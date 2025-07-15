@@ -1,0 +1,94 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <memory>
+
+#include "game.h"
+#include "player.h"
+
+int main(int argc, char** argv) {
+    std::cout << "start!" << std::endl;
+    
+    std::string deck1File;
+    std::string deck2File;
+    std::string initFile;
+    bool enableGraphics;
+    bool enableTesting;
+
+    // Argument parsing ===================================
+
+    for (int i = 1; i < argc; i++) {
+        std::string curArg = argv[i];
+        std::cout << curArg << std::endl;
+
+        if (curArg == "-deck1") {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Invalid deck1 specified!" << std::endl;
+                return 1;
+            }
+            deck1File = argv[i];
+            std::cout << "DEBUG: received - " << deck1File << std::endl;
+        } else if (curArg == "-deck2") {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Invalid deck2 specified!" << std::endl;
+                return 1;
+            }
+            deck2File = argv[i];
+            std::cout << "DEBUG: received - " << deck2File << std::endl;
+        } else if (curArg == "-init") {
+            ++i;
+            if (i >= argc) {
+                std::cerr << "Invalid init specified!" << std::endl;
+                return 1;
+            }
+            initFile = argv[i];
+            std::cout << "DEBUG: received - " << initFile << std::endl;
+        } else if (curArg == "-testing") {
+            enableTesting = true;
+            std::cout << "DEBUG: received - " << enableTesting << std::endl;
+        } else if (curArg == "-graphics") {
+            enableGraphics = true;
+            std::cout << "DEBUG: received - " << enableGraphics << std::endl;
+        } else {
+            std::cerr << "Invalid argument " << curArg << "." << std::endl;
+            return 1;
+        }
+    }
+
+    // Read Files =========================================
+
+    std::ifstream init{initFile};
+    std::string player1, player2;
+
+    if (!init) {
+        std::cerr << "Invalid file path: unable to open file." << std::endl;
+        return 1;
+    }
+
+    if (!std::getline(init, player1)) {
+        std::cerr << "Invalid player1 name." << std::endl;
+        return 1;
+    }
+    if (!std::getline(init, player2)) {
+        std::cerr << "Invalid player2 name." << std::endl;
+        return 1;
+    }
+
+    std::cout << "DEBUG: received - player1: " << player1 << ", player2: " << player2 << std::endl;
+    
+    // Initialize game objects ================================
+    auto p1 = std::make_unique<Player>(player1, 0, 0);
+    auto p2 = std::make_unique<Player>(player2, 0, 0);
+
+    std::vector<std::unique_ptr<Player>> players;
+    players.push_back(std::move(p1)); // transfer ownership
+    players.push_back(std::move(p2));
+
+    auto game = std::make_unique<Game>(std::move(players));
+
+    // output it 
+    std::cout << "Init - player1: " << game->getPlayer(0)->getName() << std::endl;
+    std::cout << "Init - player2: " << game->getPlayer(1)->getName() << std::endl; 
+}

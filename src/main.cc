@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <memory>
 
-// #include "game.h"
-// #include "player.h"
+#include "game.h"
+#include "player.h"
 
 int main(int argc, char** argv) {
     std::cout << "start!" << std::endl;
@@ -58,5 +59,36 @@ int main(int argc, char** argv) {
 
     // Read Files =========================================
 
+    std::ifstream init{initFile};
+    std::string player1, player2;
 
+    if (!init) {
+        std::cerr << "Invalid file path: unable to open file." << std::endl;
+        return 1;
+    }
+
+    if (!std::getline(init, player1)) {
+        std::cerr << "Invalid player1 name." << std::endl;
+        return 1;
+    }
+    if (!std::getline(init, player2)) {
+        std::cerr << "Invalid player2 name." << std::endl;
+        return 1;
+    }
+
+    std::cout << "DEBUG: received - player1: " << player1 << ", player2: " << player2 << std::endl;
+    
+    // Initialize game objects ================================
+    auto p1 = std::make_unique<Player>(player1, 0, 0);
+    auto p2 = std::make_unique<Player>(player2, 0, 0);
+
+    std::vector<std::unique_ptr<Player>> players;
+    players.push_back(std::move(p1)); // transfer ownership
+    players.push_back(std::move(p2));
+
+    auto game = std::make_unique<Game>(std::move(players));
+
+    // output it 
+    std::cout << "Init - player1: " << game->getPlayer(0)->getName() << std::endl;
+    std::cout << "Init - player2: " << game->getPlayer(1)->getName() << std::endl; 
 }

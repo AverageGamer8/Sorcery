@@ -1,5 +1,5 @@
-#ifndef PLAYER_H;
-#define PLAYER_H;
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <string>
 #include <vector>
@@ -12,4 +12,7 @@ class Player {
 
 public:
     Player(std::string name, int life, int magic);
+    std::string getName();
 };
+
+#endif

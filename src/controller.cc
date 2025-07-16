@@ -21,9 +21,5 @@ Controller::Controller(std::shared_ptr<Game> game,
 // Calls virtual function on all displays
 
 void Controller::help() {
-  int numViewers = viewer->getDisplays().size();
-
-  for (int i = 0; i < numViewers; i++) {
-    viewer->getDisplays()[i]->printHelp();
-  }
+    viewer->display(Viewer::HELP);
 }

@@ -3,4 +3,15 @@
 Viewer::Viewer(std::vector<std::shared_ptr<Display>> displays, std::shared_ptr<Game> game) 
     : displays{displays}, game{game} {}
 
-std::vector<std::shared_ptr<Display>> Viewer::getDisplays() { return displays; }
+void Viewer::display(Command command) {
+    for (auto &d : displays) {
+        switch (command) {
+            case PRINT:
+                d->printGame(game);
+                break;
+            case HELP:
+                d->printHelp();
+                break;
+        }
+    }
+}

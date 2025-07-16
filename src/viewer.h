@@ -7,12 +7,17 @@
 #include <vector>
 
 class Viewer {
-    std::vector<std::shared_ptr<Display>> displays;
-    std::shared_ptr<Game> game;
+  std::vector<std::shared_ptr<Display>> displays;
+  std::shared_ptr<Game> game;
 
 public:
-    Viewer(std::vector<std::shared_ptr<Display>> displays, std::shared_ptr<Game> game);
-    std::vector<std::shared_ptr<Display>> getDisplays();
+  enum Command { // TODO: Add more enums with more controller commands
+    PRINT,
+    HELP
+  };
+  Viewer(std::vector<std::shared_ptr<Display>> displays,
+         std::shared_ptr<Game> game);
+  void display(Command command);
 };
 
 #endif

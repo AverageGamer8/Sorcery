@@ -4,10 +4,10 @@
 #include <string>
 
 class Ability {
+public:
   std::string description;
   // TODO: card
-
-public:
+  
   virtual void activate();
 };
 

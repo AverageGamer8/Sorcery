@@ -11,8 +11,8 @@ class Player {
   // TODO: add more fields.
 
 public:
-    Player(std::string name, int life, int magic);
-    std::string getName();
+  Player(std::string name, int life, int magic);
+  std::string getName();
 };
 
 #endif

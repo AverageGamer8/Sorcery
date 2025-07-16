@@ -13,6 +13,8 @@ class Game {
 public:
     Game(std::vector<std::unique_ptr<Player>> players);
     Player* getPlayer(int index);
+    int getActiveIndex();
+    int getInactiveIndex();
 
     void startTurn();
     void endTurn();

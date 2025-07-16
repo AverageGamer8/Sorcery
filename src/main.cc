@@ -3,8 +3,12 @@
 #include <memory>
 #include <string>
 
+#include "controller.h"
+#include "display.h"
 #include "game.h"
 #include "player.h"
+#include "textdisplay.h"
+#include "viewer.h"
 
 int main(int argc, char **argv) {
   std::cout << "start!" << std::endl;
@@ -15,7 +19,7 @@ int main(int argc, char **argv) {
   bool enableGraphics;
   bool enableTesting;
 
-  // Argument parsing ===================================
+  // =================== Argument parsing ===================================
 
   for (int i = 1; i < argc; i++) {
     std::string curArg = argv[i];
@@ -57,13 +61,13 @@ int main(int argc, char **argv) {
     }
   }
 
-  // Read Files =========================================
+  // ====================== Read Files =========================================
 
   std::ifstream init{initFile};
   std::string player1, player2;
 
   if (!init) {
-    std::cerr << "Invalid file path: unable to open file." << std::endl;
+    std::cerr << "Invalid file path for init: unable to open file." << std::endl;
     return 1;
   }
 
@@ -79,17 +83,41 @@ int main(int argc, char **argv) {
   std::cout << "DEBUG: received - player1: " << player1
             << ", player2: " << player2 << std::endl;
 
-  // Initialize game objects ================================
+  // =============== Initialize game objects ================================
+
   auto p1 = std::make_unique<Player>(player1, 0, 0);
   auto p2 = std::make_unique<Player>(player2, 0, 0);
 
   std::vector<std::unique_ptr<Player>> players;
-  players.push_back(std::move(p1)); // transfer ownership
-  players.push_back(std::move(p2));
+  players.emplace_back(std::move(p1)); // transfer ownership
+  players.emplace_back(std::move(p2));
 
-  auto game = std::make_unique<Game>(std::move(players));
+  auto game = std::make_shared<Game>(std::move(players));
 
   // output it
   std::cout << "Init - player1: " << game->getPlayer(0)->getName() << std::endl;
   std::cout << "Init - player2: " << game->getPlayer(1)->getName() << std::endl;
+
+  // ========== Initialize MVC ===========
+
+  auto textDisplay = std::make_shared<TextDisplay>(std::cout);
+  std::vector<std::shared_ptr<Display>>
+      displays; // TODO: expand this once graphics are implemented
+  displays.emplace_back(textDisplay); // for now, just text.
+  auto viewer = std::make_shared<Viewer>(displays, game);
+
+  auto controller = std::make_unique<Controller>(game, viewer);
+
+  // ================== Game ==================
+
+  while (game->getWinner() == -1) {
+    std::string command;
+    getline(std::cin, command);
+
+    if (command == "help") {
+      controller->help();
+    } else if (command == "exit") {
+      break;
+    }
+  }
 }

@@ -5,13 +5,20 @@
 #include <vector>
 
 #include "game.h"
+#include "viewer.h"
 
 class Controller {
-  std::unique_ptr<Game> game;
-  std::vector<std::unique_ptr<Viewer>> viewer;
+  std::shared_ptr<Game> game;
+  std::shared_ptr<Viewer> viewer;
 
 public:
-  Controller(unique_ptr<Game> game, unique_ptr<Viewer> viewer);
+  Controller(std::shared_ptr<Game> game, std::shared_ptr<Viewer> viewer);
+
+  void run();
+  void drawCard();
+
+  void help();
+  void end();
 };
 
 #endif

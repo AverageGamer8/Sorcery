@@ -7,6 +7,7 @@
 class Display {
     public:
         virtual void printGame(std::shared_ptr<Game> game);
+        virtual void printHelp(); // Give a list a commands
 };
 
 #endif

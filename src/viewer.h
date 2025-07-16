@@ -7,11 +7,12 @@
 #include <vector>
 
 class Viewer {
-  std::vector<std::unique_ptr<Display>> displays;
-  std::shared_ptr<Game> game;
+    std::vector<std::shared_ptr<Display>> displays;
+    std::shared_ptr<Game> game;
 
 public:
-    void display();
+    Viewer(std::vector<std::shared_ptr<Display>> displays, std::shared_ptr<Game> game);
+    std::vector<std::shared_ptr<Display>> getDisplays();
 };
 
 #endif

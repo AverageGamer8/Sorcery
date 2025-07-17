@@ -9,15 +9,15 @@ using namespace std;
 class Card;
 
 class Deck {
-    int player;
+    int owner;
     vector<unique_ptr<Card>> cards;
-    int seed;
+    long long seed;
 
     public:
         Deck(int player);
         void loadDeck(ifstream& inf);
         void shuffleDeck();
         void reSeed();
-}
+};
 
 #endif

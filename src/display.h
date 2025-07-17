@@ -1,14 +1,15 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "game.h"
 #include <memory>
 
+#include "game.h"
+
 class Display {
-    public:
+   public:
     // TODO: use NVI
-        virtual void printGame(std::shared_ptr<Game> game) = 0;
-        virtual void printHelp() = 0; // Give a list a commands
+    virtual void printGame(std::shared_ptr<Game> game) = 0;
+    virtual void printHelp() = 0;  // Give a list a commands
 };
 
 #endif

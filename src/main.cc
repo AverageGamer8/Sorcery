@@ -1,7 +1,7 @@
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <string>
 
 #include "concreteability.h"  // TEMPORARY FOR TESTING
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
     if (!init) {
         cerr << "Invalid file path for init: unable to open file."
-                  << endl;
+             << endl;
         return 1;
     }
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     }
 
     cout << "DEBUG: received - player1: " << player1
-              << ", player2: " << player2 << endl;
+         << ", player2: " << player2 << endl;
 
     // =============== Initialize game objects ================================
 
@@ -146,12 +146,12 @@ int main(int argc, char **argv) {
                 continue;
             }
             controller->draw();
-        } else if (command.substr(0,7) == "discard") {
+        } else if (command.substr(0, 7) == "discard") {
             if (!testingEnabled) {
                 cout << "Invalid input: Testing Mode is not enabled." << endl;
                 continue;
             }
-            
+
             stringstream cmd{command};
             string token;
             vector<string> tokens;
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
                 continue;
             }
-        } else if (command.substr(0 ,6) == "attack") {
+        } else if (command.substr(0, 6) == "attack") {
             stringstream cmd{command};
             string token;
             vector<string> tokens;

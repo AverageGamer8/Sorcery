@@ -1,10 +1,12 @@
 #include "deck.h"
-#include "minion.h"
-#include <iostream>
+
 #include <algorithm>
-#include <random>
 #include <chrono>
+#include <iostream>
+#include <random>
 #include <utility>
+
+#include "minion.h"
 using namespace std;
 
 Deck::Deck(int owner) : owner{owner}, seed{chrono::system_clock::now().time_since_epoch().count()} {}
@@ -16,28 +18,22 @@ void Deck::loadDeck(ifstream& inf) {
         if (name == "Air Elemental") {
             auto card = make_unique<AirElemental>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Earth Elemental") {
+        } else if (name == "Earth Elemental") {
             auto card = make_unique<EarthElemental>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Fire Elemental") {
+        } else if (name == "Fire Elemental") {
             auto card = make_unique<FireElemental>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Potion Seller") {
+        } else if (name == "Potion Seller") {
             auto card = make_unique<PotionSeller>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Novice Pyromancer") {
+        } else if (name == "Novice Pyromancer") {
             auto card = make_unique<NovicePyromancer>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Apprentice Summoner") {
+        } else if (name == "Apprentice Summoner") {
             auto card = make_unique<ApprenticeSummoner>(owner);
             cards.emplace_back(move(card));
-        }
-        else if (name == "Master Summoner") {
+        } else if (name == "Master Summoner") {
             auto card = make_unique<MasterSummoner>(owner);
             cards.emplace_back(move(card));
         }

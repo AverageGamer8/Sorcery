@@ -53,8 +53,8 @@ void Controller::help() {
     viewer->display(Viewer::HELP);
 }
 
-void Controller::describe(int minion) { // TODO!! figure out how to pass minion?
-    viewer->display(Viewer::DESCRIBE); // this does not take in any other params.
+void Controller::describe(int minion) {  // TODO!! figure out how to pass minion?
+    viewer->display(Viewer::DESCRIBE);   // this does not take in any other params.
 }
 
 void Controller::hand() {

@@ -7,15 +7,15 @@
 class Game;
 
 class TriggeredAbility : public Observer, public Ability {
-protected:
-  Game *game;
+   protected:
+    Game *game;
 
-public:
-  TriggeredAbility(Game *game) : game { game } {}
+   public:
+    TriggeredAbility(Game *game) : game{game} {}
 
-  virtual void activate() override = 0;
-  void notify() override;
-  virtual ~TriggeredAbility() = default;
+    virtual void activate() override = 0;
+    void notify() override;
+    virtual ~TriggeredAbility() = default;
 };
 
 #endif

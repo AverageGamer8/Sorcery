@@ -16,7 +16,7 @@ public:
     : TriggeredAbility(game), ownerPlayerId(ownerPlayerId) {}
 
   void activate() override {
-    std::cout << "DEBUG: Triggered! Hello from Player " << ownerPlayerId << std::endl;
+    std::cout << "DEBUG: Triggered - ConcreteAbility! Hello from Player " << ownerPlayerId << std::endl;
   }
 };
 

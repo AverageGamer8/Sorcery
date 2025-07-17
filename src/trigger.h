@@ -7,12 +7,14 @@
 #include "observer.h"
 
 class Trigger {
-  std::vector<shared_ptr<Observer>> observers;
+  std::vector<std::shared_ptr<Observer>> observers;
 
 public:
-    void attach(Observer *obs);
-    void detach(Observer *obs);
-    void notify();
+  void attach(std::shared_ptr<Observer> obs);
+  void detach(std::shared_ptr<Observer> obs);
+  void notifyObservers();
+
+  enum class TriggerType { TurnStart, TurnEnd, MinionEnter, MinionExit };
 };
 
 #endif

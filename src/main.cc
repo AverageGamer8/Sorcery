@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "concreteability.h" // TEMPORARY FOR TESTING
 #include "controller.h"
 #include "display.h"
 #include "game.h"
@@ -67,7 +68,8 @@ int main(int argc, char **argv) {
   std::string player1, player2;
 
   if (!init) {
-    std::cerr << "Invalid file path for init: unable to open file." << std::endl;
+    std::cerr << "Invalid file path for init: unable to open file."
+              << std::endl;
     return 1;
   }
 
@@ -108,6 +110,19 @@ int main(int argc, char **argv) {
 
   auto controller = std::make_unique<Controller>(game, viewer);
 
+  // ============= DEBUG: using the triggers example =============
+
+  // ConcreteAbility is an example class to use it.
+  // this stuff should probably be done in the cards.
+  game->setActivePlayer(0);
+  auto ta = std::make_shared<ConcreteAbility>(game.get(), 0);
+
+  // attaching the trigger to START TURN events
+  game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);
+
+  game->startTurn(); // activates here
+  game->endTurn();
+  game->startTurn(); // activates here
   // ================== Game ==================
 
   while (game->getWinner() == -1) {
@@ -116,8 +131,29 @@ int main(int argc, char **argv) {
 
     if (command == "help") {
       controller->help();
-    } else if (command == "exit") {
-      break;
+    } else if (command == "end") {
+
+    } else if (command == "quit") {
+      std::cout << "Exiting the program..." << std::endl;
+      return 0;
+    } else if (command == "draw") {
+
+    } else if (command == "discard") {
+
+    } else if (command == "attack") {
+
+    } else if (command == "play") {
+
+    } else if (command == "use") {
+
+    } else if (command == "describe") {
+
+    } else if (command == "hand") {
+
+    } else if (command == "board") {
+
+    } else {
+      std::cerr << "Invalid input!" << std::endl;
     }
   }
 }

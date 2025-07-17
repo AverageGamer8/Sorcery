@@ -4,7 +4,7 @@ Viewer::Viewer(std::vector<std::shared_ptr<Display>> displays, std::shared_ptr<G
     : displays{displays}, game{game} {}
 
 void Viewer::display(Command command) {
-    for (auto &d : displays) {
+    for (auto &d : displays) { // do the command for all active displays
         switch (command) {
             case PRINT:
                 d->printGame(game);

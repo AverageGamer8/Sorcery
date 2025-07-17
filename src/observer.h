@@ -3,7 +3,8 @@
 
 class Observer {
 public:
-  void notify();
+  virtual void notify() = 0;
+  virtual ~Observer() = default;
 };
 
 #endif

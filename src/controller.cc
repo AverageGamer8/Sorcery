@@ -23,3 +23,4 @@ Controller::Controller(std::shared_ptr<Game> game,
 void Controller::help() {
     viewer->display(Viewer::HELP);
 }
+// TODO ADD MORE!

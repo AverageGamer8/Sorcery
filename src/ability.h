@@ -7,8 +7,8 @@ class Ability {
 public:
   std::string description;
   // TODO: card
-  
-  virtual void activate();
+
+  virtual void activate() = 0;
 };
 
 #endif

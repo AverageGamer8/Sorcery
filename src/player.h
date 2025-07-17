@@ -18,8 +18,8 @@ class Player {
 
    public:
     Player(std::string name, int life, int magic);
-    std::string getName();
 
+    // ================== Gameplay =========================
     void playCard(int index);
     void playCard(int index, int player, int minion);
     void playCard(int index, int player);
@@ -34,7 +34,16 @@ class Player {
 
     void minionAttack(int index, int target);
     bool isAlive();
-    void endTurn();  // TODO: is this needed? use game?
+    bool isHandFull(); // TODO PUT IN HAND class
+
+    // ================== Getters and Setters =====================
+    std::string getName();
+    int getLife();
+    int getMagic();
+
+    void setName(std::string name);
+    void setLife(int life);
+    void setMagic(int magic);
 };
 
 #endif

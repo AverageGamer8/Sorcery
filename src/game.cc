@@ -7,6 +7,13 @@ Game::Game(std::vector<std::unique_ptr<Player>> players)
 void Game::startTurn() {
     std::cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
               << std::endl;
+    auto player = getActivePlayer();
+    player->setMagic(player->getMagic() + 1); // Gains 1 magic.
+
+    if (!player->isHandFull()) { // Draw a card, if not full.
+      player->drawCard();
+    }
+
     turnStart.notifyObservers();
 }
 void Game::endTurn() {

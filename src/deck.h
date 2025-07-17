@@ -17,7 +17,7 @@ class Deck {
         Deck(int player);
         void loadDeck(ifstream& inf);
         void shuffleDeck();
-        void reSeed();
+        vector<unique_ptr<Card>>& getCards();
 };
 
 #endif

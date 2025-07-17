@@ -96,6 +96,6 @@ void Deck::shuffleDeck() {
     shuffle(cards.begin(), cards.end(), default_random_engine(seed));
 }
 
-void Deck::reSeed() {
-    seed = chrono::system_clock::now().time_since_epoch().count();
+vector<unique_ptr<Card>>& Deck::getCards() {
+    return cards;
 }

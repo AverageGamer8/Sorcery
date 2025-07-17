@@ -1,9 +1,10 @@
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <string>
 
-#include "concreteability.h" // TEMPORARY FOR TESTING
+#include "concreteability.h"  // TEMPORARY FOR TESTING
 #include "controller.h"
 #include "display.h"
 #include "game.h"
@@ -11,149 +12,247 @@
 #include "textdisplay.h"
 #include "viewer.h"
 
+using namespace std;
+
 int main(int argc, char **argv) {
-  std::cout << "start!" << std::endl;
+    cout << "start!" << endl;
 
-  std::string deck1File;
-  std::string deck2File;
-  std::string initFile;
-  bool enableGraphics;
-  bool enableTesting;
+    string deck1File;
+    string deck2File;
+    string initFile;
+    bool graphicsEnabled;
+    bool testingEnabled;
 
-  // =================== Argument parsing ===================================
+    // =================== Argument parsing ===================================
 
-  for (int i = 1; i < argc; i++) {
-    std::string curArg = argv[i];
-    std::cout << curArg << std::endl;
+    for (int i = 1; i < argc; i++) {
+        string curArg = argv[i];
+        cout << curArg << endl;
 
-    if (curArg == "-deck1") {
-      ++i;
-      if (i >= argc) {
-        std::cerr << "Invalid deck1 specified!" << std::endl;
-        return 1;
-      }
-      deck1File = argv[i];
-      std::cout << "DEBUG: received - " << deck1File << std::endl;
-    } else if (curArg == "-deck2") {
-      ++i;
-      if (i >= argc) {
-        std::cerr << "Invalid deck2 specified!" << std::endl;
-        return 1;
-      }
-      deck2File = argv[i];
-      std::cout << "DEBUG: received - " << deck2File << std::endl;
-    } else if (curArg == "-init") {
-      ++i;
-      if (i >= argc) {
-        std::cerr << "Invalid init specified!" << std::endl;
-        return 1;
-      }
-      initFile = argv[i];
-      std::cout << "DEBUG: received - " << initFile << std::endl;
-    } else if (curArg == "-testing") {
-      enableTesting = true;
-      std::cout << "DEBUG: received - " << enableTesting << std::endl;
-    } else if (curArg == "-graphics") {
-      enableGraphics = true;
-      std::cout << "DEBUG: received - " << enableGraphics << std::endl;
-    } else {
-      std::cerr << "Invalid argument " << curArg << "." << std::endl;
-      return 1;
+        if (curArg == "-deck1") {
+            ++i;
+            if (i >= argc) {
+                cerr << "Invalid deck1 specified!" << endl;
+                return 1;
+            }
+            deck1File = argv[i];
+            cout << "DEBUG: received - " << deck1File << endl;
+        } else if (curArg == "-deck2") {
+            ++i;
+            if (i >= argc) {
+                cerr << "Invalid deck2 specified!" << endl;
+                return 1;
+            }
+            deck2File = argv[i];
+            cout << "DEBUG: received - " << deck2File << endl;
+        } else if (curArg == "-init") {
+            ++i;
+            if (i >= argc) {
+                cerr << "Invalid init specified!" << endl;
+                return 1;
+            }
+            initFile = argv[i];
+            cout << "DEBUG: received - " << initFile << endl;
+        } else if (curArg == "-testing") {
+            testingEnabled = true;
+            cout << "DEBUG: received - " << testingEnabled << endl;
+        } else if (curArg == "-graphics") {
+            graphicsEnabled = true;
+            cout << "DEBUG: received - " << graphicsEnabled << endl;
+        } else {
+            cerr << "Invalid argument " << curArg << "." << endl;
+            return 1;
+        }
     }
-  }
 
-  // ====================== Read Files =========================================
+    // ====================== Read Files =========================================
 
-  std::ifstream init{initFile};
-  std::string player1, player2;
+    ifstream init{initFile};
+    string player1, player2;
 
-  if (!init) {
-    std::cerr << "Invalid file path for init: unable to open file."
-              << std::endl;
-    return 1;
-  }
-
-  if (!std::getline(init, player1)) {
-    std::cerr << "Invalid player1 name." << std::endl;
-    return 1;
-  }
-  if (!std::getline(init, player2)) {
-    std::cerr << "Invalid player2 name." << std::endl;
-    return 1;
-  }
-
-  std::cout << "DEBUG: received - player1: " << player1
-            << ", player2: " << player2 << std::endl;
-
-  // =============== Initialize game objects ================================
-
-  auto p1 = std::make_unique<Player>(player1, 0, 0);
-  auto p2 = std::make_unique<Player>(player2, 0, 0);
-
-  std::vector<std::unique_ptr<Player>> players;
-  players.emplace_back(std::move(p1)); // transfer ownership
-  players.emplace_back(std::move(p2));
-
-  auto game = std::make_shared<Game>(std::move(players));
-
-  // output it
-  std::cout << "Init - player1: " << game->getPlayer(0)->getName() << std::endl;
-  std::cout << "Init - player2: " << game->getPlayer(1)->getName() << std::endl;
-
-  // ========== Initialize MVC ===========
-
-  auto textDisplay = std::make_shared<TextDisplay>(std::cout);
-  std::vector<std::shared_ptr<Display>>
-      displays; // TODO: expand this once graphics are implemented
-  displays.emplace_back(textDisplay); // for now, just text.
-  auto viewer = std::make_shared<Viewer>(displays, game);
-
-  auto controller = std::make_unique<Controller>(game, viewer);
-
-  // ============= DEBUG: using the triggers example =============
-
-  // ConcreteAbility is an example class to use it.
-  // this stuff should probably be done in the cards.
-  game->setActivePlayer(0);
-  auto ta = std::make_shared<ConcreteAbility>(game.get(), 0);
-
-  // attaching the trigger to START TURN events
-  game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);
-
-  game->startTurn(); // activates here
-  game->endTurn();
-  game->startTurn(); // activates here
-  // ================== Game ==================
-
-  while (game->getWinner() == -1) {
-    std::string command;
-    getline(std::cin, command);
-
-    if (command == "help") {
-      controller->help();
-    } else if (command == "end") {
-
-    } else if (command == "quit") {
-      std::cout << "Exiting the program..." << std::endl;
-      return 0;
-    } else if (command == "draw") {
-
-    } else if (command == "discard") {
-
-    } else if (command == "attack") {
-
-    } else if (command == "play") {
-
-    } else if (command == "use") {
-
-    } else if (command == "describe") {
-
-    } else if (command == "hand") {
-
-    } else if (command == "board") {
-
-    } else {
-      std::cerr << "Invalid input!" << std::endl;
+    if (!init) {
+        cerr << "Invalid file path for init: unable to open file."
+                  << endl;
+        return 1;
     }
-  }
+
+    if (!getline(init, player1)) {
+        cerr << "Invalid player1 name." << endl;
+        return 1;
+    }
+    if (!getline(init, player2)) {
+        cerr << "Invalid player2 name." << endl;
+        return 1;
+    }
+
+    cout << "DEBUG: received - player1: " << player1
+              << ", player2: " << player2 << endl;
+
+    // =============== Initialize game objects ================================
+
+    auto p1 = make_unique<Player>(player1, 0, 0);
+    auto p2 = make_unique<Player>(player2, 0, 0);
+
+    vector<unique_ptr<Player>> players;
+    players.emplace_back(move(p1));  // transfer ownership
+    players.emplace_back(move(p2));
+
+    auto game = make_shared<Game>(move(players));
+
+    // output it
+    cout << "Init - player1: " << game->getPlayer(0)->getName() << endl;
+    cout << "Init - player2: " << game->getPlayer(1)->getName() << endl;
+
+    // ========== Initialize MVC ===========
+
+    auto textDisplay = make_shared<TextDisplay>(cout);
+    vector<shared_ptr<Display>>
+        displays;                        // TODO: expand this once graphics are implemented
+    displays.emplace_back(textDisplay);  // for now, just text.
+    auto viewer = make_shared<Viewer>(displays, game);
+
+    auto controller = make_unique<Controller>(game, viewer);
+
+    // ============= DEBUG: using the triggers example =============
+
+    // ConcreteAbility is an example class to use it.
+    // this stuff should probably be done in the cards.
+    game->setActivePlayer(0);
+    auto ta = make_shared<ConcreteAbility>(game.get(), 0);
+
+    // attaching the trigger to START TURN events
+    game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);
+
+    game->startTurn();  // activates here
+    game->endTurn();
+    game->startTurn();  // activates here
+
+    // ================== Game Loop ==================
+
+    while (game->getWinner() == -1) {
+        string command;
+        getline(cin, command);
+        cout << "DEBUG: received command: " << command << endl;
+        if (command == "help") {
+            controller->help();
+        } else if (command == "end") {
+            controller->end();
+        } else if (command == "quit") {
+            cout << "Exiting the program..." << endl;
+            return 0;
+        } else if (command == "draw") {
+            if (!testingEnabled) {
+                cout << "Invalid input: Testing Mode is not enabled." << endl;
+                continue;
+            }
+            controller->draw();
+        } else if (command.substr(0,7) == "discard") {
+            if (!testingEnabled) {
+                cout << "Invalid input: Testing Mode is not enabled." << endl;
+                continue;
+            }
+            
+            stringstream cmd{command};
+            string token;
+            vector<string> tokens;
+
+            while (cmd >> token) {
+                tokens.emplace_back(token);
+            }
+            int args = tokens.size() - 1;
+            if (args == 1) {
+                int card = stoi(tokens[1]);
+                controller->discard(card);
+            } else {
+                cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
+                continue;
+            }
+        } else if (command.substr(0 ,6) == "attack") {
+            stringstream cmd{command};
+            string token;
+            vector<string> tokens;
+
+            while (cmd >> token) {
+                tokens.emplace_back(token);
+            }
+            int args = tokens.size() - 1;
+            if (args == 1) {
+                int attackingMinion = stoi(tokens[1]);
+                controller->attack(attackingMinion);
+            } else if (args == 2) {
+                int attackingMinion = stoi(tokens[1]);
+                int receivingMinion = stoi(tokens[2]);
+                controller->attack(attackingMinion, receivingMinion);
+            } else {
+                cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
+                continue;
+            }
+        } else if (command.substr(0, 4) == "play") {
+            stringstream cmd{command};
+            string token;
+            vector<string> tokens;
+
+            while (cmd >> token) {
+                tokens.emplace_back(token);
+            }
+            int args = tokens.size() - 1;
+            if (args == 1) {
+                int card = stoi(tokens[1]);
+                controller->play(card);
+            } else if (args == 3) {
+                int card = stoi(tokens[1]);
+                int player = stoi(tokens[2]);
+                int minion = stoi(tokens[3]);
+                cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
+                controller->play(card, player, minion);
+            } else {
+                cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
+                continue;
+            }
+        } else if (command.substr(0, 3) == "use") {
+            stringstream cmd{command};
+            string token;
+            vector<string> tokens;
+
+            while (cmd >> token) {
+                tokens.emplace_back(token);
+            }
+            int args = tokens.size() - 1;
+            if (args == 1) {
+                int minion = stoi(tokens[1]);
+                controller->use(minion);
+            } else if (args == 3) {
+                int activeMinion = stoi(tokens[1]);
+                int player = stoi(tokens[2]);
+                int receivingMinion = stoi(tokens[3]);
+                controller->use(activeMinion, player, receivingMinion);
+            } else {
+                cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
+                continue;
+            }
+        } else if (command.substr(0, 8) == "describe") {
+            stringstream cmd{command};
+            string token;
+            vector<string> tokens;
+
+            while (cmd >> token) {
+                tokens.emplace_back(token);
+            }
+            int args = tokens.size() - 1;
+            if (args == 1) {
+                int card = stoi(tokens[1]);
+                controller->describe(card);
+            } else {
+                cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
+                continue;
+            }
+        } else if (command == "hand") {
+            controller->hand();
+        } else if (command == "board") {
+            controller->board();
+        } else {
+            cerr << "Invalid input: Command not recognised!" << endl;
+            continue;
+        }
+    }
 }

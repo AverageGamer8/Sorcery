@@ -33,7 +33,7 @@ public:
 
   void minionAttack(int index, int target);
   bool isAlive();
-  void endTurn();
+  void endTurn(); // TODO: is this needed? use game?
 };
 
 #endif

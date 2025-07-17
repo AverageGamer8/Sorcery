@@ -13,7 +13,10 @@ class Viewer {
 public:
   enum Command { // TODO: Add more enums with more controller commands
     PRINT,
-    HELP
+    HELP,
+    DESCRIBE,
+    HAND,
+    BOARD
   };
   Viewer(std::vector<std::shared_ptr<Display>> displays,
          std::shared_ptr<Game> game);

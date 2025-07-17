@@ -1,5 +1,5 @@
 #include "game.h"
-#include <iostream> // DEBUG not needed later
+#include <iostream> // for DEBUG not needed later
 Game::Game(std::vector<std::unique_ptr<Player>> players)
     : players{std::move(players)} {}
 

@@ -31,3 +31,7 @@ Trigger& Game::getTrigger(Trigger::TriggerType type) { // easier to call, could 
     default: std::cerr << "Game::getTrigger: invalid type." << std::endl;
   }
 }
+
+int Game::getInactiveIndex() {
+    return (activePlayer + 1) % 2;
+}

@@ -21,6 +21,7 @@ public:
   Game(std::vector<std::unique_ptr<Player>> players);
   Player *getPlayer(int index);
   Player *getActivePlayer();
+    int getInactiveIndex();
 
   void setActivePlayer(int player);
 

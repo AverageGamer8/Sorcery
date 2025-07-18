@@ -4,6 +4,7 @@
 #include "minion.h"
 #include "deck.h"
 #include "hand.h"
+#include "board.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -16,6 +17,7 @@ class Player {
   std::vector<std::unique_ptr<Minion>> minions;
   std::shared_ptr<Hand> hand;
   std::shared_ptr<Deck> deck;
+  std::shared_ptr<Board> board;
 
   friend class Minion;
 

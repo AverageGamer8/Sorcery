@@ -39,11 +39,6 @@ int Minion::getCost() const {
     return cost;
 }
 
-void expend() {
-    // TODO
-    return;
-}
-
 // Specific Minions
 AirElemental::AirElemental(int owner) : Minion{"Air Elemental", "", "Minion", 0, owner, 1, 1, 0} {}
 EarthElemental::EarthElemental(int owner) : Minion{"Earth Elemental", "", "Minion", 3, owner, 4, 4, 0} {}

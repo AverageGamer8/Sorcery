@@ -2,7 +2,9 @@
 #include "deck.h"
 
 Player::Player(std::string name, int life, int magic)
-    : name{name}, life{life}, magic{magic} {}
+    : name{name}, life{life}, magic{magic} {
+        hand = make_shared<Hand>();
+}
 
 std::string Player::getName() {
     return name;
@@ -17,13 +19,13 @@ std::shared_ptr<Deck>& Player::getDeck() {
 }
 
 void Player::draw() {
-    if (hand.size() >= 5 || deck->getCards().empty())
+    if (hand->isFull() || deck->getCards().empty())
         return;
     
-    hand.emplace_back(deck->getCards().back());
-    deck->getCards().pop_back();
+    hand->addCard(deck->getTopCard());
+    deck->popTopCard();
 }
 
-std::vector<shared_ptr<Card>>& Player::getHand() {
+std::shared_ptr<Hand>& Player::getHand() {
     return hand;
 }

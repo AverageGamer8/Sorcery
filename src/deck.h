@@ -18,6 +18,8 @@ class Deck {
         void loadDeck(ifstream& inf);
         void shuffleDeck();
         vector<shared_ptr<Card>>& getCards();
+        shared_ptr<Card>& getTopCard();
+        void popTopCard();
 };
 
 #endif

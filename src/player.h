@@ -3,6 +3,7 @@
 
 #include "minion.h"
 #include "deck.h"
+#include "hand.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@ class Player {
   int magic;
   // TODO: add more fields.
   std::vector<std::unique_ptr<Minion>> minions;
-  std::vector<shared_ptr<Card>> hand;
+  std::shared_ptr<Hand> hand;
   std::shared_ptr<Deck> deck;
 
   friend class Minion;
@@ -24,7 +25,7 @@ public:
     void setDeck(Deck deck);
     std::shared_ptr<Deck>& getDeck();
     void draw();
-    std::vector<shared_ptr<Card>>& getHand();
+    std::shared_ptr<Hand>& getHand();
 };
 
 #endif

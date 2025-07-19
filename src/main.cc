@@ -19,8 +19,8 @@ const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
 int main(int argc, char **argv) {
     cout << "Starting game... Welcome to Sorcery!" << endl;
 
-    string deck1File;
-    string deck2File;
+    string deck1FilePath;
+    string deck2FilePath;
     string initFile;
     bool graphicsEnabled;
     bool testingEnabled;
@@ -37,16 +37,16 @@ int main(int argc, char **argv) {
                 cerr << "Invalid deck1 specified!" << endl;
                 return 1;
             }
-            deck1File = argv[i];
-            cout << "DEBUG: received - " << deck1File << endl;
+            deck1FilePath = argv[i];
+            cout << "DEBUG: received - " << deck1FilePath << endl;
         } else if (curArg == "-deck2") {
             ++i;
             if (i >= argc) {
                 cerr << "Invalid deck2 specified!" << endl;
                 return 1;
             }
-            deck2File = argv[i];
-            cout << "DEBUG: received - " << deck2File << endl;
+            deck2FilePath = argv[i];
+            cout << "DEBUG: received - " << deck2FilePath << endl;
         } else if (curArg == "-init") {
             ++i;
             if (i >= argc) {
@@ -93,7 +93,6 @@ int main(int argc, char **argv) {
         cout << "DEBUG: received - player1: " << player1Name
              << ", player2: " << player2Name << endl;
     } else {  // Init is provided - prompt users.
-        
         cout << "Please enter name of Player 1: ";
         cin >> player1Name;
         cout << "Please enter name of Player 2: ";
@@ -112,10 +111,20 @@ int main(int argc, char **argv) {
     auto deck1 = make_shared<Deck>(0);
     auto deck2 = make_shared<Deck>(1);
 
-    ifstream defaultDeck1{DEFAULT_DECK_PATH};
-    ifstream defaultDeck2{DEFAULT_DECK_PATH};
-    deck1->loadDeck(defaultDeck1);
-    deck2->loadDeck(defaultDeck2);
+    ifstream deck1File;
+    ifstream deck2File;
+    if (deck1FilePath.empty()) {
+        deck1File.open(DEFAULT_DECK_PATH);
+    } else {
+        deck1File.open(deck1FilePath);
+    }
+    if (deck2FilePath.empty()) {
+        deck2File.open(DEFAULT_DECK_PATH);
+    } else {
+        deck2File.open(deck2FilePath);
+    }
+    deck1->loadDeck(deck1File);
+    deck2->loadDeck(deck2File);
 
     players[0]->setDeck(deck1);
     players[1]->setDeck(deck2);
@@ -128,8 +137,8 @@ int main(int argc, char **argv) {
     auto game = make_shared<Game>(move(players));
 
     // output it
-    cout << "DEBUG: (Main) Init - player1: " << game->getPlayer(0)->getName() << endl;
-    cout << "DEBUG: (Main) Init - player2: " << game->getPlayer(1)->getName() << endl;
+    cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
+    cout << "DEBUG: (Main) Created - player2: " << game->getPlayer(1)->getName() << endl;
 
     // ========== Initialize MVC ===========
 

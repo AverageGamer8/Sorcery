@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "game.h"
-#include "viewer.h"
+#include "view/viewer.h"
 
 class Controller {
     std::shared_ptr<Game> game;

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "display.h"
-#include "game.h"
+#include "../game.h"
 
 class Viewer {
     std::vector<std::shared_ptr<Display>> displays;
@@ -22,6 +22,7 @@ class Viewer {
     Viewer(std::vector<std::shared_ptr<Display>> displays,
            std::shared_ptr<Game> game);
     void display(Command command);
+    void display(Command command, int minion);
 };
 
 #endif

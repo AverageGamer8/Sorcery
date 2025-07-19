@@ -3,6 +3,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <filesystem> // todo debug
 
 #include "concreteability.h"  // TEMPORARY FOR TESTING
 #include "controller.h"
@@ -13,6 +14,8 @@
 #include "view/viewer.h"
 
 using namespace std;
+
+const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
 
 int main(int argc, char **argv) {
     cout << "start!" << endl;
@@ -27,7 +30,7 @@ int main(int argc, char **argv) {
 
     for (int i = 1; i < argc; i++) {
         string curArg = argv[i];
-        cout << curArg << endl;
+        // cout << curArg << endl;
 
         if (curArg == "-deck1") {
             ++i;
@@ -52,13 +55,13 @@ int main(int argc, char **argv) {
                 return 1;
             }
             initFile = argv[i];
-            cout << "DEBUG: received - " << initFile << endl;
+            cout << "DEBUG: initFile received - " << initFile << endl;
         } else if (curArg == "-testing") {
             testingEnabled = true;
-            cout << "DEBUG: received - " << testingEnabled << endl;
+            cout << "DEBUG: testingEnabled received - " << testingEnabled << endl;
         } else if (curArg == "-graphics") {
             graphicsEnabled = true;
-            cout << "DEBUG: received - " << graphicsEnabled << endl;
+            cout << "DEBUG: graphics received - " << graphicsEnabled << endl;
         } else {
             cerr << "Invalid argument " << curArg << "." << endl;
             return 1;
@@ -97,16 +100,28 @@ int main(int argc, char **argv) {
     players.emplace_back(move(p1));  // transfer ownership
     players.emplace_back(move(p2));
 
+    auto deck1 = make_shared<Deck>(0);
+    auto deck2 = make_shared<Deck>(1);
+
+    ifstream defaultDeck1{DEFAULT_DECK_PATH};
+    ifstream defaultDeck2{DEFAULT_DECK_PATH};
+    deck1->loadDeck(defaultDeck1);
+    deck2->loadDeck(defaultDeck2);
+
+    deck1->shuffleDeck();
+    deck2->shuffleDeck();
+    players[0]->setDeck(deck1);
+    players[1]->setDeck(deck2);
+
     auto game = make_shared<Game>(move(players));
 
     // output it
-    cout << "Init - player1: " << game->getPlayer(0)->getName() << endl;
-    cout << "Init - player2: " << game->getPlayer(1)->getName() << endl;
+    cout << "DEBUG: (Main) Init - player1: " << game->getPlayer(0)->getName() << endl;
+    cout << "DEBUG: (Main) Init - player2: " << game->getPlayer(1)->getName() << endl;
 
     // ========== Initialize MVC ===========
 
     auto textDisplay = make_shared<TextDisplay>(cout);
-    cout << "hey" << endl;
     vector<shared_ptr<Display>> displays;  // TODO: expand this once graphics are implemented
     displays.emplace_back(textDisplay);    // for now, just text.
     auto viewer = make_shared<Viewer>(displays, game);

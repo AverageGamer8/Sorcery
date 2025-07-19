@@ -1,7 +1,6 @@
 #include "deck.h"
 #include "minion.h"
 #include "spell.h"
-#include <iostream>
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -12,7 +11,6 @@ Deck::Deck(int owner) : owner{owner}, seed{chrono::system_clock::now().time_sinc
 
 void Deck::loadDeck(ifstream& inf) {
     string name;
-
     while (getline(inf, name)) {
         if (name == "Air Elemental") {
             auto card = make_shared<AirElemental>(owner);

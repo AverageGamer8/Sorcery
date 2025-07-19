@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "display.h"
 #include "ascii_graphics.h"

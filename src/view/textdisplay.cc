@@ -1,12 +1,16 @@
 #include "textdisplay.h"
 
+#include "../spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
-TextDisplay::TextDisplay(ostream &out) : out{out} {}
+TextDisplay::TextDisplay(ostream& out) : out{out} {}
 
 void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
-    for (const auto& line : cardInfo) {
-        out << line << endl;
+    for (int i = 0; i < cardInfo.size(); ++i) {
+        out << cardInfo[i];
+        if (i < cardInfo.size() - 1) {
+            out << endl;
+        }
     }
 }
 
@@ -39,18 +43,56 @@ void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
         minionCard->getName(),
         minionCard->getCost(),
         minionCard->getAttack(),
-        minionCard->getDefence()
-    );
+        minionCard->getDefence());
     printCardTemplate(cardInfo);
 }
 
-
 void TextDisplay::printHand(shared_ptr<Game> game) {
+    cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
-    
+
+    vector<card_template_t> cardTemplates;
+    for (int i = 0; i < hand->getSize(); ++i) {
+        auto card = hand->getCardAtIndex(i);
+        card_template_t cardInfo;
+
+        if (card->getType() == "Minion") {
+            auto minion = static_cast<Minion*>(card.get());
+            cardInfo = display_minion_no_ability(  // TODO other abilities.
+                minion->getName(),
+                minion->getCost(),
+                minion->getAttack(),
+                minion->getDefence());
+        } else if (card->getType() == "Spell") {
+            auto spell = static_cast<Spell*>(card.get());
+            cardInfo = display_spell(
+                spell->getName(),
+                spell->getCost(),
+                spell->getDesc());
+        } else {                                   // TODO: Other cards
+            cardInfo = display_minion_no_ability(  // This is a filler.
+                "Empty.",
+                -99,
+                -99,
+                -99);
+        }
+        cardTemplates.emplace_back(cardInfo);
+        // printCardTemplate(cardInfo);
+    }
+    if (!cardTemplates.empty()) {  // Print them horizontally
+        int height = cardTemplates[0].size();
+        for (int line = 0; line < height; ++line) {
+            for (int card = 0; card < cardTemplates.size(); ++card) {
+                out << cardTemplates[card][line];
+            }
+            if (line < height - 1) {
+                out << endl;
+            }
+        }
+    }
+    out << endl;
 }
 
 void TextDisplay::printBoard(shared_ptr<Game> game) {
-
 }

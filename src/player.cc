@@ -1,3 +1,4 @@
+#include <iostream> // TODO: remove debugs later.
 #include "player.h"
 
 #include "board.h"
@@ -20,9 +21,10 @@ void Player::shuffleDeck() {}
 void Player::drawCard() {
     if (hand->isFull() || deck->getCards().empty())
         return;
-
     hand->addCard(deck->getTopCard());
     deck->popTopCard();
+
+    hand->debugPrintHand(); // debug msg.
 }
 void Player::activateCard(int index) {}
 void Player::activateCard(int index, int player) {}
@@ -43,6 +45,6 @@ const vector<unique_ptr<Minion>>& Player::getMinions() const{ return minions; }
 void Player::setName(string name) { name = name; }
 void Player::setLife(int life) { life = life; }
 void Player::setMagic(int magic) { magic = magic; }
-void Player::setDeck(Deck deck) {
-    this->deck = make_shared<Deck>(deck);
+void Player::setDeck(shared_ptr<Deck> deck) {
+    this->deck = deck;
 }

@@ -8,7 +8,7 @@
 #include "board.h"
 #include "deck.h"
 #include "hand.h"
-#include "minion.h"
+#include "../cards/minion.h"
 
 using namespace std;
 

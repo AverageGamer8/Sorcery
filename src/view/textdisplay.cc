@@ -1,6 +1,6 @@
 #include "textdisplay.h"
 
-#include "../spell.h"  // TODO: investigate dependecny this shouldnt be needed
+#include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
 TextDisplay::TextDisplay(ostream& out) : out{out} {}

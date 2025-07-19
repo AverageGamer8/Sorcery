@@ -1,9 +1,6 @@
 #include <iostream> // TODO: remove debugs later.
 #include "player.h"
 
-#include "board.h"
-#include "deck.h"
-#include "hand.h"
 using namespace std;
 
 Player::Player(string name, int life, int magic)

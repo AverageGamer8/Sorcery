@@ -1,6 +1,5 @@
 #include "spell.h"
 #include "card.h"
-#include "minion.h"
 #include <string>
 using namespace std;
 

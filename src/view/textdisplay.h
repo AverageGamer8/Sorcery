@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 
-#include "display.h"
 #include "ascii_graphics.h"
+#include "display.h"
 
 using namespace std;
 

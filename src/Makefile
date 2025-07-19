@@ -11,8 +11,15 @@ CXX = g++-14					# compiler
 CXXFLAGS = -std=c++20 -g -Wall -MMD -Iview			# compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-SOURCES = $(wildcard *.cc)			# source files (*.cc)
-OBJECTS = ${SOURCES:.cc=.o}	view/viewer.o view/textdisplay.o view/display.o view/ascii_graphics.o		# object files forming executable
+# sources (*.cc)
+
+SOURCES = $(wildcard *.cc) \
+          $(wildcard cards/*.cc) \
+          $(wildcard controller/*.cc) \
+          $(wildcard gameModel/*.cc) \
+          $(wildcard view/*.cc)
+
+OBJECTS = ${SOURCES:.cc=.o}		# object files forming executable
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 EXEC = sorcery					# executable name
 
@@ -23,8 +30,18 @@ EXEC = sorcery					# executable name
 ${EXEC} : ${OBJECTS}				# link step
 	${CXX} ${CXXFLAGS} $^ -o $@		# additional object files before $^
 
-view/&.0: view/&.cc
-	${CXX} ${CXXFLAGS} -c $< -o $@ # compile view files in /view
+# compile for subdirectories
+cards/%.o: cards/%.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+controller/%.o: controller/%.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+gameModel/%.o: gameModel/%.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+view/%.o: view/%.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
 
 ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 

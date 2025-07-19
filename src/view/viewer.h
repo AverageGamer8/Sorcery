@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "display.h"
-#include "../game.h"
+#include "../gameModel/game.h"
 
 class Viewer {
     std::vector<std::shared_ptr<Display>> displays;

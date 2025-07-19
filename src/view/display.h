@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../game.h"
+#include "../gameModel/game.h"
 
 class Display {
    public:

@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "game.h"
-#include "view/viewer.h"
+#include "../gameModel/game.h"
+#include "../view/viewer.h"
 
 class Controller {
     std::shared_ptr<Game> game;

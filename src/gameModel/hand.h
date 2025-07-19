@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "card.h"
+#include "../cards/card.h"
 using namespace std;
 
 const int MAX_HAND_SIZE = 5;

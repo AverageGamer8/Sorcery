@@ -1,6 +1,6 @@
 #include "deck.h"
-#include "minion.h"
-#include "spell.h"
+#include "../cards/minion.h"
+#include "../cards/spell.h"
 #include <algorithm>
 #include <random>
 #include <chrono>

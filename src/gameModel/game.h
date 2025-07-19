@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "player.h"
-#include "trigger.h"
+#include "../trigger.h"
 
 class Player;
 

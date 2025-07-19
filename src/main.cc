@@ -3,12 +3,11 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <filesystem> // todo debug
 
 #include "concreteability.h"  // TEMPORARY FOR TESTING
-#include "controller.h"
-#include "game.h"
-#include "player.h"
+#include "controller/controller.h"
+#include "gameModel/game.h"
+#include "gameModel/player.h"
 #include "view/display.h"
 #include "view/textdisplay.h"
 #include "view/viewer.h"

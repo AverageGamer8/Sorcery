@@ -23,7 +23,8 @@ class Player {
     shared_ptr<Board> board;
 
     friend class Minion;
-
+    
+    bool hasMagicCost(int cost) const;
 
    public:
     Player(string name, int life, int magic);

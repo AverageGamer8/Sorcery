@@ -17,7 +17,7 @@ using namespace std;
 const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
 
 int main(int argc, char **argv) {
-    cout << "start!" << endl;
+    cout << "Starting game... Welcome to Sorcery!" << endl;
 
     string deck1File;
     string deck2File;
@@ -69,31 +69,41 @@ int main(int argc, char **argv) {
 
     // ====================== Read Files =========================================
 
-    ifstream init{initFile};
-    string player1, player2;
+    // Get player names:
+    string player1Name, player2Name;
+    ifstream init;
+    if (!initFile.empty()) {
+        init.open(initFile);
 
-    if (!init) {
-        cerr << "Invalid file path for init: unable to open file."
-             << endl;
-        return 1;
-    }
+        if (!init) {
+            cerr << "Invalid file path for init: unable to open file."
+                 << endl;
+            return 1;
+        }
 
-    if (!getline(init, player1)) {
-        cerr << "Invalid player1 name." << endl;
-        return 1;
-    }
-    if (!getline(init, player2)) {
-        cerr << "Invalid player2 name." << endl;
-        return 1;
-    }
+        if (!getline(init, player1Name)) {
+            cerr << "Invalid player1 name." << endl;
+            return 1;
+        }
+        if (!getline(init, player2Name)) {
+            cerr << "Invalid player2 name." << endl;
+            return 1;
+        }
 
-    cout << "DEBUG: received - player1: " << player1
-         << ", player2: " << player2 << endl;
+        cout << "DEBUG: received - player1: " << player1Name
+             << ", player2: " << player2Name << endl;
+    } else {  // Init is provided - prompt users.
+        
+        cout << "Please enter name of Player 1: ";
+        cin >> player1Name;
+        cout << "Please enter name of Player 2: ";
+        cin >> player2Name;
+    }
 
     // =============== Initialize game objects ================================
 
-    auto p1 = make_unique<Player>(player1, 0, 0);
-    auto p2 = make_unique<Player>(player2, 0, 0);
+    auto p1 = make_unique<Player>(player1Name, 0, 0);
+    auto p2 = make_unique<Player>(player2Name, 0, 0);
 
     vector<unique_ptr<Player>> players;
     players.emplace_back(move(p1));  // transfer ownership
@@ -107,10 +117,13 @@ int main(int argc, char **argv) {
     deck1->loadDeck(defaultDeck1);
     deck2->loadDeck(defaultDeck2);
 
-    deck1->shuffleDeck();
-    deck2->shuffleDeck();
     players[0]->setDeck(deck1);
     players[1]->setDeck(deck2);
+
+    if (!testingEnabled) {
+        players[0]->shuffleDeck();
+        players[1]->shuffleDeck();
+    }
 
     auto game = make_shared<Game>(move(players));
 

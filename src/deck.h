@@ -9,15 +9,17 @@ using namespace std;
 class Card;
 
 class Deck {
-    int player;
-    vector<unique_ptr<Card>> cards;
-    int seed;
+    int owner;
+    vector<shared_ptr<Card>> cards;
+    long long seed;
 
     public:
         Deck(int player);
         void loadDeck(ifstream& inf);
         void shuffleDeck();
-        void reSeed();
-}
+        vector<shared_ptr<Card>>& getCards();
+        shared_ptr<Card>& getTopCard();
+        void popTopCard();
+};
 
 #endif

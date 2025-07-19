@@ -8,11 +8,11 @@
 ########## Variables ##########
 
 CXX = g++-14					# compiler
-CXXFLAGS = -std=c++20 -g -Wall -MMD			# compiler flags
+CXXFLAGS = -std=c++20 -g -Wall -MMD -Iview			# compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 SOURCES = $(wildcard *.cc)			# source files (*.cc)
-OBJECTS = ${SOURCES:.cc=.o}			# object files forming executable
+OBJECTS = ${SOURCES:.cc=.o}	view/viewer.o view/textdisplay.o view/display.o view/ascii_graphics.o		# object files forming executable
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 EXEC = sorcery					# executable name
 
@@ -22,6 +22,9 @@ EXEC = sorcery					# executable name
 
 ${EXEC} : ${OBJECTS}				# link step
 	${CXX} ${CXXFLAGS} $^ -o $@		# additional object files before $^
+
+view/&.0: view/&.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@ # compile view files in /view
 
 ${OBJECTS} : ${MAKEFILE_NAME}			# OPTIONAL : changes to this file => recompile
 

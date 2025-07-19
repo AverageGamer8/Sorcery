@@ -6,11 +6,12 @@ using namespace std;
 // red: attack
 // blue: defence, magic
 // green: player life, ritual charges
-const ATK = Xwindow::Red;
-const DEF = Xwindow::Blue, MP = Xwindow::Blue;
-const LIFE = Xwindow::Green;
-const BLANK = Xwindow::White;
-const EMPTY = Xwindow::Black;
+const int ATK = Xwindow::Red;
+const int DEF = Xwindow::Blue, MP = Xwindow::Blue;
+const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
+const int BLANK = Xwindow::White;
+const int EMPTY = Xwindow::Black;
+const int offset = 10;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
     xw{width, height}, width{width}, height{height}, cWidth{width / 6}, cHeight{height / 5} { xw.fillRectangle(0, 0, width, height); }
@@ -24,14 +25,60 @@ void GraphicsDisplay::printCardTemplate(const card_template_t& cardInfo) {
     }
 }
 
-void GraphicsDisplay::printPlayer(int pos, std::string name, int life, int magic) {
+void GraphicsDisplay::printPlayer(int pos, shared_ptr<Player> player) {
     int left = cWidth * 2, top = pos == 0 ? 0 : cHeight * 4;
     xw.fillRectangle(left, top, cWidth, cHeight, BLANK);
-    xw.drawString(left + (cWidth * 0.4), top + (pos == 0 ? cHeight * 0.2 : cHeight * 0.6), name);
+    xw.drawString(left + (cWidth * 0.4), top + (pos == 0 ? cHeight * 0.2 : cHeight * 0.6), player->getName());
     xw.fillRectangle(left, top + (pos == 0 ? cHeight * 0.8 : 0), cWidth * 0.2, cHeight * 0.2, LIFE);
-    xw.drawString(left + 10, top + (pos == 0 ? cHeight * 0.8 : 0) + 10, life + "");
+    xw.drawString(left + offset, top + (pos == 0 ? cHeight * 0.8 : 0) + offset, to_string(player->getLife()));
     xw.fillRectangle(left + (cWidth * 0.8), top + (pos == 0 ? cHeight * 0.8 : 0), cWidth * 0.2, cHeight * 0.2, MP);
-    xw.drawString(left + (cWidth * 0.8) + 10, top + (pos == 0 ? cHeight * 0.8 : 0) + 10, magic + "");
+    xw.drawString(left + (cWidth * 0.8) + offset, top + (pos == 0 ? cHeight * 0.8 : 0) + offset, to_string(player->getMagic()));
+}
+
+void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, minion->getName());
+    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(minion->getCost()));
+    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, minion->getType());
+    xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
+    xw.drawString(x + offset, y + (cHeight * 0.8) + offset, to_string(minion->getAttack()));
+    xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, to_string(minion->getDefence()));
+    // include activated abilities here and stuff here
+}
+
+void GraphicsDisplay::printEnchantment(int x, int y, shared_ptr<Enchantment> ench) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, ench->getName());
+    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(ench->getCost()));
+    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ench->getType());
+    xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
+    xw.drawString(x + offset, y + (cHeight * 0.8) + offset, ench->getAtkDesc());
+    xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, ench->getDefDesc());
+    // include activated abilities here and stuff here
+}
+
+void GraphicsDisplay::printRitual(int x, int y, shared_ptr<Ritual> ritual) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, ritual->getName());
+    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(ritual->getCost()));
+    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ritual->getType());
+    xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, CHARGE);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, toString(ritual->getCharge()));
+    // include activated abilities here and stuff here
+}
+
+void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, spell->getName());
+    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(spell->getCost()));
+    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, spell->getType());
+    xw.drawString(x + offset, y + (cHeight * 0.4) + offset, spell->getDesc());
 }
 
 void GraphicsDisplay::printGame(shared_ptr<Game> game) {
@@ -39,7 +86,7 @@ void GraphicsDisplay::printGame(shared_ptr<Game> game) {
 }
 
 void GraphicsDisplay::printHelp() {
-    xw.drawString(width / 2, height / 2, 
+    xw.drawString(0, cHeight * 2 + 5, 
         "Commands:\n\t"
         + "help -- Display this message,\n\t"
         + "end -- End the current player’s turn,\n\t"
@@ -57,15 +104,16 @@ void GraphicsDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
     auto minionCard = player->getMinions()[minion].get();
 
-    card_template_t cardInfo;
+    // erase whole board
+    xw.fillRectangle(0, 0, width, height);
+    // needs get individual enchantment method???
+    // might need get base minion method???
+    printMinion(0, 0, minionCard);
+    for (int i = 0; i < 100; i++) { // need individual enchantments
+        
+    }
     // TODO: if minion has abilities, more fields.
-
-    cardInfo = display_minion_no_ability(
-        minionCard->getName(),
-        minionCard->getCost(),
-        minionCard->getAttack(),
-        minionCard->getDefence());
-    printCardTemplate(cardInfo);
+    // make sure to print enchantments as well
 }
 
 void GraphicsDisplay::printHand(shared_ptr<Game> game) {
@@ -73,47 +121,13 @@ void GraphicsDisplay::printHand(shared_ptr<Game> game) {
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
-    vector<card_template_t> cardTemplates;
-    for (int i = 0; i < hand->getSize(); ++i) {
-        auto card = hand->getCardAtIndex(i);
-        card_template_t cardInfo;
-
-        if (card->getType() == "Minion") {
-            auto minion = static_cast<Minion*>(card.get());
-            cardInfo = display_minion_no_ability(  // TODO other abilities.
-                minion->getName(),
-                minion->getCost(),
-                minion->getAttack(),
-                minion->getDefence());
-        } else if (card->getType() == "Spell") {
-            auto spell = static_cast<Spell*>(card.get());
-            cardInfo = display_spell(
-                spell->getName(),
-                spell->getCost(),
-                spell->getDesc());
-        } else {                                   // TODO: Other cards
-            cardInfo = display_minion_no_ability(  // This is a filler.
-                "Empty.",
-                -99,
-                -99,
-                -99);
-        }
-        cardTemplates.emplace_back(cardInfo);
-        // printCardTemplate(cardInfo);
+    int y = cHeight * 5;
+    for (int i = 0; i < hand->getSize(); i++) {
+        int x = i * cWidth;
+        // get card type, print card here
     }
-    if (!cardTemplates.empty()) {  // Print them horizontally
-        int height = cardTemplates[0].size();
-        for (int line = 0; line < height; ++line) {
-            for (int card = 0; card < cardTemplates.size(); ++card) {
-                out << cardTemplates[card][line];
-            }
-            if (line < height - 1) {
-                out << endl;
-            }
-        }
-    }
-    out << endl;
 }
 
 void GraphicsDisplay::printBoard(shared_ptr<Game> game) {
+    // go through everything or something idk
 }

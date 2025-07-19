@@ -15,6 +15,11 @@ class GraphicsDisplay : public Display {
     int width = 960, height = 600, cWidth = 160, cHeight = 120, 
 
     void printCardTemplate(const card_template_t& cardInfo);
+    void printMinion(int x, int y, shared_ptr<Minion> minion);
+    void printEnchantment(int x, int y, shared_ptr<Enchantment> ench);
+    void printRitual(int x, int y, shared_ptr<Game> game);
+    void printSpell(int x, int y, shared_ptr<Game> game);
+    void printSorcery(int x, int y);
 
    public:
     GraphicsDisplay(int width, int length);

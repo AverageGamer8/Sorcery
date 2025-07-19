@@ -1,8 +1,8 @@
 #include "game.h"
 
 #include <iostream>  // for DEBUG not needed later
-Game::Game(std::vector<std::unique_ptr<Player>> players)
-    : players{std::move(players)} {}
+Game::Game(std::vector<std::shared_ptr<Player>> players)
+    : players{players} {}
 
 void Game::startTurn() {
     std::cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
@@ -23,9 +23,9 @@ void Game::endTurn() {
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
 }
 
-Player *Game::getPlayer(int index) { return players[index].get(); }
+shared_ptr<Player> Game::getPlayer(int index) { return players[index]; }
 
-Player *Game::getActivePlayer() { return getPlayer(activePlayer); }
+shared_ptr<Player> Game::getActivePlayer() { return getPlayer(activePlayer); }
 
 void Game::setActivePlayer(int player) { activePlayer = player; }
 int Game::getWinner() { return -1; }  // TODO

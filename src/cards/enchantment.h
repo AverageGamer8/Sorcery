@@ -4,6 +4,7 @@
 #include <string>
 
 #include "card.h"
+#include "minion.h"
 using namespace std;
 
 class Enchantment: public Minion {
@@ -40,7 +41,7 @@ class GiantStrength: public Enchantment {
 class Enrage: public Enchantment {
     public:
      Enrage(int owner);
-     Enrage::attach(shared_ptr<Minion> target) override;
+     void attach(shared_ptr<Minion> target) override;
 };
 
 class Haste: public Enchantment {

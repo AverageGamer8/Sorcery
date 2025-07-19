@@ -17,6 +17,7 @@ class Board {
     void addMinion(std::shared_ptr<Minion> m);
     void removeMinion(int target);
     vector<shared_ptr<Minion>>& getMinions();
+    shared_ptr<Minion> getMinion(int index);
 };
 
 #endif

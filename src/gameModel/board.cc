@@ -24,3 +24,7 @@ void Board::removeMinion(int target) {
 vector<shared_ptr<Minion>>& Board::getMinions() {
     return minions;
 }
+
+shared_ptr<Minion> Board::getMinion(int index) {
+    return minions[index];
+}

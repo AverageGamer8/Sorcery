@@ -1,9 +1,11 @@
 #include "minion.h"
-#include "game.h"
-#include "player.h"
-#include "card.h"
+
 #include <memory>
 #include <string>
+
+#include "card.h"
+#include "game.h"
+#include "player.h"
 using namespace std;
 
 Minion::Minion(string name, string description, string type, int cost, int owner, int atk, int defence, int actions) : Card{name, description, type, cost, owner}, atk{atk}, defence{defence}, actions{actions} {}
@@ -38,6 +40,13 @@ string Minion::getType() const {
 int Minion::getCost() const {
     return cost;
 }
+int Minion::getAttack() const {
+    return atk;
+}
+int Minion::getDefence() const {
+    return defence;
+}
+
 
 // Specific Minions
 AirElemental::AirElemental(int owner) : Minion{"Air Elemental", "", "Minion", 0, owner, 1, 1, 0} {}

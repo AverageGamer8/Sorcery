@@ -23,6 +23,9 @@ class Minion: public Card {
         string getDesc() const override;
         string getType() const override;
         int getCost() const override;
+
+        int getAttack() const;
+        int getDefence() const;
 };
 
 class AirElemental: public Minion {

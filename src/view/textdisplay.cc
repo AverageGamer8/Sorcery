@@ -28,9 +28,9 @@ void TextDisplay::printHelp() {
         << "board -- Describe all cards on the board."
         << endl;
 }
-void printDescribe(shared_ptr<Game> game, int minion) {
+void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getMinions()[minion];
+    auto minionCard = player->getMinions()[minion].get();
 
     card_template_t cardInfo;
     // TODO: if minion has abilities, more fields.
@@ -39,18 +39,18 @@ void printDescribe(shared_ptr<Game> game, int minion) {
         minionCard->getName(),
         minionCard->getCost(),
         minionCard->getAttack(),
-        minionCard->getDefense()
+        minionCard->getDefence()
     );
     printCardTemplate(cardInfo);
 }
 
 
-void printHand(shared_ptr<Game> game) {
+void TextDisplay::printHand(shared_ptr<Game> game) {
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
     
 }
 
-void printBoard(shared_ptr<Game> game) {
+void TextDisplay::printBoard(shared_ptr<Game> game) {
 
 }

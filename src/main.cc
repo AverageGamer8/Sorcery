@@ -6,11 +6,11 @@
 
 #include "concreteability.h"  // TEMPORARY FOR TESTING
 #include "controller.h"
-#include "display.h"
 #include "game.h"
 #include "player.h"
-#include "textdisplay.h"
-#include "viewer.h"
+#include "view/display.h"
+#include "view/textdisplay.h"
+#include "view/viewer.h"
 
 using namespace std;
 
@@ -106,9 +106,9 @@ int main(int argc, char **argv) {
     // ========== Initialize MVC ===========
 
     auto textDisplay = make_shared<TextDisplay>(cout);
-    vector<shared_ptr<Display>>
-        displays;                        // TODO: expand this once graphics are implemented
-    displays.emplace_back(textDisplay);  // for now, just text.
+    cout << "hey" << endl;
+    vector<shared_ptr<Display>> displays;  // TODO: expand this once graphics are implemented
+    displays.emplace_back(textDisplay);    // for now, just text.
     auto viewer = make_shared<Viewer>(displays, game);
 
     auto controller = make_unique<Controller>(game, viewer);
@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
             string token;
             vector<string> tokens;
 
-            while (cmd >> token) { // Reading in all the args
+            while (cmd >> token) {  // Reading in all the args
                 tokens.emplace_back(token);
             }
             int args = tokens.size() - 1;

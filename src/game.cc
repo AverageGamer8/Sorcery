@@ -15,6 +15,7 @@ void Game::startTurn() {
     }
 
     turnStart.notifyObservers();
+    cout << "hahaha" <<endl;
 }
 void Game::endTurn() {
     std::cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."

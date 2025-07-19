@@ -19,7 +19,7 @@ void Viewer::display(Command command) {
                 break;
             case BOARD:
                 d->printBoard(game);
-                break
+                break;
         }
     }
 }

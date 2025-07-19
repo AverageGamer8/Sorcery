@@ -11,20 +11,22 @@
 
 #include "minion.h"
 
+using namespace std;
+
 class Player {
-  std::string name;
+  string name;
   int life;
   int magic;
   // TODO: add more fields.
-  std::vector<std::unique_ptr<Minion>> minions;
-  std::shared_ptr<Hand> hand;
-  std::shared_ptr<Deck> deck;
-  std::shared_ptr<Board> board;
+  vector<unique_ptr<Minion>> minions;
+  shared_ptr<Hand> hand;
+  shared_ptr<Deck> deck;
+  shared_ptr<Board> board;
 
     friend class Minion;
 
    public:
-    Player(std::string name, int life, int magic);
+    Player(string name, int life, int magic);
 
     // ================== Gameplay =========================
     void playCard(int index);
@@ -44,16 +46,18 @@ class Player {
     bool isHandFull(); // TODO PUT IN HAND class
 
     // ================== Getters and Setters =====================
-    std::string getName();
-    int getLife();
-    int getMagic();
+    const string getName() const;
+    const int getLife() const;
+    const int getMagic() const;
+    const shared_ptr<Deck>& getDeck() const;
+    const shared_ptr<Hand>& getHand() const;
+    const vector<unique_ptr<Minion>>& getMinions() const;
+    
 
-    void setName(std::string name);
+    void setName(string name);
     void setLife(int life);
     void setMagic(int magic);
     void setDeck(Deck deck);
-    std::shared_ptr<Deck>& getDeck();
-    std::shared_ptr<Hand>& getHand();
 };
 
 #endif

@@ -16,6 +16,7 @@ class Board {
     bool isFull();
     void addMinion(std::shared_ptr<Minion> m);
     void removeMinion(int target);
+    vector<shared_ptr<Minion>>& getMinions();
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "player.h"
+#include "graveyard.h"
 
 #include <iostream>  // TODO: remove debugs later.
 
@@ -10,6 +11,7 @@ Player::Player(string name, int life, int magic)
     : name{name}, life{life}, magic{magic} {
     hand = make_shared<Hand>();
     board = make_shared<Board>();
+    graveyard = make_shared<Graveyard>();
 }
 
 bool Player::hasMagicCost(int cost) const { return magic >= cost; }
@@ -89,7 +91,9 @@ const int Player::getLife() const { return life; }
 const int Player::getMagic() const { return magic; }
 const shared_ptr<Deck>& Player::getDeck() const { return deck; }
 const shared_ptr<Hand>& Player::getHand() const { return hand; }
-const vector<unique_ptr<Minion>>& Player::getMinions() const { return minions; }
+const shared_ptr<Board>& Player::getBoard() const { return board; }
+const shared_ptr<Graveyard>& Player::getGraveyard() const { return graveyard; }
+const vector<unique_ptr<Minion>>& Player::getMinions() const{ return minions; }
 
 void Player::setName(string name) { name = name; }
 void Player::setLife(int life) { life = life; }

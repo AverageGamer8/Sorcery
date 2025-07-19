@@ -9,6 +9,7 @@
 #include "deck.h"
 #include "hand.h"
 #include "../cards/minion.h"
+#include "graveyard.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ class Player {
     shared_ptr<Hand> hand;
     shared_ptr<Deck> deck;
     shared_ptr<Board> board;
+    shared_ptr<Graveyard> graveyard;
 
     friend class Minion;
 
@@ -53,7 +55,9 @@ class Player {
     const int getMagic() const;
     const shared_ptr<Deck>& getDeck() const;
     const shared_ptr<Hand>& getHand() const;
-    const vector<unique_ptr<Minion>>& getBoard() const;
+    const shared_ptr<Board>& getBoard() const;
+    const shared_ptr<Graveyard>& getGraveyard() const;
+    const vector<unique_ptr<Minion>>& getMinions() const;
 
     void setName(string name);
     void setLife(int life);

@@ -12,7 +12,7 @@ class Minion : public Card {
     int actions;
 
    public:
-    Minion(string name, string description, string type, int cost, int owner, int atk, int defence, int actions);
+    Minion(string name, string description, int cost, int owner, int atk, int defence, int actions, string type = "Minion");
     void attack();
     void attack(int target);
     void activate();
@@ -27,6 +27,8 @@ class Minion : public Card {
 
     int getAttack() const;
     int getDefence() const;
+
+    void setDefence(int defence);
 };
 
 class AirElemental : public Minion {

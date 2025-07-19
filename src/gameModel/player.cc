@@ -1,5 +1,6 @@
 #include <iostream> // TODO: remove debugs later.
 #include "player.h"
+#include "graveyard.h"
 
 using namespace std;
 
@@ -7,6 +8,7 @@ Player::Player(string name, int life, int magic)
     : name{name}, life{life}, magic{magic} {
     hand = make_shared<Hand>();
     board = make_shared<Board>();
+    graveyard = make_shared<Graveyard>();
 }
 
 void Player::playCard(int index) {}
@@ -18,8 +20,7 @@ void Player::shuffleDeck() {}
 void Player::drawCard() {
     if (hand->isFull() || deck->getCards().empty())
         return;
-    hand->addCard(deck->getTopCard());
-    deck->popTopCard();
+    hand->addCard(deck->popTopCard());
 
     hand->debugPrintHand(); // debug msg.
 }
@@ -37,6 +38,8 @@ const int Player::getLife() const { return life; }
 const int Player::getMagic() const { return magic; }
 const shared_ptr<Deck>& Player::getDeck() const { return deck; }
 const shared_ptr<Hand>& Player::getHand() const { return hand; }
+const shared_ptr<Board>& Player::getBoard() const { return board; }
+const shared_ptr<Graveyard>& Player::getGraveyard() const { return graveyard; }
 const vector<unique_ptr<Minion>>& Player::getMinions() const{ return minions; }
 
 void Player::setName(string name) { name = name; }

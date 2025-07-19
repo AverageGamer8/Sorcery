@@ -20,3 +20,7 @@ void Board::removeMinion(int target) {
 
     minions.erase(minions.begin() + target);
 }
+
+vector<shared_ptr<Minion>>& Board::getMinions() {
+    return minions;
+}

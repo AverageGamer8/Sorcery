@@ -3,6 +3,8 @@
 #include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
+const int MAX_ACTIVE_MINIONS = 5;
+
 TextDisplay::TextDisplay(ostream& out) : out{out} {}
 
 void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
@@ -34,7 +36,7 @@ void TextDisplay::printHelp() {
 }
 void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getBoard()->getMinions()[minion].get();
+    auto minionCard = player->getBoard()->getMinions()[minion];
 
     card_template_t cardInfo;
     // TODO: if minion has abilities, more fields.
@@ -80,28 +82,38 @@ card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
     }
 }
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
-    if (!cardTemplates.empty()) {  // Prints them horizontally, row by row.
-        int height = cardTemplates[0].size();
-        for (int line = 0; line < height; ++line) {
-            for (int card = 0; card < cardTemplates.size(); ++card) {
-                out << cardTemplates[card][line];
-            }
-            if (line < height - 1) {
-                out << endl;
-            }
+    if (cardTemplates.empty()) {
+        cout << "empty tmeplate" << endl;
+        return;
+    }
+    int height = cardTemplates[0].size();
+    for (int line = 0; line < height; ++line) {
+        for (int card = 0; card < cardTemplates.size(); ++card) {
+            out << cardTemplates[card][line];
+        }
+        if (line < height - 1) {
+            out << endl;
         }
     }
     cout << endl;
 }
+
 vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> player) {
     vector<card_template_t> cardTemplates;
-    for (int i = 0; i < player->getMinions().size(); ++i) {
-        shared_ptr<Minion> minion = player->getMinions()[i];
-        auto card = static_pointer_cast<Card>(minion);  // cast so we can use function.
-        card_template_t cardInfo = getCardInfo(card);
+
+    auto board = player->getBoard();
+    int numMinions = board->getMinions().size();
+    for (int i = 0; i < numMinions; ++i) {
+        auto minion = board->getMinions()[i];
+        card_template_t cardInfo = getCardInfo(minion);
         cardTemplates.emplace_back(cardInfo);
     }
+    for (int i = 0; i < MAX_ACTIVE_MINIONS - numMinions; ++i) {
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    }
+    return cardTemplates;
 }
+
 
 vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player) {
     vector<card_template_t> cardTemplates;
@@ -132,14 +144,13 @@ void TextDisplay::printBoard(shared_ptr<Game> game) {
     auto player2 = game->getPlayer(1);
     vector<card_template_t> row1Templates = getBoardPlayerRow(player1);
     vector<card_template_t> row2Templates = getBoardMinionsRow(player1);
-    vector<card_template_t> row3Templates = getBoardPlayerRow(player2);
-    vector<card_template_t> row4Templates = getBoardMinionsRow(player2);
+    vector<card_template_t> row3Templates = getBoardMinionsRow(player2);
+    vector<card_template_t> row4Templates = getBoardPlayerRow(player2);
 
     printTemplatesRow(row1Templates);
     printTemplatesRow(row2Templates);
     printCardTemplate(CENTRE_GRAPHIC);
+    cout << endl;
     printTemplatesRow(row3Templates);
     printTemplatesRow(row4Templates);
-
-
 }

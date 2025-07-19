@@ -10,7 +10,7 @@ using namespace std;
 Player::Player(string name, int life, int magic)
     : name{name}, life{life}, magic{magic} {
     hand = make_shared<Hand>();
-    minions = make_shared<Board>();
+    board = make_shared<Board>();
     graveyard = make_shared<Graveyard>();
 }
 
@@ -91,7 +91,7 @@ const int Player::getLife() const { return life; }
 const int Player::getMagic() const { return magic; }
 const shared_ptr<Deck>& Player::getDeck() const { return deck; }
 const shared_ptr<Hand>& Player::getHand() const { return hand; }
-const shared_ptr<Board>& Player::getBoard() const { return minions; }
+const shared_ptr<Board>& Player::getBoard() const { return board; }
 const shared_ptr<Graveyard>& Player::getGraveyard() const { return graveyard; }
 const vector<shared_ptr<Minion>>& Player::getMinions() const{ return board->getMinions(); }
 

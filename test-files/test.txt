@@ -10,3 +10,11 @@ play 1 2 3
 use 1
 use 1 2 3
 hand
+play 1
+end
+draw
+draw
+draw
+play 3
+play 3
+board

@@ -101,8 +101,8 @@ int main(int argc, char **argv) {
 
     // =============== Initialize game objects ================================
 
-    auto p1 = make_shared<Player>(player1, 0, 0);
-    auto p2 = make_shared<Player>(player2, 0, 0);
+    auto p1 = make_shared<Player>(player1Name, 0, 0);
+    auto p2 = make_shared<Player>(player2Name, 0, 0);
 
     vector<shared_ptr<Player>> players;
     players.emplace_back(move(p1));  // transfer ownership

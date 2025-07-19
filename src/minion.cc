@@ -1,11 +1,9 @@
 #include "minion.h"
-
-#include <memory>
-#include <string>
-
-#include "card.h"
 #include "game.h"
 #include "player.h"
+#include "card.h"
+#include <memory>
+#include <string>
 using namespace std;
 
 Minion::Minion(string name, string description, string type, int cost, int owner, int atk, int defence, int actions) : Card{name, description, type, cost, owner}, atk{atk}, defence{defence}, actions{actions} {}
@@ -39,11 +37,6 @@ string Minion::getType() const {
 
 int Minion::getCost() const {
     return cost;
-}
-
-void expend() {
-    // TODO
-    return;
 }
 
 // Specific Minions

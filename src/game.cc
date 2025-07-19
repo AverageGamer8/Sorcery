@@ -48,3 +48,7 @@ Trigger &Game::getTrigger(Trigger::TriggerType type) {  // easier to call, could
 int Game::getInactiveIndex() {
     return (activePlayer + 1) % 2;
 }
+
+int Game::getActiveIndex() {
+    return activePlayer;
+}

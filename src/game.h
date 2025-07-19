@@ -23,6 +23,7 @@ class Game {
     Player *getPlayer(int index);
     Player *getActivePlayer();
     int getInactiveIndex();
+    int getActiveIndex();
 
     void setActivePlayer(int player);
 

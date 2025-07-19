@@ -1,7 +1,12 @@
 Dave
 John
 help
+draw
+draw
+draw
+draw
 play 1
 play 1 2 3
 use 1
 use 1 2 3
+hand

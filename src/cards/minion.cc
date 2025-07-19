@@ -11,18 +11,17 @@ using namespace std;
 Minion::Minion(string name, string description, int cost, int owner, int atk, int defence, int actions, string type) : Card{name, description, type, cost, owner}, atk{atk}, defence{defence}, actions{actions} {}
 
 void Minion::attack() {
-    Game* g = game.get();
-    Player* opp = g->getPlayer(g->getInactiveIndex());
+    Player* opp = game->getPlayer(game->getInactiveIndex());
 
-    opp->life -= atk;
+    opp->setLife(opp->getLife() - atk);
 }
 
 void Minion::attack(int target) {
-    Game* g = game.get();
-    Player* opp = g->getPlayer(g->getInactiveIndex());
+    Player* opp = game->getPlayer(game->getInactiveIndex());
 
-    opp->getMinions()[target - 1].get()->defence -= atk;
-    defence -= opp->getMinions()[target - 1].get()->atk;
+    shared_ptr<Minion> oppMinion = opp->getBoard()->getMinion(target - 1);
+    oppMinion->setDefence(oppMinion->getDefence() - atk);
+    defence -= oppMinion->getAttack();
 }
 
 void Minion::setDefence(int defence) {

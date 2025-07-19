@@ -34,7 +34,7 @@ void TextDisplay::printHelp() {
 }
 void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getMinions()[minion].get();
+    auto minionCard = player->getBoard()->getMinions()[minion].get();
 
     card_template_t cardInfo;
     // TODO: if minion has abilities, more fields.

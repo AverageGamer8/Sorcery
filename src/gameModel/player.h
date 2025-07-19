@@ -20,10 +20,9 @@ class Player {
     // TODO: add more fields.
     shared_ptr<Hand> hand;
     shared_ptr<Deck> deck;
-    shared_ptr<Board> board;
+    shared_ptr<Board> minions;
     shared_ptr<Graveyard> graveyard;
 
-    friend class Minion;
 
     bool hasMagicCost(int cost) const;
 

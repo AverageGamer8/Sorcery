@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
     string deck1FilePath;
     string deck2FilePath;
     string initFile;
-    bool graphicsEnabled;
-    bool testingEnabled;
+    bool graphicsEnabled = false;
+    bool testingEnabled = false;
 
     // =================== Argument parsing ===================================
 
@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
                 continue;
             }
-        } else if (command.substr(0, 4) == "play") {
+        } else if (command.substr(0, 4) == "play") { // TODO: testing allows you to use spell,activate without magic, set to 0.
             stringstream cmd{command};
             string token;
             vector<string> tokens;

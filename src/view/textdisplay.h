@@ -14,6 +14,7 @@ class TextDisplay : public Display {
     ostream& out;
 
     void printCardTemplate(const card_template_t& cardInfo);
+    void printTemplatesRow(vector<card_template_t> cardTemplates) const;
 
    public:
     TextDisplay(std::ostream& out);

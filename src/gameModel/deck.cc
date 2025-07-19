@@ -104,5 +104,6 @@ shared_ptr<Card>& Deck::getTopCard() {
 }
 
 void Deck::popTopCard() {
+    if (cards.empty()) return; // TODO: exception.
     cards.pop_back();
 }

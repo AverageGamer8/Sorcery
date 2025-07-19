@@ -17,13 +17,12 @@ class Player {
     int life;
     int magic;
     // TODO: add more fields.
-    vector<unique_ptr<Minion>> minions;
     shared_ptr<Hand> hand;
     shared_ptr<Deck> deck;
     shared_ptr<Board> board;
 
     friend class Minion;
-    
+
     bool hasMagicCost(int cost) const;
 
    public:
@@ -45,6 +44,8 @@ class Player {
     void minionAttack(int index, int target);
     bool isAlive();
     bool isHandFull();  // TODO PUT IN HAND class
+    bool hasRitual() const;
+    bool isGraveyardEmpty() const;
 
     // ================== Getters and Setters =====================
     const string getName() const;
@@ -52,7 +53,7 @@ class Player {
     const int getMagic() const;
     const shared_ptr<Deck>& getDeck() const;
     const shared_ptr<Hand>& getHand() const;
-    const vector<unique_ptr<Minion>>& getMinions() const;
+    const vector<unique_ptr<Minion>>& getBoard() const;
 
     void setName(string name);
     void setLife(int life);

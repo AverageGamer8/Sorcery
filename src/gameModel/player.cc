@@ -2,7 +2,7 @@
 
 #include <iostream>  // TODO: remove debugs later.
 
-#include "../cards/spell.h" // TODO: investigate includes for this. should it have it?
+#include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
 
 using namespace std;
 
@@ -19,7 +19,7 @@ void Player::playCard(int index) {
     auto card = hand->getCardAtIndex(index);
     int cost = card->getCost();
 
-    if (!hasMagicCost(cost)) {
+    if (!hasMagicCost(cost)) {  // TODO: testing allows you to use spell,activate without magic, set to 0.
         // TODO: exception: not enough magic.
     }
     if (card->getType() == "Minion") {
@@ -73,6 +73,14 @@ void Player::minionAttack(int index, int target) {}
 
 bool Player::isAlive() { return life <= 0; }
 bool Player::isHandFull() { return hand->isFull(); }
+bool Player::hasRitual() const {
+    //  return !(ritual == nullptr);  //TODO ritual.
+    return false;
+}
+bool Player::isGraveyardEmpty() const {
+    // TODO graveyard
+    return false;
+}
 
 // =============== Getters and Setters ==============
 

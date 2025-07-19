@@ -10,7 +10,7 @@
 class Player;
 
 class Game {
-    std::vector<std::unique_ptr<Player>> players;
+    std::vector<std::shared_ptr<Player>> players;
     int activePlayer;
 
     Trigger turnStart;
@@ -19,9 +19,9 @@ class Game {
     Trigger minionExit;
 
    public:
-    Game(std::vector<std::unique_ptr<Player>> players);
-    Player *getPlayer(int index);
-    Player *getActivePlayer();
+    Game(std::vector<std::shared_ptr<Player>> players);
+    std::shared_ptr<Player> getPlayer(int index);
+    std::shared_ptr<Player> getActivePlayer();
     int getInactiveIndex();
     int getActiveIndex();
 

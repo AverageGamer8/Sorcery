@@ -57,7 +57,7 @@ class Player {
     const shared_ptr<Hand>& getHand() const;
     const shared_ptr<Board>& getBoard() const;
     const shared_ptr<Graveyard>& getGraveyard() const;
-    const vector<unique_ptr<Minion>>& getMinions() const;
+    const vector<shared_ptr<Minion>>& getMinions() const;
 
     void setName(string name);
     void setLife(int life);

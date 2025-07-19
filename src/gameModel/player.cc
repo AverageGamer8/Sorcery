@@ -62,7 +62,7 @@ void Player::discardCard(int index) { hand->discardCard(index); }
 void Player::shuffleDeck() { deck->shuffleDeck(); }
 
 void Player::drawCard() {
-    hand->addCard(deck->getTopCard());
+    hand->addCard(deck->popTopCard());
     deck->popTopCard();
 
     hand->debugPrintHand();  // debug msg.
@@ -81,7 +81,7 @@ bool Player::hasRitual() const {
 }
 bool Player::isGraveyardEmpty() const {
     // TODO graveyard
-    return false;
+    return true;
 }
 
 // =============== Getters and Setters ==============
@@ -93,7 +93,7 @@ const shared_ptr<Deck>& Player::getDeck() const { return deck; }
 const shared_ptr<Hand>& Player::getHand() const { return hand; }
 const shared_ptr<Board>& Player::getBoard() const { return board; }
 const shared_ptr<Graveyard>& Player::getGraveyard() const { return graveyard; }
-const vector<unique_ptr<Minion>>& Player::getMinions() const{ return minions; }
+const vector<shared_ptr<Minion>>& Player::getMinions() const{ return board->getMinions(); }
 
 void Player::setName(string name) { name = name; }
 void Player::setLife(int life) { life = life; }

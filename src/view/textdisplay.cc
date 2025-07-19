@@ -55,28 +55,30 @@ void TextDisplay::printHand(shared_ptr<Game> game) {
     vector<card_template_t> cardTemplates;
     for (int i = 0; i < hand->getSize(); ++i) {
         auto card = hand->getCardAtIndex(i);
-        card_template_t cardInfo;
-
-        if (card->getType() == "Minion") {
-            auto minion = static_cast<Minion*>(card.get());
-            cardInfo = display_minion_no_ability(  // TODO other abilities.
-                minion->getName(),
-                minion->getCost(),
-                minion->getAttack(),
-                minion->getDefence());
-        } else if (card->getType() == "Spell") {
-            auto spell = static_cast<Spell*>(card.get());
-            cardInfo = display_spell(
-                spell->getName(),
-                spell->getCost(),
-                spell->getDesc());
-        } else {  // TODO: Other cards
-            cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
-        }
+        card_template_t cardInfo = getCardInfo(card);
+        cardTemplates.emplace_back(cardInfo);
     }
     printTemplatesRow(cardTemplates);
 }
 
+card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
+    if (card->getType() == "Minion") {
+        auto minion = static_cast<Minion*>(card.get());
+        return display_minion_no_ability(  // TODO other abilities.
+            minion->getName(),
+            minion->getCost(),
+            minion->getAttack(),
+            minion->getDefence());
+    } else if (card->getType() == "Spell") {
+        auto spell = static_cast<Spell*>(card.get());
+        return display_spell(
+            spell->getName(),
+            spell->getCost(),
+            spell->getDesc());
+    } else {  // TODO: Other cards
+        return CARD_TEMPLATE_BORDER;
+    }
+}
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
     if (!cardTemplates.empty()) {  // Prints them horizontally, row by row.
         int height = cardTemplates[0].size();
@@ -91,32 +93,53 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
     }
     cout << endl;
 }
+vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> player) {
+    vector<card_template_t> cardTemplates;
+    for (int i = 0; i < player->getMinions().size(); ++i) {
+        shared_ptr<Minion> minion = player->getMinions()[i];
+        auto card = static_pointer_cast<Card>(minion);  // cast so we can use function.
+        card_template_t cardInfo = getCardInfo(card);
+        cardTemplates.emplace_back(cardInfo);
+    }
+}
 
-void TextDisplay::printBoard(shared_ptr<Game> game) {
-    cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
-    vector<card_template_t> row1Templates;
-    auto player1 = game->getPlayer(0);
-    auto player2 = game->getPlayer(1);
-
-    if (player1->hasRitual()) {
+vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player) {
+    vector<card_template_t> cardTemplates;
+    if (player->hasRitual()) {
         // card_template_t cardInfo = display_ritual()
     } else {
-        row1Templates.emplace_back(CARD_TEMPLATE_BORDER);
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
     }
-    row1Templates.emplace_back(CARD_TEMPLATE_BORDER);
+    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
     card_template_t player1Info = display_player_card(
         0,
-        player1->getName(),
-        player1->getLife(),
-        player1->getMagic());
-    row1Templates.emplace_back(player1Info);
-    row1Templates.emplace_back(CARD_TEMPLATE_BORDER);
-    if (!player1->isGraveyardEmpty()) {
+        player->getName(),
+        player->getLife(),
+        player->getMagic());
+    cardTemplates.emplace_back(player1Info);
+    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    if (!player->isGraveyardEmpty()) {
         // TODO: other minion abilities
     } else {
-        row1Templates.emplace_back(CARD_TEMPLATE_BORDER);
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
     }
-    printTemplatesRow(row1Templates);
+    return cardTemplates;
+}
 
+void TextDisplay::printBoard(shared_ptr<Game> game) {
+    // cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    auto player1 = game->getPlayer(0);
+    auto player2 = game->getPlayer(1);
+    vector<card_template_t> row1Templates = getBoardPlayerRow(player1);
+    vector<card_template_t> row2Templates = getBoardMinionsRow(player1);
+    vector<card_template_t> row3Templates = getBoardPlayerRow(player2);
+    vector<card_template_t> row4Templates = getBoardMinionsRow(player2);
+
+    printTemplatesRow(row1Templates);
+    printTemplatesRow(row2Templates);
     printCardTemplate(CENTRE_GRAPHIC);
+    printTemplatesRow(row3Templates);
+    printTemplatesRow(row4Templates);
+
+
 }

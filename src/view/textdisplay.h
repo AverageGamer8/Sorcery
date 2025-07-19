@@ -15,6 +15,9 @@ class TextDisplay : public Display {
 
     void printCardTemplate(const card_template_t& cardInfo);
     void printTemplatesRow(vector<card_template_t> cardTemplates) const;
+    card_template_t getCardInfo(shared_ptr<Card> card) const;
+    vector<card_template_t> getBoardMinionsRow(shared_ptr<Player> player);
+    vector<card_template_t> getBoardPlayerRow(shared_ptr<Player> player);
 
    public:
     TextDisplay(std::ostream& out);

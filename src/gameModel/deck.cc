@@ -100,7 +100,7 @@ vector<shared_ptr<Card>>& Deck::getCards() {
 }
 
 shared_ptr<Card> Deck::popTopCard() {
-    if (cards.empty()) return; // TODO: exception.
+    if (cards.empty()) return nullptr; // TODO: exception.
     auto card = cards.back();
     cards.pop_back();
     return card;

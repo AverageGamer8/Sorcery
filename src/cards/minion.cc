@@ -21,8 +21,8 @@ void Minion::attack(int target) {
     Game* g = game.get();
     Player* opp = g->getPlayer(g->getInactiveIndex());
 
-    opp->minions[target - 1].get()->defence -= atk;
-    defence -= opp->minions[target - 1].get()->atk;
+    opp->getMinions()[target - 1].get()->defence -= atk;
+    defence -= opp->getMinions()[target - 1].get()->atk;
 }
 
 void Minion::setDefence(int defence) {

@@ -3,9 +3,6 @@
 #include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
-// red: attack
-// blue: defence, magic
-// green: player life, ritual charges
 const int ATK = Xwindow::Red;
 const int DEF = Xwindow::Blue, MP = Xwindow::Blue;
 const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
@@ -81,6 +78,11 @@ void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
     xw.drawString(x + offset, y + (cHeight * 0.4) + offset, spell->getDesc());
 }
 
+void GraphicsDisplay::printSorcery(int x, int y) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, "SORCERY");
+}
+
 void GraphicsDisplay::printGame(shared_ptr<Game> game) {
     xw.drawString(0, 0, "GraphicsDisplay: Printing the gameeee!");
 }
@@ -110,7 +112,7 @@ void GraphicsDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     // might need get base minion method???
     printMinion(0, 0, minionCard);
     for (int i = 0; i < 100; i++) { // need individual enchantments
-        
+
     }
     // TODO: if minion has abilities, more fields.
     // make sure to print enchantments as well

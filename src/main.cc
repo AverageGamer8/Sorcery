@@ -131,7 +131,13 @@ int main(int argc, char **argv) {
 
     while (game->getWinner() == -1) {
         string command;
-        getline(cin, command);
+        if (init) {
+            if (!getline(init, command)) {  // First, get commands from initFile, if any.
+                getline(cin, command);
+            }
+        } else {
+            getline(cin, command);
+        }
         cout << "DEBUG: received command: " << command << endl;
         if (command == "help") {
             controller->help();
@@ -156,7 +162,7 @@ int main(int argc, char **argv) {
             string token;
             vector<string> tokens;
 
-            while (cmd >> token) {
+            while (cmd >> token) { // Reading in all the args
                 tokens.emplace_back(token);
             }
             int args = tokens.size() - 1;
@@ -203,7 +209,7 @@ int main(int argc, char **argv) {
                 int card = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
                 int minion = stoi(tokens[3]);
-                cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
+                // cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
                 controller->play(card, player, minion);
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;

@@ -5,19 +5,23 @@
 #include <vector>
 
 #include "../cards/minion.h"
+#include "../cards/ritual.h"
 using namespace std;
 
 const int MAX_BOARD_SIZE = 5;
 
 class Board {
-    std::vector<std::shared_ptr<Minion>> minions;
+    vector<shared_ptr<Minion>> minions;
+    shared_ptr<Ritual> ritual;
 
    public:
+    Board(shared_ptr<Ritual> ritual) : ritual{ritual} {}
     bool isFull();
     void addMinion(std::shared_ptr<Minion> m);
     void removeMinion(int target);
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);
+    void setRitual(shared_ptr<Ritual> ritual);
 };
 
 #endif

@@ -28,3 +28,7 @@ vector<shared_ptr<Minion>>& Board::getMinions() {
 shared_ptr<Minion> Board::getMinion(int index) {
     return minions[index];
 }
+
+void Board::setRitual(shared_ptr<Ritual> ritual) {
+    this->ritual = ritual;
+}

@@ -28,9 +28,28 @@ void Banish::expend() {
     // TODO: Handle exception
     return;
 }
+void Banish::expend(shared_ptr<Minion> minion) {
+    minion->setDefence(0);
+}
+void Banish::expend(shared_ptr<Ritual> ritual) {
+    game->getPlayer(game->getActiveIndex())->getBoard()->setRitual(nullptr);
+}
 
 Unsummon::Unsummon(int owner) : Spell{"Unsummon", "Return target minion to its owner's hand", 1, owner} {}
 void Unsummon::expend() {
+    // TODO: Handle exception
+    return;
+}
+void Unsummon::expend(shared_ptr<Minion> minion) {
+    auto curr = game->getPlayer(game->getActiveIndex());
+    if (curr->getHand()->isFull()) {
+        // TODO: Handle exception
+        return;
+    }
+
+    curr->getHand()->addCard(minion);
+}
+void Unsummon::expend(shared_ptr<Ritual> ritual) {
     // TODO: Handle exception
     return;
 }
@@ -40,12 +59,28 @@ void Recharge::expend() {
     // TODO: Handle exception
     return;
 }
+void Recharge::expend(shared_ptr<Minion> minion) {
+    // TODO: Handle exception
+    return;
+}
+void Recharge::expend(shared_ptr<Ritual> ritual) {
+    ritual->setCharges(ritual->getCharges() + 3);
+}
 
 Disenchant::Disenchant(int owner) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner} {}
 void Disenchant::expend() {
     // TODO: Handle exception
     return;
 }
+void Disenchant::expend(shared_ptr<Minion> minion) {
+    // TODO: Destroy top enchantment on minion
+    return;
+}
+void Disenchant::expend(shared_ptr<Ritual> ritual) {
+    // TODO: Handle exception
+    return;
+}
+
 
 RaiseDead::RaiseDead(int owner) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner} {}
 void RaiseDead::expend() {
@@ -63,6 +98,14 @@ void RaiseDead::expend() {
     m->setDefence(1);
     curr->getBoard()->addMinion(m);
 }
+void RaiseDead::expend(shared_ptr<Minion> minion) {
+    // TODO: Handle exception
+    return;
+}
+void RaiseDead::expend(shared_ptr<Ritual> ritual) {
+    // TODO: Handle exception
+    return;
+}
 
 Blizzard::Blizzard(int owner) : Spell{"Blizzard", "Deal 2 damage to all minions", 3, owner} {}
 void Blizzard::expend() {
@@ -74,4 +117,12 @@ void Blizzard::expend() {
     for (auto& minion : opp->getBoard()->getMinions()) {
         minion->setDefence(minion->getDefence() - 2);
     }
+}
+void Blizzard::expend(shared_ptr<Minion> minion) {
+    // TODO: Handle exception
+    return;
+}
+void Blizzard::expend(shared_ptr<Ritual> ritual) {
+    // TODO: Handle exception
+    return;
 }

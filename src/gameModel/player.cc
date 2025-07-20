@@ -7,7 +7,7 @@ using namespace std;
 Player::Player(string name, int life, int magic)
     : name{name}, life{life}, magic{magic} {
     hand = make_shared<Hand>();
-    minions = make_shared<Board>();
+    minions = make_shared<Board>(nullptr);
     graveyard = make_shared<Graveyard>();
 }
 

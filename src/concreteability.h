@@ -6,6 +6,7 @@ THIS IS AN EXAMPLE USAGE. DELETE IN SUBMISSION!
 #define CONCRETEABILITY_H
 
 #include <iostream>
+#include <memory>
 
 #include "triggeredability.h"
 
@@ -13,7 +14,7 @@ class ConcreteAbility : public TriggeredAbility {
     int ownerPlayerId;
 
    public:
-    ConcreteAbility(Game* game, int ownerPlayerId)
+    ConcreteAbility(std::shared_ptr<Game> game, int ownerPlayerId)
         : TriggeredAbility(game), ownerPlayerId(ownerPlayerId) {}
 
     void activate() override {

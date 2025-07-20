@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
     // ConcreteAbility is an example class to use it.
     // this stuff should probably be done in the cards.
     game->setActivePlayer(0);
-    auto ta = make_shared<ConcreteAbility>(game.get(), 0);
+    auto ta = make_shared<ConcreteAbility>(game, 0);
 
     // attaching the trigger to START TURN events
     game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);

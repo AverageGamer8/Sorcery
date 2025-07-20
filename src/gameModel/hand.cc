@@ -19,7 +19,13 @@ void Hand::addCard(shared_ptr<Card> card) {
     cards.emplace_back(card);
 }
 
-void Hand::discardCard(int index) { cards.erase(cards.begin() + index); }
+void Hand::discardCard(int index) {
+    if (index >= cards.size()) {
+        cout << "DEBUG: (Hand) Can't discard, out of range." << endl;
+        return;
+    }
+    cards.erase(cards.begin() + index);
+}
 
 // ============== getters & setters ==========
 

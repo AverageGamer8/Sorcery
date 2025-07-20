@@ -28,7 +28,7 @@ void Player::playCard(int index) {
         auto minion = static_pointer_cast<Minion>(card);
         board->addMinion(minion);
     } else if (card->getType() == "Spell") {
-        auto spell = static_pointer_cast<Spell>(card);
+        // auto spell = static_pointer_cast<Spell>(card);
         // TODO: Call spell->expend.
     } else if (card->getType() == "Ritual") {
         // TODO ritual.

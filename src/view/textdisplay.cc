@@ -51,7 +51,7 @@ void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
 }
 
 void TextDisplay::printHand(shared_ptr<Game> game) {
-    // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
+    cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
@@ -91,7 +91,7 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
         cout << "DEBUG: TD: empty template" << endl; // todo exception
         return;
     }
-    int height = cardTemplates[1].size(); // NOTE: take second element of templates vector as height of card!
+    int height = cardTemplates[0].size(); // NOTE: take first element of templates vector as height of card!
     for (int line = 0; line < height; ++line) {
         for (int card = 0; card < cardTemplates.size(); ++card) {
             out << cardTemplates[card][line];

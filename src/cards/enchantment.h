@@ -8,18 +8,19 @@
 using namespace std;
 
 class Enchantment: public Minion {
+   protected:
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
 
    public:
-    Enchantment(string name, string description, int cost, int owner, int atk, int def, int actions, string atkDesc = "", string defDesc = "");
-    virtual void attach(shared_ptr<Minion> target) override;
-    virtual void attack() override;
-    virtual void attack(int target) override;
-    virtual void activate() override;
-    virtual void activate(int target) override;
-    virtual void restoreAction() override;
-    virtual void getHit(int dmg) override;
+    Enchantment(string name, string description, string type, int cost, int owner, int atk, int def, int actions, string atkDesc = "", string defDesc = "");
+    virtual void attach(shared_ptr<Minion> target);
+    virtual void attack();
+    virtual void attack(int target);
+    virtual void activate();
+    virtual void activate(int target);
+    virtual void restoreAction();
+    virtual void getHit(int dmg);
     
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
@@ -29,8 +30,8 @@ class Enchantment: public Minion {
 
     int getAttack() const;
     int getDefence() const;
-    string& getAtkDesc() const;
-    string& getDefDesc() const;
+    string getAtkDesc() const;
+    string getDefDesc() const;
 };
 
 class GiantStrength: public Enchantment {

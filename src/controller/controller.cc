@@ -34,8 +34,7 @@ void Controller::attack(int attackingMinion, int receivingMinion) {
 }
 
 void Controller::play(int card) {
-    auto player = game.get()->getActivePlayer();
-    player->playCard(card);
+    game->playCard(card);
 }
 
 void Controller::play(int card, int onPlayer, int minion) {

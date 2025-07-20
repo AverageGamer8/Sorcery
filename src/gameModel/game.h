@@ -12,6 +12,7 @@ class Player;
 class Game {
     std::vector<std::shared_ptr<Player>> players;
     int activePlayer;
+    int winningPlayer = -1;
 
     Trigger turnStart;
     Trigger turnEnd;
@@ -23,14 +24,17 @@ class Game {
 
     void setActivePlayer(int player);
 
-    void battleMinion(int atk, int receivingMinion);
+    void battleMinion(int atk, int receivingMinion); // called by minion
+    void playCard(int card); // TODO: wrapper for player
 
     void startTurn();  // TODO actual game handling
     void endTurn();
     // void addMinion();  // should we have it in player or game? easy to trigger in game.
     // void destroyMinion();
 
-    int getWinner();
+
+    void setWinner(int winner);
+    int getWinner() const;
 
     Trigger &getTrigger(Trigger::TriggerType type);
     std::shared_ptr<Player> getPlayer(int index);

@@ -1,6 +1,6 @@
 #include "minion.h"
 
-#include <iostream> // todo remove debug
+#include <iostream>  // todo remove debug
 #include <memory>
 #include <string>
 
@@ -9,14 +9,16 @@
 #include "card.h"
 using namespace std;
 
-Minion::Minion(string name, string description, int cost, int owner,  shared_ptr<Game> game, int atk, int defence, int actions, string type)
+Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type)
     : Card{name, description, type, cost, owner, game}, atk{atk}, defence{defence}, actions{actions} {}
 
 void Minion::attack() {
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
-    cout << "life " << opp->getLife();
     opp->setLife(opp->getLife() - atk);
-    cout << "life " << opp->getLife();
+    if (opp->getLife() <= 0) {
+        opp->setLife(0);
+        game->setWinner(game->getActiveIndex());
+    }
 }
 
 void Minion::attack(int target) {

@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
     auto ta = make_shared<ConcreteAbility>(game.get(), 0);
 
     // attaching the trigger to START TURN events
-    game->getTrigger(Trigger::TriggerType::MinionExit).attach(ta);
+    game->getTrigger(Trigger::TriggerType::MinionEnter).attach(ta);
 
     game->startTurn();  // activates here
     game->endTurn();
@@ -300,4 +300,7 @@ int main(int argc, char **argv) {
             continue;
         }
     }
+    cout << "YOU DIE: " << game->getPlayer((game->getWinner() + 1) % 2)->getName() 
+        << ". Congratulations " << game->getPlayer(game->getWinner())->getName() 
+        << "! You are the winner!" << endl;
 }

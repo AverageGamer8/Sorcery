@@ -26,7 +26,8 @@ void Game::endTurn() {
 void Game::battleMinion(int atk, int receivingMinion) {
     shared_ptr<Player> opp = getInactivePlayer();
     shared_ptr<Minion> oppMinion = opp->getBoard()->getMinion(receivingMinion);
-    cout << "DEBUG: Game: Attacking " << oppMinion->getName() << ". Their HP: " << oppMinion->getDefence() << endl;;
+    cout << "DEBUG: Game: Attacking " << oppMinion->getName() << ". Their HP: " << oppMinion->getDefence() << endl;
+    ;
     oppMinion->setDefence(oppMinion->getDefence() - atk);
     if (oppMinion->getDefence() <= 0) {
         oppMinion->setDefence(0);
@@ -34,15 +35,24 @@ void Game::battleMinion(int atk, int receivingMinion) {
         opp->getGraveyard()->addMinion(oppMinion);
         minionExit.notifyObservers();
     }
-    cout << "DEBUG: Game: After attack - Opponent: "  << oppMinion->getName() << ". HP: " << oppMinion->getDefence() << endl;
+    cout << "DEBUG: Game: After attack - Opponent: " << oppMinion->getName() << ". HP: " << oppMinion->getDefence() << endl;
+}
+void Game::playCard(int card) { // Wrapper to notify MinionEnter observers
+    auto player = getActivePlayer();
+    auto cardPtr = player->getHand()->getCardAtIndex(card);
+    if (cardPtr->getType() == "Minion") {
+        minionEnter.notifyObservers();
+    }
+    player->playCard(card);
 }
 
 void Game::setActivePlayer(int player) { activePlayer = player; }
-int Game::getWinner() { return -1; }  // TODO
+void Game::setWinner(int winner) { winningPlayer = winner; }
+int Game::getWinner() const { return winningPlayer; }  // TODO
 
 shared_ptr<Player> Game::getPlayer(int index) { return players[index]; }
 shared_ptr<Player> Game::getActivePlayer() { return getPlayer(activePlayer); }
-shared_ptr<Player> Game::getInactivePlayer() {return getPlayer(getInactiveIndex());}
+shared_ptr<Player> Game::getInactivePlayer() { return getPlayer(getInactiveIndex()); }
 
 int Game::getInactiveIndex() {
     return (activePlayer + 1) % 2;

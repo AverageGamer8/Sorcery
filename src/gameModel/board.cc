@@ -9,8 +9,11 @@ bool Board::isFull() {
 }
 
 void Board::addMinion(std::shared_ptr<Minion> m) {
-    if (!isFull())
-        minions.emplace_back(m);
+    if (isFull() && m) {
+        return;
+    }
+
+    minions.emplace_back(m);
 }
 
 void Board::removeMinion(int target) {

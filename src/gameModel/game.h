@@ -27,10 +27,12 @@ class Game {
 
     void setActivePlayer(int player);
 
+    void battleMinion(int attackingMinion, int receivingMinion);
+
     void startTurn();  // TODO actual game handling
     void endTurn();
-    void addMinion();  // should we have it in player or game? easy to trigger in game.
-    void destroyMinion();
+    // void addMinion();  // should we have it in player or game? easy to trigger in game.
+    // void destroyMinion();
 
     int getWinner();
 

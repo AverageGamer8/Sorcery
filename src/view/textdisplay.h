@@ -18,6 +18,8 @@ class TextDisplay : public Display {
     card_template_t getCardInfo(shared_ptr<Card> card) const;
     vector<card_template_t> getBoardMinionsRow(shared_ptr<Player> player);
     vector<card_template_t> getBoardPlayerRow(shared_ptr<Player> player);
+    void printHorizontalBorder() const;
+    card_template_t buildVerticalCardBorder() const;
 
    public:
     TextDisplay(std::ostream& out);

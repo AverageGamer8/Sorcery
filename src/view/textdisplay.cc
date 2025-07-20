@@ -4,6 +4,7 @@
 using namespace std;
 
 const int MAX_ACTIVE_MINIONS = 5;
+const int HORIZONTAL_LINE_WIDTH = 165;
 
 TextDisplay::TextDisplay(ostream& out) : out{out} {}
 
@@ -83,10 +84,10 @@ card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
 }
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
     if (cardTemplates.empty()) {
-        cout << "empty tmeplate" << endl;
+        cout << "DEBUG: TD: empty template" << endl; // todo exception
         return;
     }
-    int height = cardTemplates[0].size();
+    int height = cardTemplates[1].size(); // NOTE: take second element of templates vector as height of card!
     for (int line = 0; line < height; ++line) {
         for (int card = 0; card < cardTemplates.size(); ++card) {
             out << cardTemplates[card][line];
@@ -114,7 +115,6 @@ vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> playe
     return cardTemplates;
 }
 
-
 vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player) {
     vector<card_template_t> cardTemplates;
     if (player->hasRitual()) {
@@ -138,14 +138,41 @@ vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player
     return cardTemplates;
 }
 
+void TextDisplay::printHorizontalBorder() const {
+    for (int i = 0; i < HORIZONTAL_LINE_WIDTH; i++) {
+        cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+    }
+}
+card_template_t TextDisplay::buildVerticalCardBorder() const {
+    card_template_t col;
+    int cardHeight = CARD_TEMPLATE_EMPTY.size();
+    for (int i = 0; i < cardHeight; i++) {
+        col.emplace_back(EXTERNAL_BORDER_CHAR_UP_DOWN);
+    }
+    return col;
+}
 void TextDisplay::printBoard(shared_ptr<Game> game) {
-    // cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+    cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+    printHorizontalBorder();
+    cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT;
+    cout << endl;
+
+    card_template_t verticalBorder = buildVerticalCardBorder();
+
     auto player1 = game->getPlayer(0);
     auto player2 = game->getPlayer(1);
     vector<card_template_t> row1Templates = getBoardPlayerRow(player1);
     vector<card_template_t> row2Templates = getBoardMinionsRow(player1);
     vector<card_template_t> row3Templates = getBoardMinionsRow(player2);
     vector<card_template_t> row4Templates = getBoardPlayerRow(player2);
+    row1Templates.insert(row1Templates.begin(), verticalBorder);
+    row1Templates.emplace_back(verticalBorder);
+    row2Templates.insert(row2Templates.begin(), verticalBorder);
+    row2Templates.emplace_back(verticalBorder);
+    row3Templates.insert(row3Templates.begin(), verticalBorder);
+    row3Templates.emplace_back(verticalBorder);
+    row4Templates.insert(row4Templates.begin(), verticalBorder);
+    row4Templates.emplace_back(verticalBorder);
 
     printTemplatesRow(row1Templates);
     printTemplatesRow(row2Templates);
@@ -153,4 +180,9 @@ void TextDisplay::printBoard(shared_ptr<Game> game) {
     cout << endl;
     printTemplatesRow(row3Templates);
     printTemplatesRow(row4Templates);
+
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+    printHorizontalBorder();
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT;
+    cout << endl;
 }

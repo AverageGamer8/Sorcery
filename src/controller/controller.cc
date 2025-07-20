@@ -1,4 +1,5 @@
 #include "controller.h"
+#include <iostream> // TODO remove debug
 
 Controller::Controller(std::shared_ptr<Game> game,
                        std::shared_ptr<Viewer> viewer)
@@ -22,11 +23,13 @@ void Controller::discard(int card) {
 
 void Controller::attack(int attackingMinion) {
     auto player = game.get()->getActivePlayer();
-    player->minionAttack(attackingMinion, 0);  // 0, indicates attacks player? TODO: could have another function for clarity.
+    player->minionAttack(attackingMinion);  // attack player.
 }
 
 void Controller::attack(int attackingMinion, int receivingMinion) {
     auto player = game.get()->getActivePlayer();
+    auto player2 = game.get()->getInactivePlayer();
+    
     player->minionAttack(attackingMinion, receivingMinion);
 }
 

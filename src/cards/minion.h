@@ -12,7 +12,7 @@ class Minion : public Card {
     int actions;
 
    public:
-    Minion(string name, string description, int cost, int owner, int atk, int defence, int actions, string type = "Minion");
+    Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type = "Minion");
     void attack();
     void attack(int target);
     void activate();
@@ -33,35 +33,35 @@ class Minion : public Card {
 
 class AirElemental : public Minion {
    public:
-    AirElemental(int owner);
+    AirElemental(int owner, shared_ptr<Game> game);
 };
 class EarthElemental : public Minion {
    public:
-    EarthElemental(int owner);
+    EarthElemental(int owner, shared_ptr<Game> game);
 };
 class BoneGolem : public Minion {
    public:
-    BoneGolem(int owner);
+    BoneGolem(int owner, shared_ptr<Game> game);
 };
 class FireElemental : public Minion {
    public:
-    FireElemental(int owner);
+    FireElemental(int owner, shared_ptr<Game> game);
 };
 class PotionSeller : public Minion {
    public:
-    PotionSeller(int owner);
+    PotionSeller(int owner, shared_ptr<Game> game);
 };
 class NovicePyromancer : public Minion {
    public:
-    NovicePyromancer(int owner);
+    NovicePyromancer(int owner, shared_ptr<Game> game);
 };
 class ApprenticeSummoner : public Minion {
    public:
-    ApprenticeSummoner(int owner);
+    ApprenticeSummoner(int owner, shared_ptr<Game> game);
 };
 class MasterSummoner : public Minion {
    public:
-    MasterSummoner(int owner);
+    MasterSummoner(int owner, shared_ptr<Game> game);
 };
 
 #endif

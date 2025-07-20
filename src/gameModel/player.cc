@@ -62,16 +62,36 @@ void Player::discardCard(int index) { hand->discardCard(index); }
 void Player::shuffleDeck() { deck->shuffleDeck(); }
 
 void Player::drawCard() {
-    hand->addCard(deck->popTopCard());
+    auto card = deck->popTopCard();
+    if (!card) {
+        cout << "DEBUG: Player: Deck is out of cards." << endl;
+        return;
+    }
+    hand->addCard(card);
     deck->popTopCard();
 
-    hand->debugPrintHand();  // debug msg.
+    // hand->debugPrintHand();  // debug msg.
 }
 void Player::activateCard(int index) {}
 void Player::activateCard(int index, int player) {}
 void Player::activateCard(int index, int player, int minion) {}
 
-void Player::minionAttack(int index, int target) {}
+void Player::minionAttack(int index) { // attacks player
+    auto minion = board->getMinion(index);
+    if (!minion) {
+        cout << "DEBUG: Player: index out of bounds of board." << endl;
+        return;
+    }
+    minion->attack();
+}
+void Player::minionAttack(int index, int target) {
+    auto minion = board->getMinion(index);
+    if (!minion) {
+        cout << "DEBUG: Player: index out of bounds of board." << endl;
+        return;
+    }
+    minion->attack(target);
+}
 
 bool Player::isAlive() { return life <= 0; }
 bool Player::isHandFull() { return hand->isFull(); }
@@ -95,7 +115,7 @@ const shared_ptr<Board>& Player::getBoard() const { return board; }
 const shared_ptr<Graveyard>& Player::getGraveyard() const { return graveyard; }
 const vector<shared_ptr<Minion>>& Player::getMinions() const{ return board->getMinions(); }
 
-void Player::setName(string name) { name = name; }
-void Player::setLife(int life) { life = life; }
-void Player::setMagic(int magic) { magic = magic; }
+void Player::setName(string name) { this->name = name; }
+void Player::setLife(int life) { this->life = life; }
+void Player::setMagic(int magic) { this->magic = magic; }
 void Player::setDeck(shared_ptr<Deck> deck) { this->deck = deck; }

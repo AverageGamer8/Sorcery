@@ -26,5 +26,6 @@ vector<shared_ptr<Minion>>& Board::getMinions() {
 }
 
 shared_ptr<Minion> Board::getMinion(int index) {
+    if (index >= minions.size()) return nullptr;
     return minions[index];
 }

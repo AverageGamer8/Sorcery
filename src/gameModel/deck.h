@@ -7,6 +7,7 @@
 using namespace std;
 
 class Card;
+class Game;
 
 class Deck {
     int owner;
@@ -15,7 +16,7 @@ class Deck {
 
     public:
         Deck(int player);
-        void loadDeck(ifstream& inf);
+        void loadDeck(ifstream& inf, shared_ptr<Game> game);
         void shuffleDeck();
         vector<shared_ptr<Card>>& getCards();
         shared_ptr<Card> popTopCard();

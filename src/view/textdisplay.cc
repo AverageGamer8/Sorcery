@@ -37,7 +37,7 @@ void TextDisplay::printHelp() {
 }
 void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getBoard()->getMinions()[minion];
+    auto minionCard = player->getBoard()->getMinion(minion);
 
     card_template_t cardInfo;
     // TODO: if minion has abilities, more fields.
@@ -51,13 +51,17 @@ void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
 }
 
 void TextDisplay::printHand(shared_ptr<Game> game) {
-    cout << "DEBUG: (TextDisplay) printhand run. " << endl;
+    // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
     vector<card_template_t> cardTemplates;
     for (int i = 0; i < hand->getSize(); ++i) {
         auto card = hand->getCardAtIndex(i);
+        if (!card) {
+            cout << "DEBUG: (TextDisplay) Hand: no card at index." << endl;
+            return;
+        }
         card_template_t cardInfo = getCardInfo(card);
         cardTemplates.emplace_back(cardInfo);
     }
@@ -105,7 +109,7 @@ vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> playe
     auto board = player->getBoard();
     int numMinions = board->getMinions().size();
     for (int i = 0; i < numMinions; ++i) {
-        auto minion = board->getMinions()[i];
+        auto minion = board->getMinion(i);
         card_template_t cardInfo = getCardInfo(minion);
         cardTemplates.emplace_back(cardInfo);
     }

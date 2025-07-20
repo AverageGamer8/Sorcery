@@ -8,7 +8,7 @@ using namespace std;
 
 class Spell: public Card {
     public:
-        Spell(string name, string description, int cost, int owner, string type = "Spell");
+        Spell(string name, string description, int cost, int owner, shared_ptr<Game> game, string type = "Spell");
 
         string getName() const override;
         string getDesc() const override;
@@ -20,32 +20,32 @@ class Spell: public Card {
 
 class Banish: public Spell {
     public:
-        Banish(int owner);
+        Banish(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 class Unsummon: public Spell {
     public:
-        Unsummon(int owner);
+        Unsummon(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 class Recharge: public Spell {
     public:
-        Recharge(int owner);
+        Recharge(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 class Disenchant: public Spell {
     public:
-        Disenchant(int owner);
+        Disenchant(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 class RaiseDead: public Spell {
     public:
-        RaiseDead(int owner);
+        RaiseDead(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 class Blizzard: public Spell {
     public:
-        Blizzard(int owner);
+        Blizzard(int owner, shared_ptr<Game> game);
         void expend() override;
 };
 

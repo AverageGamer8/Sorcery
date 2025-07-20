@@ -9,59 +9,59 @@ using namespace std;
 
 Deck::Deck(int owner) : owner{owner}, seed{chrono::system_clock::now().time_since_epoch().count()} {}
 
-void Deck::loadDeck(ifstream& inf) {
+void Deck::loadDeck(ifstream& inf, shared_ptr<Game> game) {
     string name;
     while (getline(inf, name)) {
         if (name == "Air Elemental") {
-            auto card = make_shared<AirElemental>(owner);
+            auto card = make_shared<AirElemental>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Earth Elemental") {
-            auto card = make_shared<EarthElemental>(owner);
+            auto card = make_shared<EarthElemental>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Fire Elemental") {
-            auto card = make_shared<FireElemental>(owner);
+            auto card = make_shared<FireElemental>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Potion Seller") {
-            auto card = make_shared<PotionSeller>(owner);
+            auto card = make_shared<PotionSeller>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Novice Pyromancer") {
-            auto card = make_shared<NovicePyromancer>(owner);
+            auto card = make_shared<NovicePyromancer>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Apprentice Summoner") {
-            auto card = make_shared<ApprenticeSummoner>(owner);
+            auto card = make_shared<ApprenticeSummoner>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Master Summoner") {
-            auto card = make_shared<MasterSummoner>(owner);
+            auto card = make_shared<MasterSummoner>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Banish") {
-            auto card = make_shared<Banish>(owner);
+            auto card = make_shared<Banish>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Unsummon") {
-            auto card = make_shared<Unsummon>(owner);
+            auto card = make_shared<Unsummon>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Recharge") {
-            auto card = make_shared<Recharge>(owner);
+            auto card = make_shared<Recharge>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Disenchant") {
-            auto card = make_shared<Disenchant>(owner);
+            auto card = make_shared<Disenchant>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Raise Dead") {
-            auto card = make_shared<RaiseDead>(owner);
+            auto card = make_shared<RaiseDead>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Blizzard") {
-            auto card = make_shared<Blizzard>(owner);
+            auto card = make_shared<Blizzard>(owner, game);
             cards.emplace_back(card);
         }
         // else if (name == "Giant Strength") {

@@ -42,7 +42,8 @@ class Player {
     void activateCard(int index, int player);
     void activateCard(int index, int player, int minion);
 
-    void minionAttack(int index, int target);
+    void minionAttack(int index); // minion v player
+    void minionAttack(int index, int target); // minion v minion
     bool isAlive();
     bool isHandFull();  // TODO PUT IN HAND class
     bool hasRitual() const;

@@ -15,6 +15,9 @@
 using namespace std;
 
 const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
+const int DEFAULT_PLAYER_LIFE = 20;
+const int DEFAULT_PLAYER_MAGIC = 3;
+
 
 int main(int argc, char **argv) {
     cout << "Starting game... Welcome to Sorcery!" << endl;
@@ -101,12 +104,14 @@ int main(int argc, char **argv) {
 
     // =============== Initialize game objects ================================
 
-    auto p1 = make_shared<Player>(player1Name, 0, 0);
-    auto p2 = make_shared<Player>(player2Name, 0, 0);
+    auto p1 = make_shared<Player>(player1Name, DEFAULT_PLAYER_LIFE, DEFAULT_PLAYER_MAGIC);
+    auto p2 = make_shared<Player>(player2Name, DEFAULT_PLAYER_LIFE, DEFAULT_PLAYER_MAGIC);
 
     vector<shared_ptr<Player>> players;
     players.emplace_back(move(p1));  // transfer ownership
     players.emplace_back(move(p2));
+
+    auto game = make_shared<Game>(move(players));
 
     auto deck1 = make_shared<Deck>(0);
     auto deck2 = make_shared<Deck>(1);
@@ -123,18 +128,16 @@ int main(int argc, char **argv) {
     } else {
         deck2File.open(deck2FilePath);
     }
-    deck1->loadDeck(deck1File);
-    deck2->loadDeck(deck2File);
+    deck1->loadDeck(deck1File, game);
+    deck2->loadDeck(deck2File, game);
 
-    players[0]->setDeck(deck1);
-    players[1]->setDeck(deck2);
+    game->getPlayer(0)->setDeck(deck1);
+    game->getPlayer(1)->setDeck(deck2);
 
     if (!testingEnabled) {
-        players[0]->shuffleDeck();
-        players[1]->shuffleDeck();
+        game->getPlayer(0)->shuffleDeck();
+        game->getPlayer(1)->shuffleDeck();
     }
-
-    auto game = make_shared<Game>(move(players));
 
     // output it
     cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
@@ -157,7 +160,7 @@ int main(int argc, char **argv) {
     auto ta = make_shared<ConcreteAbility>(game.get(), 0);
 
     // attaching the trigger to START TURN events
-    game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);
+    game->getTrigger(Trigger::TriggerType::MinionExit).attach(ta);
 
     game->startTurn();  // activates here
     game->endTurn();
@@ -229,7 +232,7 @@ int main(int argc, char **argv) {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
                 continue;
             }
-        } else if (command.substr(0, 4) == "play") { // TODO: testing allows you to use spell,activate without magic, set to 0.
+        } else if (command.substr(0, 4) == "play") {  // TODO: testing allows you to use spell,activate without magic, set to 0.
             stringstream cmd{command};
             string token;
             vector<string> tokens;

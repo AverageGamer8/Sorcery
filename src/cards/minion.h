@@ -7,6 +7,7 @@
 using namespace std;
 
 class Minion : public Card {
+   protected:
     int atk;
     int defence;
     int actions;

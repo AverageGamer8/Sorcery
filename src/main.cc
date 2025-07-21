@@ -18,7 +18,6 @@ const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
 const int DEFAULT_PLAYER_LIFE = 20;
 const int DEFAULT_PLAYER_MAGIC = 3;
 
-
 int main(int argc, char **argv) {
     cout << "Starting game... Welcome to Sorcery!" << endl;
 
@@ -170,14 +169,14 @@ int main(int argc, char **argv) {
 
     while (game->getWinner() == -1) {
         string command;
-        if (init) {
-            if (!getline(init, command)) {  // First, get commands from initFile, if any.
-                getline(cin, command);
-            }
+        if ((init && getline(init, command)) || getline(cin, command)) {
+            if (command.empty()) continue;
+
+            cout << "DEBUG: received command: " << command << endl;
+
         } else {
-            getline(cin, command);
+            break;
         }
-        cout << "DEBUG: received command: " << command << endl;
         if (command == "help") {
             controller->help();
         } else if (command == "end") {
@@ -300,7 +299,7 @@ int main(int argc, char **argv) {
             continue;
         }
     }
-    cout << "YOU DIE: " << game->getPlayer((game->getWinner() + 1) % 2)->getName() 
-        << ". Congratulations " << game->getPlayer(game->getWinner())->getName() 
-        << "! You are the winner!" << endl;
+    cout << "YOU DIE: " << game->getPlayer((game->getWinner() + 1) % 2)->getName()
+         << ". Congratulations " << game->getPlayer(game->getWinner())->getName()
+         << "! You are the winner!" << endl;
 }

@@ -1,6 +1,7 @@
 #include "deck.h"
 #include "../cards/minion.h"
 #include "../cards/spell.h"
+#include "../cards/ritual.h"
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -76,18 +77,18 @@ void Deck::loadDeck(ifstream& inf, shared_ptr<Game> game) {
         //     auto card = make_shared<Silence>(owner);
         //     cards.emplace_back(card);
         // }
-        // else if (name == "Dark Ritual") {
-        //     auto card = make_shared<DarkRitual>(owner);
-        //     cards.emplace_back(card);
-        // }
-        // else if (name == "Aura of Power") {
-        //     auto card = make_shared<AuraOfPower>(owner);
-        //     cards.emplace_back(card);
-        // }
-        // else if (name == "Standstill") {
-        //     auto card = make_shared<Standstill>(owner);
-        //     cards.emplace_back(card);
-        // }
+        else if (name == "Dark Ritual") {
+            auto card = make_shared<DarkRitual>(owner);
+            cards.emplace_back(card);
+        }
+        else if (name == "Aura of Power") {
+            auto card = make_shared<AuraOfPower>(owner);
+            cards.emplace_back(card);
+        }
+        else if (name == "Standstill") {
+            auto card = make_shared<Standstill>(owner);
+            cards.emplace_back(card);
+        }
     }
 }
 

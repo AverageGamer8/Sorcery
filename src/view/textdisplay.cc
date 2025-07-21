@@ -3,6 +3,9 @@
 #include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
+const int MAX_ACTIVE_MINIONS = 5;
+const int HORIZONTAL_LINE_WIDTH = 165;
+
 TextDisplay::TextDisplay(ostream& out) : out{out} {}
 
 void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
@@ -34,7 +37,7 @@ void TextDisplay::printHelp() {
 }
 void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getMinions()[minion].get();
+    auto minionCard = player->getBoard()->getMinion(minion);
 
     card_template_t cardInfo;
     // TODO: if minion has abilities, more fields.
@@ -48,51 +51,151 @@ void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
 }
 
 void TextDisplay::printHand(shared_ptr<Game> game) {
-    cout << "DEBUG: (TextDisplay) printhand run. " << endl;
+    // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
     vector<card_template_t> cardTemplates;
     for (int i = 0; i < hand->getSize(); ++i) {
         auto card = hand->getCardAtIndex(i);
-        card_template_t cardInfo;
-
-        if (card->getType() == "Minion") {
-            auto minion = static_cast<Minion*>(card.get());
-            cardInfo = display_minion_no_ability(  // TODO other abilities.
-                minion->getName(),
-                minion->getCost(),
-                minion->getAttack(),
-                minion->getDefence());
-        } else if (card->getType() == "Spell") {
-            auto spell = static_cast<Spell*>(card.get());
-            cardInfo = display_spell(
-                spell->getName(),
-                spell->getCost(),
-                spell->getDesc());
-        } else {                                   // TODO: Other cards
-            cardInfo = display_minion_no_ability(  // This is a filler.
-                "Empty.",
-                -99,
-                -99,
-                -99);
+        if (!card) {
+            cout << "DEBUG: (TextDisplay) Hand: no card at index." << endl;
+            return;
         }
+        card_template_t cardInfo = getCardInfo(card);
         cardTemplates.emplace_back(cardInfo);
-        // printCardTemplate(cardInfo);
     }
-    if (!cardTemplates.empty()) {  // Print them horizontally
-        int height = cardTemplates[0].size();
-        for (int line = 0; line < height; ++line) {
-            for (int card = 0; card < cardTemplates.size(); ++card) {
-                out << cardTemplates[card][line];
-            }
-            if (line < height - 1) {
-                out << endl;
-            }
-        }
-    }
-    out << endl;
+    printTemplatesRow(cardTemplates);
 }
 
+card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
+    if (card->getType() == "Minion") {
+        auto minion = static_pointer_cast<Minion>(card);
+        return display_minion_no_ability(  // TODO other abilities.
+            card->getName(),
+            card->getCost(),
+            minion->getAttack(),
+            minion->getDefence());
+    } else if (card->getType() == "Spell") {
+        auto spell = static_pointer_cast<Spell>(card);
+        return display_spell(
+            card->getName(),
+            card->getCost(),
+            card->getDesc());
+    } else if (card->getType() == "Ritual") {
+        auto ritual = static_pointer_cast<Ritual>(card);
+        return display_ritual(
+            card->getName(),
+            card->getCost(),
+            ritual->getActivationCost(),
+            card->getDesc(),
+            ritual->getCharges());
+    } else {  // TODO: Other cards
+        return CARD_TEMPLATE_BORDER;
+    }
+}
+void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
+    if (cardTemplates.empty()) {
+        cout << "DEBUG: TextDisplay: empty template given to print" << endl;  // todo exception
+        return;
+    }
+    int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card! 
+    // assumes all card have same or greater height.
+    for (int line = 0; line < height; ++line) {
+        for (int card = 0; card < cardTemplates.size(); ++card) {
+            out << cardTemplates[card][line];
+        }
+        if (line < height - 1) {
+            out << endl;
+        }
+    }
+    cout << endl;
+}
+
+vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> player) {
+    vector<card_template_t> cardTemplates;
+
+    auto board = player->getBoard();
+    int numMinions = board->getMinions().size();
+    for (int i = 0; i < numMinions; ++i) {
+        auto minion = board->getMinion(i);
+        card_template_t cardInfo = getCardInfo(minion);
+        cardTemplates.emplace_back(cardInfo);
+    }
+    for (int i = 0; i < MAX_ACTIVE_MINIONS - numMinions; ++i) {
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    }
+    return cardTemplates;
+}
+
+vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player) {
+    vector<card_template_t> cardTemplates;
+    if (player->hasRitual()) {
+        // card_template_t cardInfo = display_ritual()
+    } else {
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    }
+    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    card_template_t player1Info = display_player_card(
+        0,
+        player->getName(),
+        player->getLife(),
+        player->getMagic());
+    cardTemplates.emplace_back(player1Info);
+    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    if (!player->isGraveyardEmpty()) {
+        // TODO: other minion abilities
+    } else {
+        cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    }
+    return cardTemplates;
+}
+
+void TextDisplay::printHorizontalBorder() const {
+    for (int i = 0; i < HORIZONTAL_LINE_WIDTH; i++) {
+        cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+    }
+}
+card_template_t TextDisplay::buildVerticalCardBorder() const {
+    card_template_t col;
+    int cardHeight = CARD_TEMPLATE_EMPTY.size();
+    for (int i = 0; i < cardHeight; i++) {
+        col.emplace_back(EXTERNAL_BORDER_CHAR_UP_DOWN);
+    }
+    return col;
+}
 void TextDisplay::printBoard(shared_ptr<Game> game) {
+    cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+    printHorizontalBorder();
+    cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT;
+    cout << endl;
+
+    card_template_t verticalBorder = buildVerticalCardBorder();
+
+    auto player1 = game->getPlayer(0);
+    auto player2 = game->getPlayer(1);
+    vector<card_template_t> row1Templates = getBoardPlayerRow(player1);
+    vector<card_template_t> row2Templates = getBoardMinionsRow(player1);
+    vector<card_template_t> row3Templates = getBoardMinionsRow(player2);
+    vector<card_template_t> row4Templates = getBoardPlayerRow(player2);
+    row1Templates.insert(row1Templates.begin(), verticalBorder);
+    row1Templates.emplace_back(verticalBorder);
+    row2Templates.insert(row2Templates.begin(), verticalBorder);
+    row2Templates.emplace_back(verticalBorder);
+    row3Templates.insert(row3Templates.begin(), verticalBorder);
+    row3Templates.emplace_back(verticalBorder);
+    row4Templates.insert(row4Templates.begin(), verticalBorder);
+    row4Templates.emplace_back(verticalBorder);
+
+    printTemplatesRow(row1Templates);
+    printTemplatesRow(row2Templates);
+    printCardTemplate(CENTRE_GRAPHIC);
+    cout << endl;
+    printTemplatesRow(row3Templates);
+    printTemplatesRow(row4Templates);
+
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+    printHorizontalBorder();
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT;
+    cout << endl;
 }

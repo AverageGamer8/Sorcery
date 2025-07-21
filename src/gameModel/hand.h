@@ -19,8 +19,11 @@ class Hand {
     vector<shared_ptr<Card>>& getCards();
     bool isFull();
     void addCard(shared_ptr<Card> card);
+    void discardCard(int index);
+
     int getSize() const;
     shared_ptr<Card> getCardAtIndex(int index) const;
+    int getIndexOfCard(shared_ptr<Card> card) const;
 };
 
 #endif

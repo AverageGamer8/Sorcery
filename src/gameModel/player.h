@@ -9,6 +9,7 @@
 #include "deck.h"
 #include "hand.h"
 #include "../cards/minion.h"
+#include "graveyard.h"
 
 using namespace std;
 
@@ -17,13 +18,13 @@ class Player {
     int life;
     int magic;
     // TODO: add more fields.
-    vector<unique_ptr<Minion>> minions;
     shared_ptr<Hand> hand;
     shared_ptr<Deck> deck;
     shared_ptr<Board> board;
+    shared_ptr<Graveyard> graveyard;
 
-    friend class Minion;
 
+    bool hasMagicCost(int cost) const;
 
    public:
     Player(string name, int life, int magic);
@@ -41,9 +42,12 @@ class Player {
     void activateCard(int index, int player);
     void activateCard(int index, int player, int minion);
 
-    void minionAttack(int index, int target);
+    void minionAttack(int index); // minion v player
+    void minionAttack(int index, int target); // minion v minion
     bool isAlive();
     bool isHandFull();  // TODO PUT IN HAND class
+    bool hasRitual() const;
+    bool isGraveyardEmpty() const;
 
     // ================== Getters and Setters =====================
     const string getName() const;
@@ -51,7 +55,9 @@ class Player {
     const int getMagic() const;
     const shared_ptr<Deck>& getDeck() const;
     const shared_ptr<Hand>& getHand() const;
-    const vector<unique_ptr<Minion>>& getMinions() const;
+    const shared_ptr<Board>& getBoard() const;
+    const shared_ptr<Graveyard>& getGraveyard() const;
+    const vector<shared_ptr<Minion>>& getMinions() const;
 
     void setName(string name);
     void setLife(int life);

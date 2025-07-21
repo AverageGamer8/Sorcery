@@ -1,5 +1,6 @@
 #include "minion.h"
 
+#include <iostream>  // todo remove debug
 #include <memory>
 #include <string>
 
@@ -8,21 +9,49 @@
 #include "card.h"
 using namespace std;
 
-Minion::Minion(string name, string description, string type, int cost, int owner, int atk, int defence, int actions) : Card{name, description, type, cost, owner}, atk{atk}, defence{defence}, actions{actions} {}
+Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type)
+    : Card{name, description, type, cost, owner, game}, atk{atk}, defence{defence}, actions{actions} {}
 
 void Minion::attack() {
-    Game* g = game.get();
-    Player* opp = g->getPlayer(g->getInactiveIndex());
-
-    opp->life -= atk;
+    if (actions == 0) { 
+        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        return;
+    }
+    shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
+    opp->setLife(opp->getLife() - atk);
+    if (opp->getLife() <= 0) {
+        opp->setLife(0);
+        game->setWinner(game->getActiveIndex());
+    }
+    --actions;
 }
 
-void Minion::attack(int target) {
-    Game* g = game.get();
-    Player* opp = g->getPlayer(g->getInactiveIndex());
+void Minion::attack(int target, std::shared_ptr<Minion> self) {
+    if (actions == 0) { 
+        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        return;
+    }
+    game->battleMinion(self, target);
+    --actions;
+}
 
-    opp->minions[target - 1].get()->defence -= atk;
-    defence -= opp->minions[target - 1].get()->atk;
+// TODO: investigate why shared_from_this() causes segfault. maybe something to do with dependency?
+// void Minion::attack(int target) {
+//     if (actions == 0) { 
+//         cout << "DEBUG: (Minion) " << name << "is out of actions." << endl;
+//         return;
+//     }
+//     auto attackingMinion = shared_from_this();
+//     game->battleMinion(attackingMinion, target);
+//     --actions;
+// }
+
+void Minion::setDefence(int defence) {
+    this->defence = defence;
+}
+
+void Minion::setActions(int actions) {
+    this->actions = actions;
 }
 
 string Minion::getName() const {
@@ -46,13 +75,16 @@ int Minion::getAttack() const {
 int Minion::getDefence() const {
     return defence;
 }
+int Minion::getActions() const {
+    return actions;
+}
 
 // Specific Minions
-AirElemental::AirElemental(int owner) : Minion{"Air Elemental", "", "Minion", 0, owner, 1, 1, 0} {}
-EarthElemental::EarthElemental(int owner) : Minion{"Earth Elemental", "", "Minion", 3, owner, 4, 4, 0} {}
-BoneGolem::BoneGolem(int owner) : Minion{"Bone Golem", "", "Minion", 2, owner, 1, 3, 0} {}
-FireElemental::FireElemental(int owner) : Minion{"Fire Elemental", "", "Minion", 2, owner, 2, 2, 0} {}
-PotionSeller::PotionSeller(int owner) : Minion{"Potion Seller", "", "Minion", 2, owner, 1, 3, 0} {}
-NovicePyromancer::NovicePyromancer(int owner) : Minion{"Novice Pyromancer", "", "Minion", 1, owner, 0, 1, 0} {}
-ApprenticeSummoner::ApprenticeSummoner(int owner) : Minion{"Apprentice Summoner", "", "Minion", 1, owner, 1, 1, 0} {}
-MasterSummoner::MasterSummoner(int owner) : Minion{"Master Summoner", "", "Minion", 3, owner, 2, 3, 0} {}
+AirElemental::AirElemental(int owner, shared_ptr<Game> game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0} {}
+EarthElemental::EarthElemental(int owner, shared_ptr<Game> game) : Minion{"Earth Elemental", "", 3, owner, game, 4, 4, 0} {}
+BoneGolem::BoneGolem(int owner, shared_ptr<Game> game) : Minion{"Bone Golem", "", 2, owner, game, 1, 3, 0} {}
+FireElemental::FireElemental(int owner, shared_ptr<Game> game) : Minion{"Fire Elemental", "", 2, owner, game, 2, 2, 0} {}
+PotionSeller::PotionSeller(int owner, shared_ptr<Game> game) : Minion{"Potion Seller", "", 2, owner, game, 1, 3, 0} {}
+NovicePyromancer::NovicePyromancer(int owner, shared_ptr<Game> game) : Minion{"Novice Pyromancer", "", 1, owner, game, 0, 1, 0} {}
+ApprenticeSummoner::ApprenticeSummoner(int owner, shared_ptr<Game> game) : Minion{"Apprentice Summoner", "", 1, owner, game, 1, 1, 0} {}
+MasterSummoner::MasterSummoner(int owner, shared_ptr<Game> game) : Minion{"Master Summoner", "", 3, owner, game, 2, 3, 0} {}

@@ -9,8 +9,11 @@ bool Board::isFull() {
 }
 
 void Board::addMinion(std::shared_ptr<Minion> m) {
-    if (!isFull())
-        minions.emplace_back(m);
+    if (isFull() && m) {
+        return;
+    }
+
+    minions.emplace_back(m);
 }
 
 void Board::removeMinion(int target) {
@@ -19,4 +22,28 @@ void Board::removeMinion(int target) {
         return;
 
     minions.erase(minions.begin() + target);
+}
+
+vector<shared_ptr<Minion>>& Board::getMinions() {
+    return minions;
+}
+
+shared_ptr<Minion> Board::getMinion(int index) {
+    if (index >= minions.size()) return nullptr;
+    return minions[index];
+}
+
+int Board::getMinionIndex(shared_ptr<Minion> m) const {
+    for (int i = 0; i < minions.size(); ++i) {
+        if (minions[i] == m) {
+            return i;
+        }
+    }
+
+    return -1; 
+    // TODO: exception.
+}
+
+void Board::setRitual(shared_ptr<Ritual> ritual) {
+    this->ritual = ritual;
 }

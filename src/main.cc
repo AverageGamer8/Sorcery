@@ -15,15 +15,18 @@
 using namespace std;
 
 const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
+const int DEFAULT_PLAYER_LIFE = 20;
+const int DEFAULT_PLAYER_MAGIC = 3;
+const int MAX_CARDS_IN_HAND = 5;
 
 int main(int argc, char **argv) {
-    cout << "start!" << endl;
+    cout << "Starting game... Welcome to Sorcery!" << endl;
 
-    string deck1File;
-    string deck2File;
+    string deck1FilePath;
+    string deck2FilePath;
     string initFile;
-    bool graphicsEnabled;
-    bool testingEnabled;
+    bool graphicsEnabled = false;
+    bool testingEnabled = false;
 
     // =================== Argument parsing ===================================
 
@@ -37,16 +40,16 @@ int main(int argc, char **argv) {
                 cerr << "Invalid deck1 specified!" << endl;
                 return 1;
             }
-            deck1File = argv[i];
-            cout << "DEBUG: received - " << deck1File << endl;
+            deck1FilePath = argv[i];
+            cout << "DEBUG: received - " << deck1FilePath << endl;
         } else if (curArg == "-deck2") {
             ++i;
             if (i >= argc) {
                 cerr << "Invalid deck2 specified!" << endl;
                 return 1;
             }
-            deck2File = argv[i];
-            cout << "DEBUG: received - " << deck2File << endl;
+            deck2FilePath = argv[i];
+            cout << "DEBUG: received - " << deck2FilePath << endl;
         } else if (curArg == "-init") {
             ++i;
             if (i >= argc) {
@@ -69,54 +72,82 @@ int main(int argc, char **argv) {
 
     // ====================== Read Files =========================================
 
-    ifstream init{initFile};
-    string player1, player2;
+    // Get player names:
+    string player1Name, player2Name;
+    ifstream init;
+    if (!initFile.empty()) {
+        init.open(initFile);
 
-    if (!init) {
-        cerr << "Invalid file path for init: unable to open file."
-             << endl;
-        return 1;
-    }
+        if (!init) {
+            cerr << "Invalid file path for init: unable to open file."
+                 << endl;
+            return 1;
+        }
 
-    if (!getline(init, player1)) {
-        cerr << "Invalid player1 name." << endl;
-        return 1;
-    }
-    if (!getline(init, player2)) {
-        cerr << "Invalid player2 name." << endl;
-        return 1;
-    }
+        if (!getline(init, player1Name)) {
+            cerr << "Invalid player1 name." << endl;
+            return 1;
+        }
+        if (!getline(init, player2Name)) {
+            cerr << "Invalid player2 name." << endl;
+            return 1;
+        }
 
-    cout << "DEBUG: received - player1: " << player1
-         << ", player2: " << player2 << endl;
+        cout << "DEBUG: received - player1: " << player1Name
+             << ", player2: " << player2Name << endl;
+    } else {  // Init is provided - prompt users.
+        cout << "Please enter name of Player 1: ";
+        cin >> player1Name;
+        cout << "Please enter name of Player 2: ";
+        cin >> player2Name;
+    }
 
     // =============== Initialize game objects ================================
 
-    auto p1 = make_unique<Player>(player1, 0, 0);
-    auto p2 = make_unique<Player>(player2, 0, 0);
+    auto p1 = make_shared<Player>(player1Name, DEFAULT_PLAYER_LIFE, DEFAULT_PLAYER_MAGIC);
+    auto p2 = make_shared<Player>(player2Name, DEFAULT_PLAYER_LIFE, DEFAULT_PLAYER_MAGIC);
 
-    vector<unique_ptr<Player>> players;
+    vector<shared_ptr<Player>> players;
     players.emplace_back(move(p1));  // transfer ownership
     players.emplace_back(move(p2));
+
+    auto game = make_shared<Game>(move(players));
 
     auto deck1 = make_shared<Deck>(0);
     auto deck2 = make_shared<Deck>(1);
 
-    ifstream defaultDeck1{DEFAULT_DECK_PATH};
-    ifstream defaultDeck2{DEFAULT_DECK_PATH};
-    deck1->loadDeck(defaultDeck1);
-    deck2->loadDeck(defaultDeck2);
+    ifstream deck1File;
+    ifstream deck2File;
+    if (deck1FilePath.empty()) {
+        deck1File.open(DEFAULT_DECK_PATH);
+    } else {
+        deck1File.open(deck1FilePath);
+    }
+    if (deck2FilePath.empty()) {
+        deck2File.open(DEFAULT_DECK_PATH);
+    } else {
+        deck2File.open(deck2FilePath);
+    }
+    deck1->loadDeck(deck1File, game);
+    deck2->loadDeck(deck2File, game);
 
-    deck1->shuffleDeck();
-    deck2->shuffleDeck();
-    players[0]->setDeck(deck1);
-    players[1]->setDeck(deck2);
+    game->getPlayer(0)->setDeck(deck1);
+    game->getPlayer(1)->setDeck(deck2);
 
-    auto game = make_shared<Game>(move(players));
+    if (!testingEnabled) {
+        game->getPlayer(0)->shuffleDeck();
+        game->getPlayer(1)->shuffleDeck();
+    }
+
+    // Starting Hand: Draw 5 cards for both players.
+    for (int i = 0; i < MAX_CARDS_IN_HAND; ++i) {
+        game->getPlayer(0)->drawCard();
+        game->getPlayer(1)->drawCard();
+    }
 
     // output it
-    cout << "DEBUG: (Main) Init - player1: " << game->getPlayer(0)->getName() << endl;
-    cout << "DEBUG: (Main) Init - player2: " << game->getPlayer(1)->getName() << endl;
+    cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
+    cout << "DEBUG: (Main) Created - player2: " << game->getPlayer(1)->getName() << endl;
 
     // ========== Initialize MVC ===========
 
@@ -132,27 +163,27 @@ int main(int argc, char **argv) {
     // ConcreteAbility is an example class to use it.
     // this stuff should probably be done in the cards.
     game->setActivePlayer(0);
-    auto ta = make_shared<ConcreteAbility>(game.get(), 0);
+    auto ta = make_shared<ConcreteAbility>(game, 0);
 
     // attaching the trigger to START TURN events
-    game->getTrigger(Trigger::TriggerType::TurnStart).attach(ta);
+    game->getTrigger(Trigger::TriggerType::MinionEnter).attach(ta);
 
-    game->startTurn();  // activates here
-    game->endTurn();
-    game->startTurn();  // activates here
+    // game->startTurn();  // activates here
+    // game->endTurn();
+    // game->startTurn();  // activates here
 
     // ================== Game Loop ==================
 
     while (game->getWinner() == -1) {
         string command;
-        if (init) {
-            if (!getline(init, command)) {  // First, get commands from initFile, if any.
-                getline(cin, command);
-            }
+        if ((init && getline(init, command)) || getline(cin, command)) {
+            if (command.empty()) continue;
+
+            cout << "DEBUG: received command: " << command << endl;
+
         } else {
-            getline(cin, command);
+            break;
         }
-        cout << "DEBUG: received command: " << command << endl;
         if (command == "help") {
             controller->help();
         } else if (command == "end") {
@@ -207,7 +238,7 @@ int main(int argc, char **argv) {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
                 continue;
             }
-        } else if (command.substr(0, 4) == "play") {
+        } else if (command.substr(0, 4) == "play") {  // TODO: testing allows you to use spell,activate without magic, set to 0.
             stringstream cmd{command};
             string token;
             vector<string> tokens;
@@ -275,4 +306,7 @@ int main(int argc, char **argv) {
             continue;
         }
     }
+    cout << "YOU DIE: " << game->getPlayer((game->getWinner() + 1) % 2)->getName()
+         << ". Congratulations " << game->getPlayer(game->getWinner())->getName()
+         << "! You are the winner!" << endl;
 }

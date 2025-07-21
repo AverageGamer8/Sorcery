@@ -17,7 +17,7 @@ class Card {
         shared_ptr<Game> game;
 
     public:
-        Card(string name, string description, string type, int cost, int owner);
+        Card(string name, string description, string type, int cost, int owner, shared_ptr<Game> game);
         virtual string getName() const = 0;
         virtual string getDesc() const = 0;
         virtual string getType() const = 0;

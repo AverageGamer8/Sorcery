@@ -12,9 +12,10 @@ class Minion : public Card {
     int actions;
 
    public:
-    Minion(string name, string description, string type, int cost, int owner, int atk, int defence, int actions);
+    Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type = "Minion");
     void attack();
-    void attack(int target);
+    // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
+    void attack(int target, std::shared_ptr<Minion> self);
     void activate();
     void activate(int target);
     void restoreAction();
@@ -24,42 +25,46 @@ class Minion : public Card {
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
-
+    
     int getAttack() const;
     int getDefence() const;
+    int getActions() const;
+
+    void setDefence(int defence);
+    void setActions(int actions);
 };
 
 class AirElemental : public Minion {
    public:
-    AirElemental(int owner);
+    AirElemental(int owner, shared_ptr<Game> game);
 };
 class EarthElemental : public Minion {
    public:
-    EarthElemental(int owner);
+    EarthElemental(int owner, shared_ptr<Game> game);
 };
 class BoneGolem : public Minion {
    public:
-    BoneGolem(int owner);
+    BoneGolem(int owner, shared_ptr<Game> game);
 };
 class FireElemental : public Minion {
    public:
-    FireElemental(int owner);
+    FireElemental(int owner, shared_ptr<Game> game);
 };
 class PotionSeller : public Minion {
    public:
-    PotionSeller(int owner);
+    PotionSeller(int owner, shared_ptr<Game> game);
 };
 class NovicePyromancer : public Minion {
    public:
-    NovicePyromancer(int owner);
+    NovicePyromancer(int owner, shared_ptr<Game> game);
 };
 class ApprenticeSummoner : public Minion {
    public:
-    ApprenticeSummoner(int owner);
+    ApprenticeSummoner(int owner, shared_ptr<Game> game);
 };
 class MasterSummoner : public Minion {
    public:
-    MasterSummoner(int owner);
+    MasterSummoner(int owner, shared_ptr<Game> game);
 };
 
 #endif

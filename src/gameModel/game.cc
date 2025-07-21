@@ -8,12 +8,23 @@ void Game::startTurn() {
     std::cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
               << std::endl;
     auto player = getActivePlayer();
+
+    // Replenish magic and minion actions
     player->setMagic(player->getMagic() + 1);  // Gains 1 magic.
 
-    if (!player->isHandFull()) {  // Draw a card, if not full.
-        player->drawCard();
+    auto hand = player->getHand();
+    auto board = player->getBoard();
+    for (auto card : hand->getCards()) {
+        if (card->getType() == "Minion") {
+            auto minion = static_pointer_cast<Minion>(card);
+            minion->setActions(1);
+        }
     }
-
+    for (auto minion : board->getMinions()) {
+        minion->setActions(1);
+    }
+    
+    player->drawCard();
     turnStart.notifyObservers();
 }
 void Game::endTurn() {
@@ -23,21 +34,39 @@ void Game::endTurn() {
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
 }
 
-void Game::battleMinion(int atk, int receivingMinion) {
-    shared_ptr<Player> opp = getInactivePlayer();
-    shared_ptr<Minion> oppMinion = opp->getBoard()->getMinion(receivingMinion);
-    cout << "DEBUG: Game: Attacking " << oppMinion->getName() << ". Their HP: " << oppMinion->getDefence() << endl;
-    ;
-    oppMinion->setDefence(oppMinion->getDefence() - atk);
+void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion) {
+    auto attacker = getActivePlayer();
+    auto opp = getInactivePlayer();
+    auto oppMinion = opp->getBoard()->getMinion(receivingMinion);
+    cout << "DEBUG: Game: Minion Battle\n"
+         << "  Attacker: " << attackingMinion->getName()
+         << " (ATK: " << attackingMinion->getAttack() << ", DEF: " << attackingMinion->getDefence() << ")\n"
+         << "  Defender: " << oppMinion->getName()
+         << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
+
+    oppMinion->setDefence(oppMinion->getDefence() - attackingMinion->getAttack());
     if (oppMinion->getDefence() <= 0) {
         oppMinion->setDefence(0);
         opp->getBoard()->removeMinion(receivingMinion);
         opp->getGraveyard()->addMinion(oppMinion);
         minionExit.notifyObservers();
+    } else {
+        attackingMinion->setDefence(attackingMinion->getDefence() - oppMinion->getAttack());
+        if (attackingMinion->getDefence() <= 0) {
+            attackingMinion->setDefence(0);
+            int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
+            attacker->getBoard()->removeMinion(attackerIndex);
+            attacker->getGraveyard()->addMinion(attackingMinion);
+            minionExit.notifyObservers();
+        }
     }
-    cout << "DEBUG: Game: After attack - Opponent: " << oppMinion->getName() << ". HP: " << oppMinion->getDefence() << endl;
+    cout << "DEBUG: Game: Battle Results\n"
+         << "  Attacker: " << attackingMinion->getName()
+         << " (ATK: " << attackingMinion->getAttack() << ", DEF: " << attackingMinion->getDefence() << ")\n"
+         << "  Defender: " << oppMinion->getName()
+         << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
 }
-void Game::playCard(int card) { // Wrapper to notify MinionEnter observers
+void Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
     auto player = getActivePlayer();
     auto cardPtr = player->getHand()->getCardAtIndex(card);
     if (cardPtr->getType() == "Minion") {

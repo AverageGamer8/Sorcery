@@ -21,6 +21,7 @@ class Board {
     void removeMinion(int target);
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);
+    int getMinionIndex(shared_ptr<Minion> m) const;
     void setRitual(shared_ptr<Ritual> ritual);
 };
 

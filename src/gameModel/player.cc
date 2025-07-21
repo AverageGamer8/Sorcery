@@ -90,7 +90,8 @@ void Player::minionAttack(int index, int target) {
         cout << "DEBUG: Player: index out of bounds of board." << endl;
         return;
     }
-    minion->attack(target);
+    
+    minion->attack(target, minion); // pass the shared_ptr
 }
 
 bool Player::isAlive() { return life <= 0; }

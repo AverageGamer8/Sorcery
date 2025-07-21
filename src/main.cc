@@ -17,6 +17,7 @@ using namespace std;
 const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
 const int DEFAULT_PLAYER_LIFE = 20;
 const int DEFAULT_PLAYER_MAGIC = 3;
+const int MAX_CARDS_IN_HAND = 5;
 
 int main(int argc, char **argv) {
     cout << "Starting game... Welcome to Sorcery!" << endl;
@@ -138,6 +139,12 @@ int main(int argc, char **argv) {
         game->getPlayer(1)->shuffleDeck();
     }
 
+    // Starting Hand: Draw 5 cards for both players.
+    for (int i = 0; i < MAX_CARDS_IN_HAND; ++i) {
+        game->getPlayer(0)->drawCard();
+        game->getPlayer(1)->drawCard();
+    }
+
     // output it
     cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
     cout << "DEBUG: (Main) Created - player2: " << game->getPlayer(1)->getName() << endl;
@@ -161,9 +168,9 @@ int main(int argc, char **argv) {
     // attaching the trigger to START TURN events
     game->getTrigger(Trigger::TriggerType::MinionEnter).attach(ta);
 
-    game->startTurn();  // activates here
-    game->endTurn();
-    game->startTurn();  // activates here
+    // game->startTurn();  // activates here
+    // game->endTurn();
+    // game->startTurn();  // activates here
 
     // ================== Game Loop ==================
 

@@ -33,6 +33,17 @@ shared_ptr<Minion> Board::getMinion(int index) {
     return minions[index];
 }
 
+int Board::getMinionIndex(shared_ptr<Minion> m) const {
+    for (int i = 0; i < minions.size(); ++i) {
+        if (minions[i] == m) {
+            return i;
+        }
+    }
+
+    return -1; 
+    // TODO: exception.
+}
+
 void Board::setRitual(shared_ptr<Ritual> ritual) {
     this->ritual = ritual;
 }

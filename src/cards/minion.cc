@@ -13,20 +13,45 @@ Minion::Minion(string name, string description, int cost, int owner, shared_ptr<
     : Card{name, description, type, cost, owner, game}, atk{atk}, defence{defence}, actions{actions} {}
 
 void Minion::attack() {
+    if (actions == 0) { 
+        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        return;
+    }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
     opp->setLife(opp->getLife() - atk);
     if (opp->getLife() <= 0) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }
+    --actions;
 }
 
-void Minion::attack(int target) {
-    game->battleMinion(atk, target);
+void Minion::attack(int target, std::shared_ptr<Minion> self) {
+    if (actions == 0) { 
+        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        return;
+    }
+    game->battleMinion(self, target);
+    --actions;
 }
+
+// TODO: investigate why shared_from_this() causes segfault. maybe something to do with dependency?
+// void Minion::attack(int target) {
+//     if (actions == 0) { 
+//         cout << "DEBUG: (Minion) " << name << "is out of actions." << endl;
+//         return;
+//     }
+//     auto attackingMinion = shared_from_this();
+//     game->battleMinion(attackingMinion, target);
+//     --actions;
+// }
 
 void Minion::setDefence(int defence) {
     this->defence = defence;
+}
+
+void Minion::setActions(int actions) {
+    this->actions = actions;
 }
 
 string Minion::getName() const {
@@ -49,6 +74,9 @@ int Minion::getAttack() const {
 }
 int Minion::getDefence() const {
     return defence;
+}
+int Minion::getActions() const {
+    return actions;
 }
 
 // Specific Minions

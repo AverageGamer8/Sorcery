@@ -14,7 +14,8 @@ class Minion : public Card {
    public:
     Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type = "Minion");
     void attack();
-    void attack(int target);
+    // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
+    void attack(int target, std::shared_ptr<Minion> self);
     void activate();
     void activate(int target);
     void restoreAction();
@@ -24,11 +25,13 @@ class Minion : public Card {
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
-
+    
     int getAttack() const;
     int getDefence() const;
+    int getActions() const;
 
     void setDefence(int defence);
+    void setActions(int actions);
 };
 
 class AirElemental : public Minion {

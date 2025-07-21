@@ -24,10 +24,10 @@ class Game {
 
     void setActivePlayer(int player);
 
-    void battleMinion(int atk, int receivingMinion); // called by minion
+    void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion); // TODO: might not be best way. minion passes itself.
     void playCard(int card); // TODO: wrapper for player
 
-    void startTurn();  // TODO actual game handling
+    void startTurn();
     void endTurn();
     // void addMinion();  // should we have it in player or game? easy to trigger in game.
     // void destroyMinion();

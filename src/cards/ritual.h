@@ -16,22 +16,23 @@ class Ritual: public Card {
     int getCost() const override;
 
     public:
-        Ritual(string name, string description, int cost, int owner, shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, string type = "Ritual");
-        int getCharges();
+        Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game, shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, string type = "Ritual");
+        int getActivationCost() const;
+        int getCharges() const;
         void setCharges(int charges);
 };
 
 class DarkRitual: public Ritual {
     public:
-        DarkRitual(int owner);
+        DarkRitual(int owner, shared_ptr<Game> game);
 };
 class AuraOfPower: public Ritual {
     public:
-        AuraOfPower(int owner);
+        AuraOfPower(int owner, shared_ptr<Game>);
 };
 class Standstill: public Ritual {
     public:
-        Standstill(int owner);
+        Standstill(int owner, shared_ptr<Game>);
 };
 
 

@@ -78,15 +78,15 @@ void Deck::loadDeck(ifstream& inf, shared_ptr<Game> game) {
         //     cards.emplace_back(card);
         // }
         else if (name == "Dark Ritual") {
-            auto card = make_shared<DarkRitual>(owner);
+            auto card = make_shared<DarkRitual>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Aura of Power") {
-            auto card = make_shared<AuraOfPower>(owner);
+            auto card = make_shared<AuraOfPower>(owner, game);
             cards.emplace_back(card);
         }
         else if (name == "Standstill") {
-            auto card = make_shared<Standstill>(owner);
+            auto card = make_shared<Standstill>(owner,game);
             cards.emplace_back(card);
         }
     }

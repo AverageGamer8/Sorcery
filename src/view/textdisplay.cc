@@ -70,28 +70,36 @@ void TextDisplay::printHand(shared_ptr<Game> game) {
 
 card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
     if (card->getType() == "Minion") {
-        auto minion = static_cast<Minion*>(card.get());
+        auto minion = static_pointer_cast<Minion>(card);
         return display_minion_no_ability(  // TODO other abilities.
-            minion->getName(),
-            minion->getCost(),
+            card->getName(),
+            card->getCost(),
             minion->getAttack(),
             minion->getDefence());
     } else if (card->getType() == "Spell") {
-        auto spell = static_cast<Spell*>(card.get());
+        auto spell = static_pointer_cast<Spell>(card);
         return display_spell(
-            spell->getName(),
-            spell->getCost(),
-            spell->getDesc());
+            card->getName(),
+            card->getCost(),
+            card->getDesc());
+    } else if (card->getType() == "Ritual") {
+        auto ritual = static_pointer_cast<Ritual>(card);
+        return display_ritual(
+            card->getName(),
+            card->getCost(),
+            ritual->getActivationCost(),
+            card->getDesc(),
+            ritual->getCharges());
     } else {  // TODO: Other cards
         return CARD_TEMPLATE_BORDER;
     }
 }
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
     if (cardTemplates.empty()) {
-        cout << "DEBUG: TD: empty template" << endl; // todo exception
+        cout << "DEBUG: TD: empty template" << endl;  // todo exception
         return;
     }
-    int height = cardTemplates[0].size(); // NOTE: take first element of templates vector as height of card!
+    int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card!
     for (int line = 0; line < height; ++line) {
         for (int card = 0; card < cardTemplates.size(); ++card) {
             out << cardTemplates[card][line];

@@ -96,10 +96,10 @@ int main(int argc, char **argv) {
         cout << "DEBUG: received - player1: " << player1Name
              << ", player2: " << player2Name << endl;
     } else {  // Init is provided - prompt users.
-        cout << "Please enter name of Player 1: ";
-        cin >> player1Name;
+        cout << "Please enter name of Player 1: "; 
+        getline(cin, player1Name);
         cout << "Please enter name of Player 2: ";
-        cin >> player2Name;
+        getline(cin, player2Name);
     }
 
     // =============== Initialize game objects ================================

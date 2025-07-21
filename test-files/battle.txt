@@ -1,0 +1,13 @@
+Derek
+Bob
+discard 0
+draw
+play 4
+end
+discard 0
+draw
+play 4
+board
+end
+attack 0 0
+board

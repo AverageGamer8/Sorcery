@@ -23,7 +23,7 @@ void Game::startTurn() {
     for (auto minion : board->getMinions()) {
         minion->setActions(1);
     }
-    
+
     player->drawCard();
     turnStart.notifyObservers();
 }
@@ -50,16 +50,16 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
         opp->getBoard()->removeMinion(receivingMinion);
         opp->getGraveyard()->addMinion(oppMinion);
         minionExit.notifyObservers();
-    } else {
-        attackingMinion->setDefence(attackingMinion->getDefence() - oppMinion->getAttack());
-        if (attackingMinion->getDefence() <= 0) {
-            attackingMinion->setDefence(0);
-            int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
-            attacker->getBoard()->removeMinion(attackerIndex);
-            attacker->getGraveyard()->addMinion(attackingMinion);
-            minionExit.notifyObservers();
-        }
     }
+    attackingMinion->setDefence(attackingMinion->getDefence() - oppMinion->getAttack());
+    if (attackingMinion->getDefence() <= 0) {
+        attackingMinion->setDefence(0);
+        int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
+        attacker->getBoard()->removeMinion(attackerIndex);
+        attacker->getGraveyard()->addMinion(attackingMinion);
+        minionExit.notifyObservers();
+    }
+
     cout << "DEBUG: Game: Battle Results\n"
          << "  Attacker: " << attackingMinion->getName()
          << " (ATK: " << attackingMinion->getAttack() << ", DEF: " << attackingMinion->getDefence() << ")\n"

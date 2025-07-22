@@ -31,7 +31,10 @@ class Minion : public Card {
     virtual int getDefence() const;
     virtual int getActions() const;
 
-    int setDefence(int def);
+    void setDefence(int defence);
+    void setActions(int actions);
+
+    virtual ~Minion() = default;
 };
 
 class AirElemental : public Minion {

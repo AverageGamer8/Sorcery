@@ -6,6 +6,7 @@
 
 #include "../cards/minion.h"
 #include "../cards/ritual.h"
+
 using namespace std;
 
 const int MAX_BOARD_SIZE = 5;
@@ -16,12 +17,18 @@ class Board {
 
    public:
     Board(shared_ptr<Ritual> ritual) : ritual{ritual} {}
-    bool isFull();
+
+    bool isFull() const;
+    bool hasRitual() const;
     void addMinion(std::shared_ptr<Minion> m);
+    void addRitual(std::shared_ptr<Ritual> r);
     void removeMinion(int target);
+    void removeRitual();
+
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);
     int getMinionIndex(shared_ptr<Minion> m) const;
+    shared_ptr<Ritual> getRitual();
     void setRitual(shared_ptr<Ritual> ritual);
 };
 

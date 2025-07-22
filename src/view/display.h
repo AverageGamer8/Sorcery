@@ -13,6 +13,8 @@ class Display {
     virtual void printDescribe(std::shared_ptr<Game> game, int minion) = 0;
     virtual void printHand(std::shared_ptr<Game> game) = 0;
     virtual void printBoard(std::shared_ptr<Game> game) = 0;
+
+    virtual ~Display() = default;
 };
 
 #endif

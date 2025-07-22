@@ -43,7 +43,14 @@ void OnEnterBuff::activate() {
         return;
     }
     // TODO: buff new minion
-    ritual->setCharges(ritual->getCharges() - 1);
+    auto& minions = p->getBoard()->getMinions();
+    if (!minions.empty()) {
+        auto minion = minions.back();
+        minion->setDefence(minion->getDefence() + 1);
+        minion->setAttack(minion->getAttack() + 1);
+        cout << "DEBUG: (TriggeredAbility) OnEnterBuff: Buffed newly entered minion +1/+1" << endl;
+        ritual->setCharges(ritual->getCharges() - 1);
+    }
 }
 bool OnEnterBuff::shouldTrigger() const {
     return true;
@@ -60,8 +67,16 @@ void OnEnterDestroy::activate() {
         p->getBoard()->removeRitual();
         return;
     }
+    if (!ritual) return;
     // TODO: destroy added minion.
+    auto activePlayer = game->getActivePlayer();
+    auto& minions = activePlayer->getBoard()->getMinions();
+    if (minions.empty()) return;
+    auto newMinion = minions.back();
+    activePlayer->getGraveyard()->addMinion(newMinion);
+    activePlayer->getBoard()->removeMinion(minions.size() - 1);
     ritual->setCharges(ritual->getCharges() - 1);
+    cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: Destroyed newly entered minion, sent to graveyard." << endl;
 }
 bool OnEnterDestroy::shouldTrigger() const {
     return true;

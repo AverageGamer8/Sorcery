@@ -68,13 +68,11 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
 bool Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
     auto player = getActivePlayer();
     auto cardPtr = player->getHand()->getCardAtIndex(card);
-    
-    if (!player->playCard(card)) return false;
-
+    player->playCard(card);
     if (cardPtr->getType() == "Minion") {
         minionEnter.notifyObservers();
     }
-    return true;
+    player->playCard(card);
 }
 
 void Game::setActivePlayer(int player) { activePlayer = player; }

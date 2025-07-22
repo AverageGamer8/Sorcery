@@ -26,6 +26,7 @@ bool Player::playCard(int index) {
         return false;
     }
     if (card->getType() == "Minion") {
+        cout << "DEBUG: (Player) Played card is a Minion" << endl;
         auto minion = static_pointer_cast<Minion>(card);
         board->addMinion(minion);
     } else if (card->getType() == "Spell") {

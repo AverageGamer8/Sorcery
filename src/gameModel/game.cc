@@ -64,6 +64,7 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
          << "  Defender: " << oppMinion->getName()
          << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
 }
+
 void Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
     auto player = getActivePlayer();
     auto cardPtr = player->getHand()->getCardAtIndex(card);

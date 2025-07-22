@@ -1,11 +1,16 @@
 #include "ritual.h"
 
+#include <iostream>  // TODO: remove debug
 #include <memory>
 #include <string>
 
+#include "../gameModel/game.h"
+
 using namespace std;
 
-Ritual::Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game, shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, string type) : Card{name, description, type, cost, owner, game}, triggerAbility{triggerAbility}, activationCost{activationCost}, charges{charges} {}
+Ritual::Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game,
+               shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, Trigger::TriggerType triggerType, string type)
+    : Card{name, description, type, cost, owner, game}, triggerAbility{triggerAbility}, activationCost{activationCost}, charges{charges}, triggerType{triggerType} {}
 
 string Ritual::getName() const { return name; }
 
@@ -23,8 +28,24 @@ void Ritual::setCharges(int charges) {
     this->charges = charges;
 }
 
-DarkRitual::DarkRitual(int owner, shared_ptr<Game> game) : Ritual{"Dark Ritual", "At the start of your turn, gain 1 magic", 0, owner, game, make_shared<OnStartGainMagic>(game), 1, 5} {}
+void Ritual::attachAbilities() {
+    if (!triggerAbility) return;
+    game->getTrigger(triggerType).attach(triggerAbility);
+    cout << "DEBUG: Ritual: attached trigger." << endl;
+}
+void Ritual::detachAbilities() {
+    if (!triggerAbility) return;
+    game->getTrigger(triggerType).detach(triggerAbility);
+}
 
-AuraOfPower::AuraOfPower(int owner, shared_ptr<Game> game) : Ritual{"Aura of Power", "Whenever a minion enters play under your control, it gains +1/+1", 1, owner, game, make_shared<OnEnterBuff>(game), 1, 4} {}
+DarkRitual::DarkRitual(int owner, shared_ptr<Game> game)
+    : Ritual{"Dark Ritual", "At the start of your turn, gain 1 magic", 0, owner, game,
+             make_shared<OnStartGainMagic>(game, owner), 1, 5, Trigger::TriggerType::TurnStart} {}
 
-Standstill::Standstill(int owner, shared_ptr<Game> game) : Ritual{"Standstill", "Whenever a minio enters play, destroy it", 3, owner, game, make_shared<OnEnterDestroy>(game), 2, 4} {}
+AuraOfPower::AuraOfPower(int owner, shared_ptr<Game> game)
+    : Ritual{"Aura of Power", "Whenever a minion enters play under your control, it gains +1/+1", 1, owner, game,
+             make_shared<OnEnterBuff>(game, owner), 1, 4, Trigger::TriggerType::MinionEnter} {}
+
+Standstill::Standstill(int owner, shared_ptr<Game> game)
+    : Ritual{"Standstill", "Whenever a minion enters play, destroy it", 3, owner, game,
+             make_shared<OnEnterDestroy>(game, owner), 2, 4, Trigger::TriggerType::MinionEnter} {}

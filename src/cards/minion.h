@@ -13,7 +13,7 @@ class Minion : public Card {
     int actions;
 
    public:
-    Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type = "Minion");
+    Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string type = "Minion");
     void attack();
     // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
     void attack(int target, std::shared_ptr<Minion> self);
@@ -31,7 +31,7 @@ class Minion : public Card {
     virtual int getDefence() const;
     virtual int getActions() const;
 
-    void setDefence(int defence);
+    void setDefence(int def);
     void setActions(int actions);
 
     virtual ~Minion() = default;

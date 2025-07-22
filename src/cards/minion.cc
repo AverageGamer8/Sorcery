@@ -90,7 +90,7 @@ int Minion::getDefence() const {
 int Minion::getActions() const {
     return actions;
 }
-int Minion::setDefence(int def) {
+void Minion::setDefence(int def) {
     this->def = def;
 }
 

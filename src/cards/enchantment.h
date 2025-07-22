@@ -17,8 +17,8 @@ class Enchantment: public Minion {
     virtual void attach(shared_ptr<Minion> target);
     virtual void attack();
     virtual void attack(int target, shared_ptr<Minion> self);
-    virtual void activate();
-    virtual void activate(int target);
+    virtual void activate() override;
+    virtual void activate(int target) override;
     virtual void restoreAction();
     virtual void getHit(int dmg);
     

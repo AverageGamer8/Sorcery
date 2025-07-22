@@ -31,7 +31,6 @@ class Ritual : public Card {
     void attachAbilities();
     void detachAbilities();
 
-
     virtual ~Ritual() = default;
 };
 

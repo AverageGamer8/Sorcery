@@ -22,6 +22,8 @@ class Card {
         virtual string getDesc() const = 0;
         virtual string getType() const = 0;
         virtual int getCost() const = 0;
+
+        virtual ~Card() = default;
 };
 
 #endif

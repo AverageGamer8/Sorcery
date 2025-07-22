@@ -1,25 +1,25 @@
-/*
-THIS IS AN EXAMPLE USAGE. DELETE IN SUBMISSION!
-*/
+// /*
+// THIS IS AN EXAMPLE USAGE. DELETE IN SUBMISSION!
+// */
 
-#ifndef CONCRETEABILITY_H
-#define CONCRETEABILITY_H
+// #ifndef CONCRETEABILITY_H
+// #define CONCRETEABILITY_H
 
-#include <iostream>
-#include <memory>
+// #include <iostream>
+// #include <memory>
 
-#include "triggeredability.h"
+// #include "triggeredability.h"
 
-class ConcreteAbility : public TriggeredAbility {
-    int ownerPlayerId;
+// class ConcreteAbility : public TriggeredAbility {
+//     int ownerPlayerId;
 
-   public:
-    ConcreteAbility(std::shared_ptr<Game> game, int ownerPlayerId)
-        : TriggeredAbility(game), ownerPlayerId(ownerPlayerId) {}
+//    public:
+//     ConcreteAbility(std::shared_ptr<Game> game, int ownerPlayerId)
+//         : TriggeredAbility(game), ownerPlayerId(ownerPlayerId) {}
 
-    void activate() override {
-        std::cout << "DEBUG: Triggered - ConcreteAbility! Hello from Player " << ownerPlayerId << std::endl;
-    }
-};
+//     void activate() override {
+//         std::cout << "DEBUG: Triggered - ConcreteAbility! Hello from Player " << ownerPlayerId << std::endl;
+//     }
+// };
 
-#endif
+// #endif

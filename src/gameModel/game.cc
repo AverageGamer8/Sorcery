@@ -17,11 +17,11 @@ void Game::startTurn() {
     for (auto card : hand->getCards()) {
         if (card->getType() == "Minion") {
             auto minion = static_pointer_cast<Minion>(card);
-            minion->setActions(1);
+            minion->restoreAction();
         }
     }
     for (auto minion : board->getMinions()) {
-        minion->setActions(1);
+        minion->restoreAction();
     }
 
     player->drawCard();
@@ -44,16 +44,14 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
          << "  Defender: " << oppMinion->getName()
          << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
 
-    oppMinion->setDefence(oppMinion->getDefence() - attackingMinion->getAttack());
+    oppMinion->takeDamage(attackingMinion->getAttack());
     if (oppMinion->getDefence() <= 0) {
-        oppMinion->setDefence(0);
         opp->getBoard()->removeMinion(receivingMinion);
         opp->getGraveyard()->addMinion(oppMinion);
         minionExit.notifyObservers();
     }
-    attackingMinion->setDefence(attackingMinion->getDefence() - oppMinion->getAttack());
+    attackingMinion->takeDamage(oppMinion->getAttack());
     if (attackingMinion->getDefence() <= 0) {
-        attackingMinion->setDefence(0);
         int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
         attacker->getBoard()->removeMinion(attackerIndex);
         attacker->getGraveyard()->addMinion(attackingMinion);

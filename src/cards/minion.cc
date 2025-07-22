@@ -9,8 +9,8 @@
 #include "card.h"
 using namespace std;
 
-Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int defence, int actions, string type)
-    : Card{name, description, type, cost, owner, game}, atk{atk}, defence{defence}, actions{actions} {}
+Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string type)
+    : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions} {}
 
 void Minion::attack() {
     if (actions == 0) { 
@@ -18,7 +18,7 @@ void Minion::attack() {
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
-    opp->setLife(opp->getLife() - atk);
+    opp->setLife(opp->getLife() - getAttack());
     if (opp->getLife() <= 0) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
@@ -46,12 +46,16 @@ void Minion::attack(int target, std::shared_ptr<Minion> self) {
 //     --actions;
 // }
 
-void Minion::setDefence(int defence) {
-    this->defence = defence;
+void Minion::restoreAction() {
+    actions = 1;
 }
 
-void Minion::setActions(int actions) {
-    this->actions = actions;
+void Minion::takeDamage(int dmg) {
+    def -= dmg;
+    if (def <= 0) { // or is it better to put it outside of minion
+        game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
+        // could be easier to just have the minion itself call put to graveyard methods
+    }
 }
 
 string Minion::getName() const {
@@ -73,10 +77,13 @@ int Minion::getAttack() const {
     return atk;
 }
 int Minion::getDefence() const {
-    return defence;
+    return def;
 }
 int Minion::getActions() const {
     return actions;
+}
+int Minion::setDefence(int def) {
+    this->def = def;
 }
 
 // Specific Minions

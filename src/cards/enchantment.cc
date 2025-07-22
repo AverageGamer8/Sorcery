@@ -23,7 +23,7 @@ void Enchantment::attack() {
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
-    opp->setLife(opp->getLife() - atk);
+    opp->setLife(opp->getLife() - getAttack());
     if (opp->getLife() <= 0) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
@@ -49,14 +49,15 @@ void Enchantment::activate(int target) {
 }
 
 void Enchantment::restoreAction() {
-    // minion->restoreAction(); doesnt exist yet
+    if (actions < 0) actions = 0;
+    minion->restoreAction();
 }
 
-void Enchantment::getHit(int dmg) {
-    //defence -= dmg;
-    if (getDefence() < 0) {
-        //minion->getHit(-getDefence());
-        //def = 0;
+void Enchantment::takeDamage(int dmg) {
+    def -= dmg;
+    if (def < 0) {
+        minion->takeDamage(-def);
+        def = 0;
     }
 }
 
@@ -83,7 +84,7 @@ int Enchantment::getAttack() const {
     return atk + minion->getAttack();
 }
 int Enchantment::getDefence() const {
-    return defence + minion->getDefence();
+    return def + minion->getDefence();
 }
 int Enchantment::getActions() const {
     return actions + minion->getActions();
@@ -100,13 +101,13 @@ GiantStrength::GiantStrength(int owner, shared_ptr<Game> game): Enchantment{"Gia
 Enrage::Enrage(int owner, shared_ptr<Game> game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
 void Enrage::attach(shared_ptr<Minion> target) {
     minion = target;
-    atk = target->getAttack() * 1;
-    defence = target->getDefence() * 1;
+    atk = minion->getAttack() * 1;
+    def = minion->getDefence() * 1;
 }
 Haste::Haste(int owner, shared_ptr<Game> game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1} { }
 void Haste::restoreAction() {
-    //minion->restoreAction();
-    //if (actions < 1) actions = 1;
+    if (actions < 1) actions = 1;
+    minion->restoreAction();
 }
 MagicFatigue::MagicFatigue(int owner, shared_ptr<Game> game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0} { }
 void MagicFatigue::activate() { // override activate ability with same ability but costs 2 more

@@ -29,7 +29,7 @@ void Banish::expend() {
     return;
 }
 void Banish::expend(shared_ptr<Minion> minion) {
-    minion->setDefence(0);
+    minion->setDefence(0); // this just kills, not destroy, probably better to just nullptr it
 }
 void Banish::expend(shared_ptr<Ritual> ritual) {
     game->getPlayer(game->getActiveIndex())->getBoard()->setRitual(nullptr);
@@ -95,7 +95,7 @@ void RaiseDead::expend() {
     }
 
     auto m = curr->getGraveyard()->popTopMinion();
-    m->setDefence(1);
+    m->setDefence(1); // i think the resurrected minion is supposed to go to hand
     curr->getBoard()->addMinion(m);
 }
 void RaiseDead::expend(shared_ptr<Minion> minion) {
@@ -112,10 +112,10 @@ void Blizzard::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     auto opp = game->getPlayer(game->getInactiveIndex());
     for (auto& minion : curr->getBoard()->getMinions()) {
-        minion->setDefence(minion->getDefence() - 2);
+        minion->takeDamage(2);
     }
     for (auto& minion : opp->getBoard()->getMinions()) {
-        minion->setDefence(minion->getDefence() - 2);
+        minion->takeDamage(2);
     }
 }
 void Blizzard::expend(shared_ptr<Minion> minion) {

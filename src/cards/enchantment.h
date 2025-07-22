@@ -20,8 +20,8 @@ class Enchantment: public Minion {
     virtual void activate();
     virtual void activate(int target);
     virtual void restoreAction();
-    virtual void getHit(int dmg);
-    
+    virtual void takeDamage(int dmg);
+// might need a get base minion method() or just check if its an enchantment    
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
     string getDesc() const override;

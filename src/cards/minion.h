@@ -9,7 +9,7 @@ using namespace std;
 class Minion : public Card {
    protected:
     int atk;
-    int defence;
+    int def;
     int actions;
 
    public:
@@ -20,7 +20,7 @@ class Minion : public Card {
     void activate();
     void activate(int target);
     void restoreAction();
-    void getHit();
+    void takeDamage(int dmg);
 
     string getName() const override;
     string getDesc() const override;
@@ -31,8 +31,7 @@ class Minion : public Card {
     int getDefence() const;
     int getActions() const;
 
-    void setDefence(int defence);
-    void setActions(int actions);
+    int setDefence(int def);
 };
 
 class AirElemental : public Minion {

@@ -16,9 +16,9 @@ class Spell: public Card {
         string getType() const override;
         int getCost() const override;
 
-        virtual void expend() = 0;
-        virtual void expend(shared_ptr<Minion> minion) = 0;
-        virtual void expend(shared_ptr<Ritual> ritual) = 0;
+        virtual void expend() = 0; // might be better to just give integer targets
+        virtual void expend(shared_ptr<Minion> minion) = 0; // ie int player, int minion
+        virtual void expend(shared_ptr<Ritual> ritual) = 0; // int player
 };
 
 class Banish: public Spell {

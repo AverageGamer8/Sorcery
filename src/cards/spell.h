@@ -19,6 +19,8 @@ class Spell: public Card {
         virtual void expend() = 0;
         virtual void expend(shared_ptr<Minion> minion) = 0;
         virtual void expend(shared_ptr<Ritual> ritual) = 0;
+
+        virtual ~Spell() = default;
 };
 
 class Banish: public Spell {

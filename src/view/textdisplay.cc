@@ -131,20 +131,24 @@ vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> playe
 vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player) {
     vector<card_template_t> cardTemplates;
     if (player->hasRitual()) {
-        // card_template_t cardInfo = display_ritual()
+        auto ritual = player->getBoard()->getRitual();
+        card_template_t ritualInfo = getCardInfo(static_pointer_cast<Card>(ritual));
+        cardTemplates.emplace_back(ritualInfo);
     } else {
         cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
     }
-    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    cardTemplates.emplace_back(CARD_TEMPLATE_EMPTY);
     card_template_t player1Info = display_player_card(
         0,
         player->getName(),
         player->getLife(),
         player->getMagic());
     cardTemplates.emplace_back(player1Info);
-    cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
+    cardTemplates.emplace_back(CARD_TEMPLATE_EMPTY);
     if (!player->isGraveyardEmpty()) {
-        // TODO: other minion abilities
+        auto minion = player->getGraveyard()->getTopMinion();
+        card_template_t graveyardInfo = getCardInfo(static_pointer_cast<Card>(minion));
+        cardTemplates.emplace_back(graveyardInfo);
     } else {
         cardTemplates.emplace_back(CARD_TEMPLATE_BORDER);
     }
@@ -156,6 +160,7 @@ void TextDisplay::printHorizontalBorder() const {
         cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
     }
 }
+
 card_template_t TextDisplay::buildVerticalCardBorder() const {
     card_template_t col;
     int cardHeight = CARD_TEMPLATE_EMPTY.size();

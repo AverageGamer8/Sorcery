@@ -4,9 +4,11 @@ using namespace std;
 void Graveyard::addMinion(shared_ptr<Minion> m) {
     minions.emplace_back(m);
 }
-
+shared_ptr<Minion> Graveyard::getTopMinion() {
+    return minions.back();
+}
 shared_ptr<Minion> Graveyard::popTopMinion() {
-    auto minion = minions.back();
+    auto minion = getTopMinion();
     minions.pop_back();
     return minion;
 }

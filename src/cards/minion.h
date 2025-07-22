@@ -33,6 +33,8 @@ class Minion : public Card {
 
     void setDefence(int defence);
     void setActions(int actions);
+
+    virtual ~Minion() = default;
 };
 
 class AirElemental : public Minion {

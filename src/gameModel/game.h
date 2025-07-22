@@ -25,7 +25,7 @@ class Game {
     void setActivePlayer(int player);
 
     void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion); // TODO: might not be best way. minion passes itself.
-    void playCard(int card); // TODO: wrapper for player
+    bool playCard(int card); // TODO: wrapper for player
 
     void startTurn();
     void endTurn();

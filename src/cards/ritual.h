@@ -40,11 +40,11 @@ class DarkRitual : public Ritual {
 };
 class AuraOfPower : public Ritual {
    public:
-    AuraOfPower(int owner, shared_ptr<Game>);
+    AuraOfPower(int owner, shared_ptr<Game> game);
 };
 class Standstill : public Ritual {
    public:
-    Standstill(int owner, shared_ptr<Game>);
+    Standstill(int owner, shared_ptr<Game> game);
 };
 
 #endif

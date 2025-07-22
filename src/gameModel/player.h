@@ -30,9 +30,9 @@ class Player {
     Player(string name, int life, int magic);
 
     // ================== Gameplay =========================
-    void playCard(int index);
-    void playCard(int index, int player, int minion);
-    void playCard(int index, int player);
+    bool playCard(int index);
+    bool playCard(int index, int player, int minion);
+    bool playCard(int index, int player);
 
     void drawCard();
     void discardCard(int index);

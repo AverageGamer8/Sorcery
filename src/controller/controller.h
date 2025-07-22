@@ -16,18 +16,18 @@ class Controller {
 
     void end();
     void draw();
-    void discard(int card);
-    void attack(int attackingMinion);
-    void attack(int attackingMinion, int receivingMinion);
-    void play(int card);
-    void play(int card, int onPlayer, int minion);
-    void use(int minion);
-    void use(int activeMinion, int onPlayer, int receivingMinion);
+    bool discard(int card);
+    bool attack(int attackingMinion);
+    bool attack(int attackingMinion, int receivingMinion);
+    bool play(int card);
+    bool play(int card, int onPlayer, int minion);
+    bool use(int minion);
+    bool use(int activeMinion, int onPlayer, int receivingMinion);
 
     // ======================= Display Controls ====================
 
     void help();
-    void describe(int minion);
+    bool describe(int minion);
     void hand();
     void board();
 };

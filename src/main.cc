@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
         cout << "DEBUG: received - player1: " << player1Name
              << ", player2: " << player2Name << endl;
     } else {  // Init is provided - prompt users.
-        cout << "Please enter name of Player 1: "; 
+        cout << "Please enter name of Player 1: ";
         getline(cin, player1Name);
         cout << "Please enter name of Player 2: ";
         getline(cin, player2Name);
@@ -213,7 +213,7 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                controller->discard(card);
+                if (!controller->discard(card)) break;
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
                 continue;
@@ -229,11 +229,17 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int attackingMinion = stoi(tokens[1]);
-                controller->attack(attackingMinion);
+                if (!controller->attack(attackingMinion)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else if (args == 2) {
                 int attackingMinion = stoi(tokens[1]);
                 int receivingMinion = stoi(tokens[2]);
-                controller->attack(attackingMinion, receivingMinion);
+                if (!controller->attack(attackingMinion, receivingMinion)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
                 continue;
@@ -249,13 +255,24 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                controller->play(card);
+                if (!controller->play(card)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else if (args == 3) {
                 int card = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
-                int minion = stoi(tokens[3]);
+                int minion;
+                if (tokens[3] == "r") {  // Target ritual
+                    minion = -1;
+                } else {  // Target Minion
+                    minion = stoi(tokens[3]);
+                }
                 // cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
-                controller->play(card, player, minion);
+                if (!controller->play(card, player, minion)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
                 continue;
@@ -271,12 +288,18 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int minion = stoi(tokens[1]);
-                controller->use(minion);
+                if (!controller->use(minion)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else if (args == 3) {
                 int activeMinion = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
                 int receivingMinion = stoi(tokens[3]);
-                controller->use(activeMinion, player, receivingMinion);
+                if (!controller->use(activeMinion, player, receivingMinion)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
                 continue;
@@ -292,7 +315,10 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                controller->describe(card);
+                if (!controller->describe(card)) {
+                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    continue;
+                }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
                 continue;

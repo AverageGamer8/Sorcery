@@ -5,7 +5,7 @@
 
 #include "../gameModel/game.h"
 
-class Display {
+class sorcDisplay {
    public:
     // TODO: use NVI
     virtual void printGame(std::shared_ptr<Game> game) = 0;

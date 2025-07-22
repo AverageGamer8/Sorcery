@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class TextDisplay : public Display {
+class TextDisplay : public sorcDisplay {
     ostream& out;
 
     void printCardTemplate(const card_template_t& cardInfo);

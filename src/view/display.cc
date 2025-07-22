@@ -1,11 +1,11 @@
 #include "display.h"
 
-void Display::printGame(std::shared_ptr<Game> game) {}
+void sorcDisplay::printGame(std::shared_ptr<Game> game) {}
 
-void Display::printHelp() {}
+void sorcDisplay::printHelp() {}
 
-void Display::printDescribe(std::shared_ptr<Game> game, int minion) {}
+void sorcDisplay::printDescribe(std::shared_ptr<Game> game, int minion) {}
 
-void Display::printHand(std::shared_ptr<Game> game) {}
+void sorcDisplay::printHand(std::shared_ptr<Game> game) {}
 
-void Display::printBoard(std::shared_ptr<Game> game) {}
+void sorcDisplay::printBoard(std::shared_ptr<Game> game) {}

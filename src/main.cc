@@ -10,6 +10,7 @@
 #include "gameModel/player.h"
 #include "view/display.h"
 #include "view/textdisplay.h"
+#include "view/graphicsdisplay.h"
 #include "view/viewer.h"
 
 using namespace std;
@@ -152,8 +153,12 @@ int main(int argc, char **argv) {
     // ========== Initialize MVC ===========
 
     auto textDisplay = make_shared<TextDisplay>(cout);
-    vector<shared_ptr<Display>> displays;  // TODO: expand this once graphics are implemented
+    vector<shared_ptr<sorcDisplay>> displays;  // TODO: expand this once graphics are implemented
     displays.emplace_back(textDisplay);    // for now, just text.
+    if (graphicsEnabled) {
+        auto graphicsDisplay = make_shared<GraphicsDisplay>();
+        displays.emplace_back(graphicsDisplay);
+    }
     auto viewer = make_shared<Viewer>(displays, game);
 
     auto controller = make_unique<Controller>(game, viewer);

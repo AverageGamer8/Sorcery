@@ -93,9 +93,9 @@ bool Disenchant::expend() {
     cout << "DEBUG (Spell) Not proper usage: must be used on minions." << endl;
     return false;
 }
-void Disenchant::expend(shared_ptr<Minion> minion) {
+bool Disenchant::expend(int player, int minion) {
     // TODO: Destroy top enchantment on minion
-    return;
+    return false;
 }
 bool Disenchant::expend(int player) {
     // TODO: Handle exception

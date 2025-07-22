@@ -62,7 +62,7 @@ bool Player::playCard(int index, int player, int minion) {
         auto ench = static_pointer_cast<Enchantment>(card);
         if (!ench->attach(player, minion)) {
             cout << "No minion to enchant." << endl;
-            return;
+            return false;
         }
     } else {
         // todo exception, not found.

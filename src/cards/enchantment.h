@@ -42,7 +42,7 @@ class GiantStrength: public Enchantment {
 class Enrage: public Enchantment {
     public:
      Enrage(int owner, shared_ptr<Game> game);
-     void attach(int player, int target) override;
+     bool attach(int player, int target) override;
 };
 
 class Haste: public Enchantment {

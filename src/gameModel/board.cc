@@ -39,7 +39,7 @@ void Board::removeMinion(int target) {
 void Board::removeRitual() { ritual = nullptr; }
 
 void Board::setMinion(int i, shared_ptr<Minion> m) {
-    minions[ind] = m;
+    minions[i] = m;
 }
 
 vector<shared_ptr<Minion>>& Board::getMinions() {

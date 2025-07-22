@@ -2,6 +2,7 @@
 #define GRAVEYARD_H
 
 #include "../cards/minion.h"
+#include "../cards/enchantment.h"
 #include <vector>
 #include <memory>
 using namespace std;

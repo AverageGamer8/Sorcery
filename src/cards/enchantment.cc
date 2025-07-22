@@ -13,12 +13,12 @@ Enchantment::Enchantment(string name, string description, int cost, int owner, s
                          int atk, int def, int actions, string atkDesc, string defDesc, string type): 
     Minion{name, description, cost, owner, game, atk, def, actions, type}, atkDesc{atkDesc}, defDesc{defDesc} {}
 
-void Enchantment::attach(shared_ptr<Minion> target) {
-    minion = target;
+bool Enchantment::attach(int player, int target) {
+    minion = game->getPlayer(player)->getBoard()->getMinionIndex(target);
+    return minion != nullptr;
 }
 
 void Enchantment::activate() {
-    //minion->activate(); doesnt exist yet?
     // maybe instead use getActivatedAbility to go and grab it?
     // and have this method just handle actions?
 }
@@ -78,8 +78,9 @@ string Enchantment::getDefDesc() const {
 // Specific Enchantments
 GiantStrength::GiantStrength(int owner, shared_ptr<Game> game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
 Enrage::Enrage(int owner, shared_ptr<Game> game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
-void Enrage::attach(shared_ptr<Minion> target) {
-    minion = target;
+void Enrage::attach(int player, int target) {
+    minion = game->getPlayer(player)->getBoard()->getMinionIndex(target);
+    return minion != nullptr;
     atk = minion->getAttack() * 1;
     def = minion->getDefence() * 1;
 }

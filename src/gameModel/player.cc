@@ -3,6 +3,7 @@
 #include <iostream>  // TODO: remove debugs later.
 
 #include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
+#include "../cards/enchantment.h"
 
 using namespace std;
 
@@ -58,7 +59,11 @@ void Player::playCard(int index, int player, int minion) {
         auto spell = static_pointer_cast<Spell>(card);
 
     } else if (card->getType() == "Enchantment") {
-        // todo enchantments.
+        auto ench = static_pointer_cast<Enchantment>(card);
+        if (!ench->attach(player, minion)) {
+            cout << "No minion to enchant." << endl;
+            return;
+        }
     } else {
         // todo exception, not found.
     }

@@ -1,5 +1,6 @@
 #include "spell.h"
 #include "card.h"
+#include "enchantment.h"
 #include "../gameModel/game.h"
 #include <string>
 using namespace std;
@@ -73,7 +74,11 @@ void Disenchant::expend() {
     return;
 }
 void Disenchant::expend(shared_ptr<Minion> minion) {
-    // TODO: Destroy top enchantment on minion
+    if (minion->getType() == "Enchantment") {
+        auto ench = static_pointer_cast<Enchantment>(minion);
+        auto base = ench->getMinion();
+        game->getPlayer(0)->getBoard()->setMinion(0, base); // replace 0 with correct indexes
+    }
     return;
 }
 void Disenchant::expend(shared_ptr<Ritual> ritual) {

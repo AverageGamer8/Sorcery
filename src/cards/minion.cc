@@ -93,6 +93,9 @@ int Minion::getActions() const {
 void Minion::setDefence(int def) {
     this->def = def;
 }
+void Minion::setAttack(int atk) {
+    this->atk = atk;
+}
 
 // Specific Minions
 AirElemental::AirElemental(int owner, shared_ptr<Game> game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0} {}

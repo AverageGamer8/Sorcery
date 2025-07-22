@@ -14,11 +14,6 @@ class Ritual : public Card {
     int charges;
     Trigger::TriggerType triggerType;
 
-    string getName() const override;
-    string getDesc() const override;
-    string getType() const override;
-    int getCost() const override;
-
    public:
     Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game,
            shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges,
@@ -30,6 +25,11 @@ class Ritual : public Card {
 
     void attachAbilities();
     void detachAbilities();
+    
+    string getName() const override;
+    string getDesc() const override;
+    string getType() const override;
+    int getCost() const override;
 
     virtual ~Ritual() = default;
 };

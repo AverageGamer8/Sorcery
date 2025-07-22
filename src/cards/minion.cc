@@ -12,6 +12,14 @@ using namespace std;
 Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string type)
     : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions} {}
 
+void Minion::activate() {
+
+}
+
+void Minion::activate(int target) {
+    
+}
+
 void Minion::attack() {
     if (actions == 0) { 
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
@@ -53,7 +61,7 @@ void Minion::restoreAction() {
 void Minion::takeDamage(int dmg) {
     def -= dmg;
     if (def <= 0) { // or is it better to put it outside of minion
-        game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
+        //game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
         // could be easier to just have the minion itself call put to graveyard methods
     }
 }

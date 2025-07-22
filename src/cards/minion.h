@@ -17,19 +17,19 @@ class Minion : public Card {
     void attack();
     // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
     void attack(int target, std::shared_ptr<Minion> self);
-    void activate();
-    void activate(int target);
-    void restoreAction();
-    void takeDamage(int dmg);
+    virtual void activate();
+    virtual void activate(int target);
+    virtual void restoreAction();
+    virtual void takeDamage(int dmg);
 
     string getName() const override;
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
     
-    int getAttack() const;
-    int getDefence() const;
-    int getActions() const;
+    virtual int getAttack() const;
+    virtual int getDefence() const;
+    virtual int getActions() const;
 
     int setDefence(int def);
 };

@@ -17,31 +17,10 @@ void Enchantment::attach(shared_ptr<Minion> target) {
     minion = target;
 }
 
-void Enchantment::attack() {
-    if (getActions() == 0) { 
-        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
-        return;
-    }
-    shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
-    opp->setLife(opp->getLife() - getAttack());
-    if (opp->getLife() <= 0) {
-        opp->setLife(0);
-        game->setWinner(game->getActiveIndex());
-    }
-    --actions;
-}
-
-void Enchantment::attack(int target, shared_ptr<Minion> self) {
-     if (actions == 0) { 
-        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
-        return;
-    }
-    game->battleMinion(self, target);
-    --actions;
-}
-
 void Enchantment::activate() {
     //minion->activate(); doesnt exist yet?
+    // maybe instead use getActivatedAbility to go and grab it?
+    // and have this method just handle actions?
 }
 
 void Enchantment::activate(int target) {

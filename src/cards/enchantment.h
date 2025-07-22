@@ -15,22 +15,21 @@ class Enchantment: public Minion {
    public:
     Enchantment(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual void attach(shared_ptr<Minion> target);
-    virtual void attack();
-    virtual void attack(int target, shared_ptr<Minion> self);
-    virtual void activate();
-    virtual void activate(int target);
-    virtual void restoreAction();
-    virtual void takeDamage(int dmg);
-// might need a get base minion method() or just check if its an enchantment    
+    virtual void activate() override;
+    virtual void activate(int target) override;
+    virtual void restoreAction() override;
+    virtual void takeDamage(int dmg) override;
+// might need a get base minion method() or just check if its an enchantment
+// might need getActivatedAbility    
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
 
-    int getAttack() const;
-    int getDefence() const;
-    int getActions() const;
+    int getAttack() const override;
+    int getDefence() const override;
+    int getActions() const override;
     string getAtkDesc() const;
     string getDefDesc() const;
 };

@@ -8,7 +8,7 @@
 #include "../gameModel/game.h"
 
 class Viewer {
-    std::vector<std::shared_ptr<Display>> displays;
+    std::vector<std::shared_ptr<sorcDisplay>> displays;
     std::shared_ptr<Game> game;
 
    public:
@@ -19,7 +19,7 @@ class Viewer {
         HAND,
         BOARD
     };
-    Viewer(std::vector<std::shared_ptr<Display>> displays,
+    Viewer(std::vector<std::shared_ptr<sorcDisplay>> displays,
            std::shared_ptr<Game> game);
     void display(Command command);
     void display(Command command, int minion);

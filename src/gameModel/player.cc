@@ -3,7 +3,6 @@
 #include <iostream>  // TODO: remove debugs later.
 
 #include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
-#include "graveyard.h"
 
 using namespace std;
 

@@ -1,8 +1,11 @@
 #include "spell.h"
-#include "card.h"
+
+#include <iostream>  // TODO: DEBUG
+#include <string>
+
 #include "enchantment.h"
 #include "../gameModel/game.h"
-#include <string>
+#include "card.h"
 using namespace std;
 
 Spell::Spell(string name, string description, int cost, int owner, shared_ptr<Game> game, string type) : Card{name, description, type, cost, owner, game} {};
@@ -25,95 +28,113 @@ int Spell::getCost() const {
 
 // Specific Spells
 Banish::Banish(int owner, shared_ptr<Game> game) : Spell{"Banish", "Destroy target minion or ritual", 2, owner, game} {}
-void Banish::expend() {
-    // TODO: Handle exception
-    return;
+bool Banish::expend() {
+    // TODO: Handle exception - should never be played
+    cout << "DEBUG: (Spell) Not proper usage: must have proper target." << endl;
+    return false;
 }
-void Banish::expend(shared_ptr<Minion> minion) {
-    minion->setDefence(0); // this just kills, not destroy, probably better to just nullptr it
+bool Banish::expend(int player, int target) {
+    auto p = game->getPlayer(player);
+    p->getBoard()->removeMinion(target);
+    return true;
 }
-void Banish::expend(shared_ptr<Ritual> ritual) {
-    game->getPlayer(game->getActiveIndex())->getBoard()->setRitual(nullptr);
+bool Banish::expend(int player) {
+    game->getPlayer(player)->getBoard()->removeRitual();
+    return true;
 }
 
 Unsummon::Unsummon(int owner, shared_ptr<Game> game) : Spell{"Unsummon", "Return target minion to its owner's hand", 1, owner, game} {}
-void Unsummon::expend() {
+bool Unsummon::expend() {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG: (Spell) Not proper usage: must be used on minions." << endl;
+    return false;
 }
-void Unsummon::expend(shared_ptr<Minion> minion) {
-    auto curr = game->getPlayer(game->getActiveIndex());
-    if (curr->getHand()->isFull()) {
-        // TODO: Handle exception
-        return;
+bool Unsummon::expend(int player, int minion) {
+    auto p = game->getPlayer(player);
+    if (p->getHand()->isFull()) {
+        // TODO: Handle exception - hand full
+        cout << "DEBUG: (Spell) Can't Unsummon, " << p->getName() << "'s hand is full." << endl;
+        return false;
     }
-
-    curr->getHand()->addCard(minion);
+    p->getHand()->addCard(p->getBoard()->getMinion(minion));
+    p->getBoard()->removeMinion(minion);
+    return true;
 }
-void Unsummon::expend(shared_ptr<Ritual> ritual) {
+bool Unsummon::expend(int player) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used on minions." << endl;
+    return false;
 }
 
 Recharge::Recharge(int owner, shared_ptr<Game> game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
-void Recharge::expend() {
+bool Recharge::expend() {
+    cout << "DEBUG (Spell) Not proper usage: must be used on rituals." << endl;
     // TODO: Handle exception
-    return;
+    return false;
 }
-void Recharge::expend(shared_ptr<Minion> minion) {
+bool Recharge::expend(int player, int minion) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used on rituals." << endl;
+    return false;
 }
-void Recharge::expend(shared_ptr<Ritual> ritual) {
+bool Recharge::expend(int player) {
+    auto ritual = game->getPlayer(player)->getBoard()->getRitual();
+    if (!ritual) {
+        cout << "DEBUG (Spell) Ritual is invalid." << endl;
+        return false;
+    }
     ritual->setCharges(ritual->getCharges() + 3);
+    return true;
 }
 
 Disenchant::Disenchant(int owner, shared_ptr<Game> game) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner, game} {}
-void Disenchant::expend() {
+bool Disenchant::expend() {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used on minions." << endl;
+    return false;
 }
 void Disenchant::expend(shared_ptr<Minion> minion) {
-    if (minion->getType() == "Enchantment") {
-        auto ench = static_pointer_cast<Enchantment>(minion);
-        auto base = ench->getMinion();
-        game->getPlayer(0)->getBoard()->setMinion(0, base); // replace 0 with correct indexes
-    }
+    // TODO: Destroy top enchantment on minion
     return;
 }
-void Disenchant::expend(shared_ptr<Ritual> ritual) {
+bool Disenchant::expend(int player) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used on minions." << endl;
+    return false;
 }
-
 
 RaiseDead::RaiseDead(int owner, shared_ptr<Game> game) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
-void RaiseDead::expend() {
+bool RaiseDead::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
-    if (curr->getBoard()->isFull()) {
+    if (curr->getHand()->isFull()) {
         // TODO: Handle exception
-        return;
+        cout << "DEBUG (Spell) Hand is full." << endl;
+        return false;
     }
     if (curr->getGraveyard()->isEmpty()) {
         // TODO: Handle exception
-        return;
+        cout << "DEBUG (Spell) Graveyard is empty." << endl;
+        return false;
     }
 
     auto m = curr->getGraveyard()->popTopMinion();
-    m->setDefence(1); // i think the resurrected minion is supposed to go to hand
-    curr->getBoard()->addMinion(m);
+    m->setDefence(1);
+    curr->getHand()->addCard(static_pointer_cast<Card>(m));
+    return true;
 }
-void RaiseDead::expend(shared_ptr<Minion> minion) {
+bool RaiseDead::expend(int player, int minion) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used without target." << endl;
+    return false;
 }
-void RaiseDead::expend(shared_ptr<Ritual> ritual) {
+bool RaiseDead::expend(int player) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used without target." << endl;
+    return false;
 }
 
 Blizzard::Blizzard(int owner, shared_ptr<Game> game) : Spell{"Blizzard", "Deal 2 damage to all minions", 3, owner, game} {}
-void Blizzard::expend() {
+bool Blizzard::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     auto opp = game->getPlayer(game->getInactiveIndex());
     for (auto& minion : curr->getBoard()->getMinions()) {
@@ -123,11 +144,14 @@ void Blizzard::expend() {
         minion->takeDamage(2);
     }
 }
-void Blizzard::expend(shared_ptr<Minion> minion) {
+bool Blizzard::expend(int player, int minion) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used without target." << endl;
+    return false;
+    
 }
-void Blizzard::expend(shared_ptr<Ritual> ritual) {
+bool Blizzard::expend(int player) {
     // TODO: Handle exception
-    return;
+    cout << "DEBUG (Spell) Not proper usage: must be used without target." << endl;
+    return false;
 }

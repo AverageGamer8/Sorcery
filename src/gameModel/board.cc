@@ -20,10 +20,12 @@ void Board::addMinion(shared_ptr<Minion> m) {
 }
 
 void Board::addRitual(shared_ptr<Ritual> r) {
-    if (hasRitual() || !r) {
-        return;
+    if (!r) return;
+    if (hasRitual()) {
+        ritual->detachAbilities();
     }
     ritual = r;
+    ritual->attachAbilities();
 }
 
 void Board::removeMinion(int target) {

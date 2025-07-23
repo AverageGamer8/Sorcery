@@ -12,12 +12,6 @@ bool Board::hasRitual() const {
     return ritual != nullptr;
 }
 
-void Board::addMinion(shared_ptr<Minion> m) {
-    if (isFull() || !m) {
-        return;
-    }
-    minions.emplace_back(m);
-}
 
 void Board::addRitual(shared_ptr<Ritual> r) {
     if (!r) return;
@@ -28,11 +22,23 @@ void Board::addRitual(shared_ptr<Ritual> r) {
     ritual->attachAbilities();
 }
 
+void Board::addMinion(shared_ptr<Minion> m) {
+    if (isFull() || !m) {
+        return;
+    }
+    if (m->getTriggeredAbility()) {
+        m->attachAbilities();
+    }
+    minions.emplace_back(m);
+}
+
 void Board::removeMinion(int target) {
     int size = minions.size();
     if (target >= size)
         return;
-
+    if (getMinion(target)->getTriggeredAbility()) {
+        getMinion(target)->detachAbilities();
+    }
     minions.erase(minions.begin() + target);
 }
 

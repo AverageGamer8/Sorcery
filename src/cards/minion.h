@@ -4,6 +4,9 @@
 #include <string>
 
 #include "card.h"
+#include "abilities/activatedability.h"
+#include "abilities/triggeredability.h"
+
 using namespace std;
 
 class Minion : public Card {
@@ -11,15 +14,23 @@ class Minion : public Card {
     int atk;
     int def;
     int actions;
+    shared_ptr<ActivatedAbility> activatedAbility;
+    shared_ptr<TriggeredAbility> triggeredAbility;
 
    public:
-    Minion(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string type = "Minion");
+    Minion(string name, string description, int cost, int owner, 
+        Game* game, int atk, int def, int actions, 
+        shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
+        string type = "Minion");
     void attack();
     // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
     void attack(int target, std::shared_ptr<Minion> self);
-    virtual void activate();
-    virtual void activate(int target);
+    virtual bool activate();
+    virtual bool activate(int target);
+    void attachAbilities();
+    void detachAbilities();
     virtual void restoreAction();
+    virtual void consumeAction();
     virtual void takeDamage(int dmg);
 
     string getName() const override;
@@ -30,6 +41,8 @@ class Minion : public Card {
     virtual int getAttack() const;
     virtual int getDefence() const;
     virtual int getActions() const;
+    shared_ptr<ActivatedAbility> getActivatedAbility() const;
+    shared_ptr<TriggeredAbility> getTriggeredAbility() const;
 
     void setDefence(int def);
     void setAttack(int atk);

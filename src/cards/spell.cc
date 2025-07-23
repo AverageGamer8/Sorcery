@@ -3,9 +3,9 @@
 #include <iostream>  // TODO: DEBUG
 #include <string>
 
-#include "enchantment.h"
 #include "../gameModel/game.h"
 #include "card.h"
+#include "enchantment.h"
 using namespace std;
 
 Spell::Spell(string name, string description, int cost, int owner, Game* game, string type) : Card{name, description, type, cost, owner, game} {};
@@ -57,7 +57,7 @@ bool Unsummon::expend(int player, int minion) {
         return false;
     }
     p->getHand()->addCard(p->getBoard()->getMinion(minion));
-    p->getBoard()->removeMinion(minion);
+    p->getBoard()->removeMinion(minion); // should remove enchantments too
     return true;
 }
 bool Unsummon::expend(int player) {
@@ -158,7 +158,6 @@ bool Blizzard::expend(int player, int minion) {
     // TODO: Handle exception
     cout << "DEBUG (Spell) Not proper usage: must be used without target." << endl;
     return false;
-    
 }
 bool Blizzard::expend(int player) {
     // TODO: Handle exception

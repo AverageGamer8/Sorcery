@@ -1,8 +1,8 @@
 #ifndef RITUAL_H
 #define RITUAL_H
 
-#include "../trigger.h"  // TODO: needed? currently attaching observer here.
-#include "../triggeredability.h"
+#include "abilities/trigger.h"  // TODO: needed? currently attaching observer here.
+#include "abilities/triggeredability.h"
 #include "card.h"
 using namespace std;
 
@@ -12,12 +12,10 @@ class Ritual : public Card {
     shared_ptr<TriggeredAbility> triggerAbility;
     int activationCost;
     int charges;
-    Trigger::TriggerType triggerType;
 
    public:
     Ritual(string name, string description, int cost, int owner, Game* game,
-           shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges,
-           Trigger::TriggerType triggerType, string type = "Ritual");
+           shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, string type = "Ritual");
 
     int getActivationCost() const;
     int getCharges() const;

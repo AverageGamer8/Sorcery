@@ -38,9 +38,9 @@ class Player {
     void discardCard(int index);
     void shuffleDeck();
 
-    void activateCard(int index);
-    void activateCard(int index, int player);
-    void activateCard(int index, int player, int minion);
+    bool activateCard(int index);
+    bool activateCard(int index, int player);
+    bool activateCard(int index, int player, int minion);
 
     void minionAttack(int index); // minion v player
     void minionAttack(int index, int target); // minion v minion

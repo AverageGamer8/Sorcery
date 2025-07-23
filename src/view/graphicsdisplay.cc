@@ -1,4 +1,5 @@
 #include "graphicsdisplay.h"
+#include <sstream>
 
   // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
@@ -8,10 +9,21 @@ const int DEF = Xwindow::Blue, MP = Xwindow::Blue;
 const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
 const int BLANK = Xwindow::White;
 const int EMPTY = Xwindow::Black;
-const int offset = 10;
+const int offset = 10, cOffset = 2 * offset;
+const int lineCap = 22;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width + 1, height + 1}, width{width}, height{height}, cWidth{width / 6}, cHeight{height / 5} { xw.fillRectangle(0, 0, width, height); }
+    xw{width + 1, height + 1}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+
+void GraphicsDisplay::drawDesc(int x, int y, string desc) {
+    istringstream iss{desc}; string out = "";
+    for (int line = 0; iss >> out; line++) {
+        string tmp = "";
+        while (out.length() < lineCap && iss >> tmp) out += " " + tmp;
+        xw.drawString(x + offset, y + (cHeight * (line * 0.1 + 0.4)) + offset, out);
+        out = "";
+    }
+}
 
 void GraphicsDisplay::printPlayer(int pos, shared_ptr<Player> player) {
     int left = cWidth * 2, top = pos == 0 ? 0 : cHeight * 4;
@@ -23,52 +35,43 @@ void GraphicsDisplay::printPlayer(int pos, shared_ptr<Player> player) {
     xw.drawString(left + (cWidth * 0.8) + offset, top + (pos == 0 ? cHeight * 0.8 : 0) + offset, to_string(player->getMagic()));
 }
 
-void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {
-    cout << "print minion " << minion->getName() << endl;
-    xw.drawString(x + offset, y + offset, minion->getName());
-    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(minion->getCost()));
-    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, minion->getType());
+void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {    
     xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
-    xw.drawString(x + offset, y + (cHeight * 0.8) + offset, to_string(minion->getAttack()));
+    xw.drawString(x + cOffset, y + (cHeight * 0.8) + cOffset, to_string(minion->getAttack()));
     xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, to_string(minion->getDefence()));
+    xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, to_string(minion->getDefence()));
     // include activated abilities here and stuff here
 }
 
 void GraphicsDisplay::printEnchantment(int x, int y, shared_ptr<Enchantment> ench) {
-    xw.drawString(x + offset, y + offset, ench->getName());
-    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(ench->getCost()));
-    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ench->getType());
-    xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
-    xw.drawString(x + offset, y + (cHeight * 0.8) + offset, ench->getAtkDesc());
-    xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, ench->getDefDesc());
+    if (ench->getAtkDesc() != "") {
+        xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
+        xw.drawString(x + cOffset, y + (cHeight * 0.8) + cOffset, ench->getAtkDesc());
+    }
+    if (ench->getDefDesc() != "") {
+        xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
+        xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, ench->getDefDesc());
+    }
+    drawDesc(x, y, ench->getDesc());
     // include activated abilities here and stuff here
 }
 
 void GraphicsDisplay::printRitual(int x, int y, shared_ptr<Ritual> ritual) {
-    xw.drawString(x + offset, y + offset, ritual->getName());
-    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(ritual->getCost()));
-    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ritual->getType());
     xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, CHARGE);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + (cWidth * 0.8) + offset, to_string(ritual->getCharges()));
+    xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, to_string(ritual->getCharges()));
+    xw.fillRectangle(x, y + (cHeight * 0.4), cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + cOffset, y + (cHeight * 0.4) + cOffset, to_string(ritual->getActivationCost()));
+    drawDesc(x + (cWidth * 0.2), y, ritual->getDesc());
     // include activated abilities here and stuff here
 }
 
 void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
-    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
-    xw.drawString(x + offset, y + offset, spell->getName());
-    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-    xw.drawString(x + (cWidth * 0.8) + offset, y + offset, to_string(spell->getCost()));
     xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, spell->getType());
-    xw.drawString(x + offset, y + (cHeight * 0.4) + offset, spell->getDesc());
+    drawDesc(x, y, spell->getDesc());
 }
 
 void GraphicsDisplay::printSorcery(int x, int y) {
-    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.fillRectangle(x, y, width, cHeight, BLANK);
     xw.drawString(x + offset, y + offset, "SORCERY");
 }
 
@@ -77,8 +80,9 @@ void GraphicsDisplay::printGame(shared_ptr<Game> game) {
 }
 
 void GraphicsDisplay::printHelp() {
+    xw.fillRectangle(0, cHeight * 2, cWidth * 2, cHeight, BLANK);
     const string temp = "";
-    xw.drawString(0, cHeight * 2 + 5, 
+    xw.drawString(0, cHeight * 2 + offset, 
         temp + "Commands:\n\t"
         + "help -- Display this message,\n\t"
         + "end -- End the current player’s turn,\n\t"
@@ -112,12 +116,16 @@ void GraphicsDisplay::printHand(shared_ptr<Game> game) {
     cout << "DEBUG: (GraphicsDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
-    
+
     int y = cHeight * 5;
     for (int i = 0; i < hand->getSize(); i++) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
         xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+        xw.drawString(x + offset, y + offset, card->getName());
+        xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+        xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(card->getCost()));
+        xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, card->getType());
         if (card->getType() == "Minion") printMinion(x, y, static_pointer_cast<Minion>(card));
         else if (card->getType() == "Enchantment") printEnchantment(x, y, static_pointer_cast<Enchantment>(card));
         else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));

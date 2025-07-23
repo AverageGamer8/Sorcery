@@ -28,7 +28,7 @@ void Enchantment::activate(int target) {
 }
 
 void Enchantment::restoreAction() {
-    if (actions < 0) actions = 0;
+    if (actions < 0) actions = 0; // actions of an enchantment can be negative
     minion->restoreAction();
 }
 
@@ -45,7 +45,8 @@ shared_ptr<Minion> Enchantment::getMinion() const {
 }
 
 string Enchantment::getName() const {
-    return name;
+    if (minion == nullptr) return name;
+    else return minion->getName();
 }
 
 string Enchantment::getDesc() const {
@@ -66,7 +67,7 @@ int Enchantment::getDefence() const {
     return def + minion->getDefence();
 }
 int Enchantment::getActions() const {
-    return actions + minion->getActions();
+    return actions + minion->getActions(); // getActions get cumulative actions available
 }
 string Enchantment::getAtkDesc() const {
     return atkDesc;

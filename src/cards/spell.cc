@@ -94,8 +94,18 @@ bool Disenchant::expend() {
     return false;
 }
 bool Disenchant::expend(int player, int minion) {
-    // TODO: Destroy top enchantment on minion
-    return false;
+    auto target = game->getPlayer(player)->getBoard()->getMinion(minion);
+    if (!target) {
+        cout << "No minion selected" << endl;
+        return false;
+    }
+    if (target->getType() != "Enchantment") {
+        cout << "No enchantments on minion selected" << endl;
+        return false;
+    }
+    auto ench = static_pointer_cast<Enchantment>(target);
+    game->getPlayer(player)->getBoard()->setMinion(minion, ench->getMinion());
+    return true;
 }
 bool Disenchant::expend(int player) {
     // TODO: Handle exception

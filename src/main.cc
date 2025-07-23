@@ -155,10 +155,10 @@ int main(int argc, char **argv) {
     auto textDisplay = make_shared<TextDisplay>(cout);
     vector<shared_ptr<sorcDisplay>> displays;  // TODO: expand this once graphics are implemented
     displays.emplace_back(textDisplay);    // for now, just text.
-    if (graphicsEnabled) {
-        auto graphicsDisplay = make_shared<GraphicsDisplay>();
-        displays.emplace_back(graphicsDisplay);
-    }
+    // if (graphicsEnabled) {
+    //     auto graphicsDisplay = make_shared<GraphicsDisplay>();
+    //     displays.emplace_back(graphicsDisplay);
+    // }
     auto viewer = make_shared<Viewer>(displays, game);
 
     auto controller = make_unique<Controller>(game, viewer);

@@ -1,43 +1,69 @@
 #ifndef TRIGGEREDABILITY_H
 #define TRIGGEREDABILITY_H
 
+#include <memory>
+
+#include "trigger.h" // TODO: investigate dependency. no arrow in uml
 #include "ability.h"
 #include "observer.h"
-#include <memory>
+
+using namespace std;
 
 class Game;
 
 class TriggeredAbility : public Observer, public Ability {
    protected:
-    std::shared_ptr<Game> game;
+    shared_ptr<Game> game;
     int player;
+    Trigger::TriggerType type;
 
    public:
-    TriggeredAbility(std::shared_ptr<Game> game, int player) : game{game}, player{player} {}
+    TriggeredAbility(shared_ptr<Game> game, int player, const string& desc, Trigger::TriggerType type)
+        : Ability(desc), game{game}, player{player}, type{type} {}
 
-    virtual void activate() override = 0;
+    Trigger::TriggerType getTriggerType() const;
+    virtual bool activate() override = 0;
     void notify() override;
     virtual bool shouldTrigger() const = 0;
     virtual ~TriggeredAbility() = default;
 };
 
-class OnStartGainMagic: public TriggeredAbility {
-    public:
-        OnStartGainMagic(std::shared_ptr<Game> game, int player);
-        void activate() override;
-        bool shouldTrigger() const override;
+class OnStartGainMagic : public TriggeredAbility {
+   public:
+    OnStartGainMagic(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
-class OnEnterBuff: public TriggeredAbility {
-    public:
-        OnEnterBuff(std::shared_ptr<Game> game, int player);
-        void activate() override;
-        bool shouldTrigger() const override;
+class OnEnterBuff : public TriggeredAbility {
+   public:
+    OnEnterBuff(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
-class OnEnterDestroy: public TriggeredAbility {
-    public:
-        OnEnterDestroy(std::shared_ptr<Game> game, int player);
-        void activate() override;
-        bool shouldTrigger() const override;
+class OnEnterDestroy : public TriggeredAbility {
+   public:
+    OnEnterDestroy(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
+};
+
+class OnExitGainBuff : public TriggeredAbility {
+   public:
+    OnExitGainBuff(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
+};
+class OnEnterDamage : public TriggeredAbility {
+   public:
+    OnEnterDamage(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
+};
+class OnTurnEndBuff : public TriggeredAbility {
+   public:
+    OnTurnEndBuff(shared_ptr<Game> game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
 
 #endif

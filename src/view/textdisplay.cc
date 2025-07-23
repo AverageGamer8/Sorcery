@@ -71,11 +71,30 @@ void TextDisplay::printHand(shared_ptr<Game> game) {
 card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
     if (card->getType() == "Minion") {
         auto minion = static_pointer_cast<Minion>(card);
-        return display_minion_no_ability(  // TODO other abilities.
-            card->getName(),
-            card->getCost(),
-            minion->getAttack(),
-            minion->getDefence());
+        auto triggered = static_pointer_cast<TriggeredAbility>(minion->getTriggeredAbility());
+        auto activated = static_pointer_cast<ActivatedAbility>(minion->getActivatedAbility());
+        if (triggered) {
+            return display_minion_triggered_ability(
+                card->getName(),
+                card->getCost(),
+                minion->getAttack(),
+                minion->getDefence(),
+                minion->getTriggeredAbility()->getDesc());
+        } else if (activated) {
+            return display_minion_activated_ability(
+                card->getName(),
+                card->getCost(),
+                minion->getAttack(),
+                minion->getDefence(),
+                minion->getActivatedAbility()->getCost(),
+                minion->getActivatedAbility()->getDesc());
+        } else {
+            return display_minion_no_ability(
+                card->getName(),
+                card->getCost(),
+                minion->getAttack(),
+                minion->getDefence());
+        }
     } else if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
         return display_spell(
@@ -99,7 +118,7 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
         cout << "DEBUG: TextDisplay: empty template given to print" << endl;  // todo exception
         return;
     }
-    int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card! 
+    int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card!
     // assumes all card have same or greater height.
     for (int line = 0; line < height; ++line) {
         for (int card = 0; card < cardTemplates.size(); ++card) {

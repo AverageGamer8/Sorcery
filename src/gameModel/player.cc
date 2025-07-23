@@ -2,8 +2,8 @@
 
 #include <iostream>  // TODO: remove debugs later.
 
-#include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
 #include "../cards/enchantment.h"
+#include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
 
 using namespace std;
 
@@ -59,11 +59,11 @@ bool Player::playCard(int index, int player, int minion) {
         auto spell = static_pointer_cast<Spell>(card);
         if (!spell->expend(player, minion)) return false;
     } else if (card->getType() == "Enchantment") {
-        auto ench = static_pointer_cast<Enchantment>(card);
-        if (!ench->attach(player, minion)) {
-            cout << "No minion to enchant." << endl;
-            return false;
-        }
+        // auto ench = static_pointer_cast<Enchantment>(card);
+        // if (!ench->attach(player, minion)) {
+        //     cout << "No minion to enchant." << endl;
+        //     return false;
+        // }
     } else {
         // todo exception, not found.
     }
@@ -71,7 +71,7 @@ bool Player::playCard(int index, int player, int minion) {
     hand->discardCard(index);
     return true;
 }
-bool Player::playCard(int index, int player) {  // Ritual
+bool Player::playCard(int index, int player) {  // Use spell on ritual
     auto card = hand->getCardAtIndex(index);
     int cost = card->getCost();
     if (!hasMagicCost(cost)) {
@@ -100,9 +100,45 @@ void Player::drawCard() {
 
     // hand->debugPrintHand();  // debug msg.
 }
-void Player::activateCard(int index) {}
-void Player::activateCard(int index, int player) {}
-void Player::activateCard(int index, int player, int minion) {}
+
+bool Player::activateCard(int index) {
+    auto m = getBoard()->getMinion(index);
+    auto ability = m->getActivatedAbility();
+    if (!hasMagicCost(ability->getCost())) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Does not have enough magic to use the card." << endl;
+        return false;
+    }
+    if (!m->activate()) return false;
+    setMagic(getMagic() - ability->getCost());
+    return true;
+}
+
+bool Player::activateCard(int index, int player) {
+    auto m = getBoard()->getMinion(index);
+    auto ability = m->getActivatedAbility();
+    if (!hasMagicCost(ability->getCost())) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Does not have enough magic to use the card." << endl;
+        return false;
+    }
+    if (!m->activate()) return false;
+    setMagic(getMagic() - ability->getCost());
+    return true;
+}
+
+bool Player::activateCard(int index, int player, int minion) {
+    auto m = getBoard()->getMinion(index);
+    auto ability = m->getActivatedAbility();
+    if (!hasMagicCost(ability->getCost())) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Does not have enough magic to use the card." << endl;
+        return false;
+    }
+    if (!m->activate(minion)) return false;
+    setMagic(getMagic() - ability->getCost());
+    return true;
+}
 
 void Player::minionAttack(int index) {  // attacks player
     auto minion = board->getMinion(index);
@@ -112,6 +148,7 @@ void Player::minionAttack(int index) {  // attacks player
     }
     minion->attack();
 }
+
 void Player::minionAttack(int index, int target) {
     auto minion = board->getMinion(index);
     if (!minion) {

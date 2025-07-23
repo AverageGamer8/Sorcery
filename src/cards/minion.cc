@@ -9,19 +9,33 @@
 #include "card.h"
 using namespace std;
 
-Minion::Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string type)
-    : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions} {}
+Minion::Minion(string name, string description, int cost, int owner,
+               shared_ptr<Game> game, int atk, int def, int actions,
+               shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, string type)
+    : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions}, activatedAbility{activatedAbility}, triggeredAbility{triggeredAbility} {}
 
-void Minion::activate() {
-
+bool Minion::activate() {
+    if (!activatedAbility) return false; 
+    return activatedAbility->activate();
 }
 
-void Minion::activate(int target) {
-    
+bool Minion::activate(int target) {
+    if (!activatedAbility) return false;
+    return activatedAbility->activate(target); 
+}
+
+void Minion::attachAbilities() {
+    if (!triggeredAbility) return;
+    game->getTrigger(triggeredAbility->getTriggerType()).attach(triggeredAbility);
+    cout << "DEBUG: Ritual: attached trigger." << endl;
+}
+void Minion::detachAbilities() {
+    if (!triggeredAbility) return;
+    game->getTrigger(triggeredAbility->getTriggerType()).detach(triggeredAbility);
 }
 
 void Minion::attack() {
-    if (actions == 0) { 
+    if (actions == 0) {
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -34,8 +48,8 @@ void Minion::attack() {
     --actions;
 }
 
-void Minion::attack(int target, std::shared_ptr<Minion> self) {
-    if (actions == 0) { 
+void Minion::attack(int target, shared_ptr<Minion> self) {
+    if (actions == 0) {
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -45,7 +59,7 @@ void Minion::attack(int target, std::shared_ptr<Minion> self) {
 
 // TODO: investigate why shared_from_this() causes segfault. maybe something to do with dependency?
 // void Minion::attack(int target) {
-//     if (actions == 0) { 
+//     if (actions == 0) {
 //         cout << "DEBUG: (Minion) " << name << "is out of actions." << endl;
 //         return;
 //     }
@@ -60,9 +74,9 @@ void Minion::restoreAction() {
 
 void Minion::takeDamage(int dmg) {
     def -= dmg;
-    if (def <= 0) { // or is it better to put it outside of minion
-        //game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
-        // could be easier to just have the minion itself call put to graveyard methods
+    if (def <= 0) {  // or is it better to put it outside of minion
+        // game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
+        //  could be easier to just have the minion itself call put to graveyard methods
     }
 }
 
@@ -90,6 +104,12 @@ int Minion::getDefence() const {
 int Minion::getActions() const {
     return actions;
 }
+shared_ptr<ActivatedAbility> Minion::getActivatedAbility() const {
+    return activatedAbility;
+}
+shared_ptr<TriggeredAbility> Minion::getTriggeredAbility() const {
+    return triggeredAbility;
+}
 void Minion::setDefence(int def) {
     this->def = def;
 }
@@ -98,11 +118,11 @@ void Minion::setAttack(int atk) {
 }
 
 // Specific Minions
-AirElemental::AirElemental(int owner, shared_ptr<Game> game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0} {}
-EarthElemental::EarthElemental(int owner, shared_ptr<Game> game) : Minion{"Earth Elemental", "", 3, owner, game, 4, 4, 0} {}
-BoneGolem::BoneGolem(int owner, shared_ptr<Game> game) : Minion{"Bone Golem", "", 2, owner, game, 1, 3, 0} {}
-FireElemental::FireElemental(int owner, shared_ptr<Game> game) : Minion{"Fire Elemental", "", 2, owner, game, 2, 2, 0} {}
-PotionSeller::PotionSeller(int owner, shared_ptr<Game> game) : Minion{"Potion Seller", "", 2, owner, game, 1, 3, 0} {}
-NovicePyromancer::NovicePyromancer(int owner, shared_ptr<Game> game) : Minion{"Novice Pyromancer", "", 1, owner, game, 0, 1, 0} {}
-ApprenticeSummoner::ApprenticeSummoner(int owner, shared_ptr<Game> game) : Minion{"Apprentice Summoner", "", 1, owner, game, 1, 1, 0} {}
-MasterSummoner::MasterSummoner(int owner, shared_ptr<Game> game) : Minion{"Master Summoner", "", 3, owner, game, 2, 3, 0} {}
+AirElemental::AirElemental(int owner, shared_ptr<Game> game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0, nullptr, nullptr} {}
+EarthElemental::EarthElemental(int owner, shared_ptr<Game> game) : Minion{"Earth Elemental", "", 3, owner, game, 4, 4, 0, nullptr, nullptr} {}
+BoneGolem::BoneGolem(int owner, shared_ptr<Game> game) : Minion{"Bone Golem", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnExitGainBuff>(game, owner)} {}
+FireElemental::FireElemental(int owner, shared_ptr<Game> game) : Minion{"Fire Elemental", "", 2, owner, game, 2, 2, 0, nullptr, make_shared<OnEnterDamage>(game, owner)} {}
+PotionSeller::PotionSeller(int owner, shared_ptr<Game> game) : Minion{"Potion Seller", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnTurnEndBuff>(game, owner)} {}
+NovicePyromancer::NovicePyromancer(int owner, shared_ptr<Game> game) : Minion{"Novice Pyromancer", "", 1, owner, game, 0, 1, 0, make_shared<DealDamage>(game), nullptr} {}
+ApprenticeSummoner::ApprenticeSummoner(int owner, shared_ptr<Game> game) : Minion{"Apprentice Summoner", "", 1, owner, game, 1, 1, 0, make_shared<SummonAirElemental>(game), nullptr} {}
+MasterSummoner::MasterSummoner(int owner, shared_ptr<Game> game) : Minion{"Master Summoner", "", 3, owner, game, 2, 3, 0, make_shared<SummonThreeAirElemental>(game), nullptr} {}

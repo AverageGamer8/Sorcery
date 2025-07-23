@@ -14,7 +14,7 @@ class Enchantment: public Minion {
 
    public:
     Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
-    virtual bool attach(shared_ptr<Minion> target);
+    virtual bool attach(int player, int target);
     virtual bool activate() override;
     virtual bool activate(int target) override;
     virtual void restoreAction() override;
@@ -44,8 +44,8 @@ class GiantStrength: public Enchantment {
 
 class Enrage: public Enchantment {
     public:
-     Enrage(int owner, shared_ptr<Game> game);
-     void attach(shared_ptr<Minion> target) override;
+     Enrage(int owner, Game* game);
+     bool attach(int player, int target) override;
 };
 
 class Haste: public Enchantment {

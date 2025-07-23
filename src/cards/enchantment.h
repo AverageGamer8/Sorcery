@@ -14,9 +14,9 @@ class Enchantment: public Minion {
 
    public:
     Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
-    virtual void attach(shared_ptr<Minion> target);
-    virtual void activate() override;
-    virtual void activate(int target) override;
+    virtual bool attach(shared_ptr<Minion> target);
+    virtual bool activate() override;
+    virtual bool activate(int target) override;
     virtual void restoreAction() override;
     virtual void takeDamage(int dmg) override;
 // might need a get base minion method() or just check if its an enchantment
@@ -26,6 +26,9 @@ class Enchantment: public Minion {
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
+    string getEnchName() const;
+    string getEnchDesc() const;
+    int getEnchCost() const;
 
     int getAttack() const override;
     int getDefence() const override;
@@ -54,15 +57,15 @@ class Haste: public Enchantment {
 class MagicFatigue: public Enchantment {
     public:
      MagicFatigue(int owner, Game* game);
-     void activate() override;
-     void activate(int target) override;
+     bool activate() override;
+     bool activate(int target) override;
 };
 
 class Silence: public Enchantment {
     public:
      Silence(int owner, Game* game);
-     void activate() override;
-     void activate(int target) override;
+     bool activate() override;
+     bool activate(int target) override;
 };
 
 #endif

@@ -12,12 +12,12 @@ using namespace std;
 Minion::Minion(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string type)
     : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions} {}
 
-void Minion::activate() {
-
+bool Minion::activate() {
+    return true;
 }
 
-void Minion::activate(int target) {
-    
+bool Minion::activate(int target) {
+    return true;
 }
 
 void Minion::attack() {

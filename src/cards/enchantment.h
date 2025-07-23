@@ -12,6 +12,9 @@ class Enchantment: public Minion {
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
 
+   private:
+    void consumeAction() override;
+
    public:
     Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);

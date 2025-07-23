@@ -31,7 +31,7 @@ bool Enchantment::activate(int target) {
 }
 
 void Enchantment::restoreAction() {
-    if (actions < 0) actions = 0; // actions of an enchantment can be negative
+    actions = 0; // actions of an enchantment can be negative
     minion->restoreAction();
 }
 
@@ -91,6 +91,11 @@ string Enchantment::getDefDesc() const {
     return defDesc;
 }
 
+void Enchantment::consumeAction() {
+    if (actions > 0) actions--;
+    else minion->consumeAction();
+}
+
 // Specific Enchantments
 GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
 Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
@@ -124,9 +129,11 @@ bool MagicFatigue::activate(int target) {
 }
 Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0} { }
 bool Silence::activate() {
+    cout << "Blocked by Silence Enchantment." << endl;
     return false; // your not getting that
 }
 bool Silence::activate(int target) {
+    cout << "Blocked by Silence Enchantment." << endl;
     return false;
 }
 

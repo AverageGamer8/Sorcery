@@ -31,7 +31,7 @@ void Minion::attack() {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }
-    --actions;
+    consumeAction();
 }
 
 void Minion::attack(int target, std::shared_ptr<Minion> self) {
@@ -40,7 +40,7 @@ void Minion::attack(int target, std::shared_ptr<Minion> self) {
         return;
     }
     game->battleMinion(self, target);
-    --actions;
+    consumeAction();
 }
 
 // TODO: investigate why shared_from_this() causes segfault. maybe something to do with dependency?
@@ -56,6 +56,9 @@ void Minion::attack(int target, std::shared_ptr<Minion> self) {
 
 void Minion::restoreAction() {
     actions = 1;
+}
+void Minion::consumeAction() {
+    actions--;
 }
 
 void Minion::takeDamage(int dmg) {

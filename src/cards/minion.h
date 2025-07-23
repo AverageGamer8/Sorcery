@@ -20,6 +20,7 @@ class Minion : public Card {
     virtual bool activate();
     virtual bool activate(int target);
     virtual void restoreAction();
+    virtual void consumeAction();
     virtual void takeDamage(int dmg);
 
     string getName() const override;

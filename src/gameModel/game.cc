@@ -106,3 +106,10 @@ Trigger &Game::getTrigger(Trigger::TriggerType type) {  // easier to call, could
             std::cerr << "Game::getTrigger: invalid type." << std::endl;
     }
 }
+
+void Game::notifyTrigger(Trigger::TriggerType type) {
+    auto activePlayer = getActivePlayer();
+    auto inactivePlayer = getInactivePlayer();
+
+    for (auto& trigger : )
+}

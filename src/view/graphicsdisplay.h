@@ -19,12 +19,13 @@ class GraphicsDisplay : public sorcDisplay {
     Xwindow xw;
     int width, height, cWidth, cHeight;
 
+    void printCard(int x, int y, shared_ptr<Card> card);
     void drawDesc(int x, int y, string desc);
     void printMinion(int x, int y, shared_ptr<Minion> minion);
     void printEnchantment(int x, int y, shared_ptr<Enchantment> ench);
     void printRitual(int x, int y, shared_ptr<Ritual> ritual);
     void printSpell(int x, int y, shared_ptr<Spell> spell);
-    void printSorcery(int x, int y);
+    void printSorcery();
     void printPlayer(int pos, shared_ptr<Player> player);
 
    public:

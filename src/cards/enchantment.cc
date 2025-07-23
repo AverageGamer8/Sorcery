@@ -31,7 +31,7 @@ bool Enchantment::activate(int target) {
 }
 
 void Enchantment::restoreAction() {
-    actions = 0; // actions of an enchantment can be negative
+    actions = 0;
     minion->restoreAction();
 }
 

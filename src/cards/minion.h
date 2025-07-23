@@ -30,6 +30,7 @@ class Minion : public Card {
     void attachAbilities();
     void detachAbilities();
     virtual void restoreAction();
+    virtual void consumeAction();
     virtual void takeDamage(int dmg);
 
     string getName() const override;

@@ -57,7 +57,7 @@ bool Unsummon::expend(int player, int minion) {
         return false;
     }
     p->getHand()->addCard(p->getBoard()->getMinion(minion));
-    p->getBoard()->removeMinion(minion);
+    p->getBoard()->removeMinion(minion); // should remove enchantments too
     return true;
 }
 bool Unsummon::expend(int player) {

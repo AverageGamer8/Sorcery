@@ -18,17 +18,20 @@ bool Enchantment::attach(int player, int target) {
     return minion != nullptr;
 }
 
-void Enchantment::activate() {
+bool Enchantment::activate() {
     // maybe instead use getActivatedAbility to go and grab it?
     // and have this method just handle actions?
+    return true;
 }
 
-void Enchantment::activate(int target) {
+bool Enchantment::activate(int target) {
     //minion->activate(target); doesnt exist yet?
+
+    return true;
 }
 
 void Enchantment::restoreAction() {
-    if (actions < 0) actions = 0; // actions of an enchantment can be negative
+    actions = 0; // actions of an enchantment can be negative
     minion->restoreAction();
 }
 
@@ -50,7 +53,8 @@ string Enchantment::getName() const {
 }
 
 string Enchantment::getDesc() const {
-    return description;
+    if (minion == nullptr) return description;
+    else return minion->getDesc();
 }
 
 string Enchantment::getType() const {
@@ -58,8 +62,19 @@ string Enchantment::getType() const {
 }
 
 int Enchantment::getCost() const {
+    if (minion == nullptr) return cost;
+    else return minion->getCost();
+}
+string Enchantment::getEnchName() const {
+    return name;
+}
+string Enchantment::getEnchDesc() const {
+    return description;
+}
+int Enchantment::getEnchCost() const {
     return cost;
 }
+
 int Enchantment::getAttack() const {
     return atk + minion->getAttack();
 }
@@ -76,14 +91,22 @@ string Enchantment::getDefDesc() const {
     return defDesc;
 }
 
+void Enchantment::consumeAction() {
+    if (actions > 0) actions--;
+    else minion->consumeAction();
+}
+
 // Specific Enchantments
 GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
 Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
 bool Enrage::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
-    return minion != nullptr;
-    atk = minion->getAttack() * 1;
-    def = minion->getDefence() * 1;
+    if (minion != nullptr) {
+        atk = minion->getAttack() * 1;
+        def = minion->getDefence() * 1;
+        return true;
+    }
+    return false;
 }
 Haste::Haste(int owner, Game* game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1} { }
 void Haste::restoreAction() {
@@ -91,23 +114,26 @@ void Haste::restoreAction() {
     minion->restoreAction();
 }
 MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0} { }
-void MagicFatigue::activate() { // override activate ability with same ability but costs 2 more
+bool MagicFatigue::activate() { // override activate ability with same ability but costs 2 more
     // check if magic >= cost + 2, dont activate if not
     // go through game? find active player check magic
     int curMP = game->getActivePlayer()->getMagic();
     // get base ability cost
     // get enchantment ability cost
+    return true;
 }
-void MagicFatigue::activate(int target) {
+bool MagicFatigue::activate(int target) {
     // check if magic >= cost + 2, dont activate if not
     int curMP = game->getActivePlayer()->getMagic();
-
+    return true;
 }
 Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0} { }
-void Silence::activate() {
-    return; // your not getting that
+bool Silence::activate() {
+    cout << "Blocked by Silence Enchantment." << endl;
+    return false; // your not getting that
 }
-void Silence::activate(int target) {
-    return;
+bool Silence::activate(int target) {
+    cout << "Blocked by Silence Enchantment." << endl;
+    return false;
 }
 

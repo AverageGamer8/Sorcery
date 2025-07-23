@@ -79,8 +79,9 @@ string Enchantment::getDefDesc() const {
 // Specific Enchantments
 GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
 Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
-void Enrage::attach(shared_ptr<Minion> target) {
-    minion = target;
+bool Enrage::attach(int player, int target) {
+    minion = game->getPlayer(player)->getBoard()->getMinion(target);
+    return minion != nullptr;
     atk = minion->getAttack() * 1;
     def = minion->getDefence() * 1;
 }

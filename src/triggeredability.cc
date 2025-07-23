@@ -13,7 +13,7 @@ void TriggeredAbility::notify() {
     }
 }
 
-OnStartGainMagic::OnStartGainMagic(shared_ptr<Game> game, int player) : TriggeredAbility{game, player} {}
+OnStartGainMagic::OnStartGainMagic(Game* game, int player) : TriggeredAbility{game, player} {}
 void OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     auto p = game->getPlayer(player);
     cout << "DEBUG: TriggeredAbility) OnStartGainMagic: activated " << endl;
@@ -31,7 +31,7 @@ bool OnStartGainMagic::shouldTrigger() const {
     return game->getActiveIndex() == player;
 }
 
-OnEnterBuff::OnEnterBuff(shared_ptr<Game> game, int player) : TriggeredAbility{game, player} {}
+OnEnterBuff::OnEnterBuff(Game* game, int player) : TriggeredAbility{game, player} {}
 void OnEnterBuff::activate() {
     auto p = game->getPlayer(player);
     cout << "DEBUG: (TriggeredAbility) OnEnterBuff: activated " << endl;
@@ -56,7 +56,7 @@ bool OnEnterBuff::shouldTrigger() const {
     return true;
 }
 
-OnEnterDestroy::OnEnterDestroy(shared_ptr<Game> game, int player) : TriggeredAbility{game, player} {}
+OnEnterDestroy::OnEnterDestroy(Game* game, int player) : TriggeredAbility{game, player} {}
 void OnEnterDestroy::activate() {
     auto p = game->getPlayer(player);
     cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: activated " << endl;

@@ -9,11 +9,11 @@ class Game;
 
 class TriggeredAbility : public Observer, public Ability {
    protected:
-    std::shared_ptr<Game> game;
+    Game* game;
     int player;
 
    public:
-    TriggeredAbility(std::shared_ptr<Game> game, int player) : game{game}, player{player} {}
+    TriggeredAbility(Game* game, int player) : game{game}, player{player} {}
 
     virtual void activate() override = 0;
     void notify() override;
@@ -23,19 +23,19 @@ class TriggeredAbility : public Observer, public Ability {
 
 class OnStartGainMagic: public TriggeredAbility {
     public:
-        OnStartGainMagic(std::shared_ptr<Game> game, int player);
+        OnStartGainMagic(Game* game, int player);
         void activate() override;
         bool shouldTrigger() const override;
 };
 class OnEnterBuff: public TriggeredAbility {
     public:
-        OnEnterBuff(std::shared_ptr<Game> game, int player);
+        OnEnterBuff(Game* game, int player);
         void activate() override;
         bool shouldTrigger() const override;
 };
 class OnEnterDestroy: public TriggeredAbility {
     public:
-        OnEnterDestroy(std::shared_ptr<Game> game, int player);
+        OnEnterDestroy(Game* game, int player);
         void activate() override;
         bool shouldTrigger() const override;
 };

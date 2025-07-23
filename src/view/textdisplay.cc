@@ -17,7 +17,7 @@ void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
     }
 }
 
-void TextDisplay::printGame(shared_ptr<Game> game) {
+void TextDisplay::printGame(Game* game) {
     out << "TextDisplay: Printing the gameeee!" << endl;
 }
 
@@ -35,7 +35,7 @@ void TextDisplay::printHelp() {
         << "board -- Describe all cards on the board."
         << endl;
 }
-void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
+void TextDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
     auto minionCard = player->getBoard()->getMinion(minion);
 
@@ -50,7 +50,7 @@ void TextDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     printCardTemplate(cardInfo);
 }
 
-void TextDisplay::printHand(shared_ptr<Game> game) {
+void TextDisplay::printHand(Game* game) {
     // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
@@ -169,7 +169,7 @@ card_template_t TextDisplay::buildVerticalCardBorder() const {
     }
     return col;
 }
-void TextDisplay::printBoard(shared_ptr<Game> game) {
+void TextDisplay::printBoard(Game* game) {
     cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
     printHorizontalBorder();
     cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT;

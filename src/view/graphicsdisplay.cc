@@ -72,7 +72,7 @@ void GraphicsDisplay::printSorcery(int x, int y) {
     xw.drawString(x + offset, y + offset, "SORCERY");
 }
 
-void GraphicsDisplay::printGame(shared_ptr<Game> game) {
+void GraphicsDisplay::printGame(Game* game) {
     xw.drawString(0, 0, "GraphicsDisplay: Printing the gameeee!");
 }
 
@@ -92,7 +92,7 @@ void GraphicsDisplay::printHelp() {
         + "board -- Describe all cards on the board.");
 }
 
-void GraphicsDisplay::printDescribe(shared_ptr<Game> game, int minion) {
+void GraphicsDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
     auto minionCard = player->getMinions()[minion];
 
@@ -108,7 +108,7 @@ void GraphicsDisplay::printDescribe(shared_ptr<Game> game, int minion) {
     // make sure to print enchantments as well
 }
 
-void GraphicsDisplay::printHand(shared_ptr<Game> game) {
+void GraphicsDisplay::printHand(Game* game) {
     cout << "DEBUG: (GraphicsDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
@@ -125,6 +125,6 @@ void GraphicsDisplay::printHand(shared_ptr<Game> game) {
     }
 }
 
-void GraphicsDisplay::printBoard(shared_ptr<Game> game) {
+void GraphicsDisplay::printBoard(Game* game) {
     // go through everything or something idk
 }

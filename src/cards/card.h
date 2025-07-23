@@ -14,10 +14,10 @@ class Card {
         string type;
         int cost;
         int owner;
-        shared_ptr<Game> game;
+        Game* game;
 
     public:
-        Card(string name, string description, string type, int cost, int owner, shared_ptr<Game> game);
+        Card(string name, string description, string type, int cost, int owner, Game* game);
         virtual string getName() const = 0;
         virtual string getDesc() const = 0;
         virtual string getType() const = 0;

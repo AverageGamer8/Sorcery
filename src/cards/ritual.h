@@ -15,7 +15,7 @@ class Ritual : public Card {
     Trigger::TriggerType triggerType;
 
    public:
-    Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game,
+    Ritual(string name, string description, int cost, int owner, Game* game,
            shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges,
            Trigger::TriggerType triggerType, string type = "Ritual");
 
@@ -36,15 +36,15 @@ class Ritual : public Card {
 
 class DarkRitual : public Ritual {
    public:
-    DarkRitual(int owner, shared_ptr<Game> game);
+    DarkRitual(int owner, Game* game);
 };
 class AuraOfPower : public Ritual {
    public:
-    AuraOfPower(int owner, shared_ptr<Game> game);
+    AuraOfPower(int owner, Game* game);
 };
 class Standstill : public Ritual {
    public:
-    Standstill(int owner, shared_ptr<Game> game);
+    Standstill(int owner, Game* game);
 };
 
 #endif

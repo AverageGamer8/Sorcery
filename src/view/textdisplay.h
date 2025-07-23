@@ -23,11 +23,11 @@ class TextDisplay : public sorcDisplay {
 
    public:
     TextDisplay(std::ostream& out);
-    void printGame(shared_ptr<Game> game) override;
+    void printGame(Game* game) override;
     void printHelp() override;
-    void printDescribe(shared_ptr<Game> game, int minion) override;
-    void printHand(shared_ptr<Game> game) override;
-    void printBoard(shared_ptr<Game> game) override;
+    void printDescribe(Game* game, int minion) override;
+    void printHand(Game* game) override;
+    void printBoard(Game* game) override;
 };
 
 #endif

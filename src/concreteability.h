@@ -14,7 +14,7 @@
 //     int ownerPlayerId;
 
 //    public:
-//     ConcreteAbility(std::shared_ptr<Game> game, int ownerPlayerId)
+//     ConcreteAbility(Game* game, int ownerPlayerId)
 //         : TriggeredAbility(game), ownerPlayerId(ownerPlayerId) {}
 
 //     void activate() override {

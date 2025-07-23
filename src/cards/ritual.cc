@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Ritual::Ritual(string name, string description, int cost, int owner, shared_ptr<Game> game,
+Ritual::Ritual(string name, string description, int cost, int owner, Game* game,
                shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, Trigger::TriggerType triggerType, string type)
     : Card{name, description, type, cost, owner, game}, triggerAbility{triggerAbility}, activationCost{activationCost}, charges{charges}, triggerType{triggerType} {}
 
@@ -38,14 +38,14 @@ void Ritual::detachAbilities() {
     game->getTrigger(triggerType).detach(triggerAbility);
 }
 
-DarkRitual::DarkRitual(int owner, shared_ptr<Game> game)
+DarkRitual::DarkRitual(int owner, Game* game)
     : Ritual{"Dark Ritual", "At the start of your turn, gain 1 magic", 0, owner, game,
              make_shared<OnStartGainMagic>(game, owner), 1, 5, Trigger::TriggerType::TurnStart} {}
 
-AuraOfPower::AuraOfPower(int owner, shared_ptr<Game> game)
+AuraOfPower::AuraOfPower(int owner, Game* game)
     : Ritual{"Aura of Power", "Whenever a minion enters play under your control, it gains +1/+1", 1, owner, game,
              make_shared<OnEnterBuff>(game, owner), 1, 4, Trigger::TriggerType::MinionEnter} {}
 
-Standstill::Standstill(int owner, shared_ptr<Game> game)
+Standstill::Standstill(int owner, Game* game)
     : Ritual{"Standstill", "Whenever a minion enters play, destroy it", 3, owner, game,
              make_shared<OnEnterDestroy>(game, owner), 2, 4, Trigger::TriggerType::MinionEnter} {}

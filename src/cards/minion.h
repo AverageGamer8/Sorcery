@@ -13,7 +13,7 @@ class Minion : public Card {
     int actions;
 
    public:
-    Minion(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string type = "Minion");
+    Minion(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string type = "Minion");
     void attack();
     // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
     void attack(int target, std::shared_ptr<Minion> self);
@@ -40,35 +40,35 @@ class Minion : public Card {
 
 class AirElemental : public Minion {
    public:
-    AirElemental(int owner, shared_ptr<Game> game);
+    AirElemental(int owner, Game* game);
 };
 class EarthElemental : public Minion {
    public:
-    EarthElemental(int owner, shared_ptr<Game> game);
+    EarthElemental(int owner, Game* game);
 };
 class BoneGolem : public Minion {
    public:
-    BoneGolem(int owner, shared_ptr<Game> game);
+    BoneGolem(int owner, Game* game);
 };
 class FireElemental : public Minion {
    public:
-    FireElemental(int owner, shared_ptr<Game> game);
+    FireElemental(int owner, Game* game);
 };
 class PotionSeller : public Minion {
    public:
-    PotionSeller(int owner, shared_ptr<Game> game);
+    PotionSeller(int owner, Game* game);
 };
 class NovicePyromancer : public Minion {
    public:
-    NovicePyromancer(int owner, shared_ptr<Game> game);
+    NovicePyromancer(int owner, Game* game);
 };
 class ApprenticeSummoner : public Minion {
    public:
-    ApprenticeSummoner(int owner, shared_ptr<Game> game);
+    ApprenticeSummoner(int owner, Game* game);
 };
 class MasterSummoner : public Minion {
    public:
-    MasterSummoner(int owner, shared_ptr<Game> game);
+    MasterSummoner(int owner, Game* game);
 };
 
 #endif

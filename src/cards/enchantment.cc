@@ -9,7 +9,7 @@
 #include "card.h"
 using namespace std;
 
-Enchantment::Enchantment(string name, string description, int cost, int owner, shared_ptr<Game> game,
+Enchantment::Enchantment(string name, string description, int cost, int owner, Game* game,
                          int atk, int def, int actions, string atkDesc, string defDesc, string type): 
     Minion{name, description, cost, owner, game, atk, def, actions, type}, atkDesc{atkDesc}, defDesc{defDesc} {}
 
@@ -76,19 +76,19 @@ string Enchantment::getDefDesc() const {
 }
 
 // Specific Enchantments
-GiantStrength::GiantStrength(int owner, shared_ptr<Game> game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
-Enrage::Enrage(int owner, shared_ptr<Game> game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
+GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
+Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
 void Enrage::attach(shared_ptr<Minion> target) {
     minion = target;
     atk = minion->getAttack() * 1;
     def = minion->getDefence() * 1;
 }
-Haste::Haste(int owner, shared_ptr<Game> game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1} { }
+Haste::Haste(int owner, Game* game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1} { }
 void Haste::restoreAction() {
     if (actions < 1) actions = 1;
     minion->restoreAction();
 }
-MagicFatigue::MagicFatigue(int owner, shared_ptr<Game> game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0} { }
+MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0} { }
 void MagicFatigue::activate() { // override activate ability with same ability but costs 2 more
     // check if magic >= cost + 2, dont activate if not
     // go through game? find active player check magic
@@ -101,7 +101,7 @@ void MagicFatigue::activate(int target) {
     int curMP = game->getActivePlayer()->getMagic();
 
 }
-Silence::Silence(int owner, shared_ptr<Game> game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0} { }
+Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0} { }
 void Silence::activate() {
     return; // your not getting that
 }

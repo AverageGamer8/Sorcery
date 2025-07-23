@@ -1,6 +1,6 @@
 #include "viewer.h"
 
-Viewer::Viewer(std::vector<std::shared_ptr<sorcDisplay>> displays, std::shared_ptr<Game> game)
+Viewer::Viewer(std::vector<std::shared_ptr<sorcDisplay>> displays, Game* game)
     : displays{displays}, game{game} {}
 
 // TODO: possible find a better way to do switching with multiple. 

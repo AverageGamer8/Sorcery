@@ -129,8 +129,8 @@ int main(int argc, char **argv) {
     } else {
         deck2File.open(deck2FilePath);
     }
-    deck1->loadDeck(deck1File, game);
-    deck2->loadDeck(deck2File, game);
+    deck1->loadDeck(deck1File, game.get());
+    deck2->loadDeck(deck2File, game.get());
 
     game->getPlayer(0)->setDeck(deck1);
     game->getPlayer(1)->setDeck(deck2);
@@ -159,9 +159,9 @@ int main(int argc, char **argv) {
         auto graphicsDisplay = make_shared<GraphicsDisplay>();
         displays.emplace_back(graphicsDisplay);
     }
-    auto viewer = make_shared<Viewer>(displays, game);
+    auto viewer = make_shared<Viewer>(displays, game.get());
 
-    auto controller = make_unique<Controller>(game, viewer);
+    auto controller = make_unique<Controller>(game.get(), viewer);
 
     // ============= DEBUG: using the triggers example =============
 

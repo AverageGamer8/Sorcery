@@ -28,11 +28,11 @@ class GraphicsDisplay : public sorcDisplay {
 
    public:
     GraphicsDisplay(int width = 960, int length = 600);
-    void printGame(shared_ptr<Game> game) override;
+    void printGame(Game* game) override;
     void printHelp() override;
-    void printDescribe(shared_ptr<Game> game, int minion) override;
-    void printHand(shared_ptr<Game> game) override;
-    void printBoard(shared_ptr<Game> game) override;
+    void printDescribe(Game* game, int minion) override;
+    void printHand(Game* game) override;
+    void printBoard(Game* game) override;
 };
 
 #endif

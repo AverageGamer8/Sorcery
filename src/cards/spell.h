@@ -9,7 +9,7 @@ using namespace std;
 
 class Spell: public Card {
     public:
-        Spell(string name, string description, int cost, int owner, shared_ptr<Game> game, string type = "Spell");
+        Spell(string name, string description, int cost, int owner, Game* game, string type = "Spell");
 
         string getName() const override;
         string getDesc() const override;
@@ -25,42 +25,42 @@ class Spell: public Card {
 
 class Banish: public Spell {
     public:
-        Banish(int owner, shared_ptr<Game> game);
+        Banish(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;
 };
 class Unsummon: public Spell {
     public:
-        Unsummon(int owner, shared_ptr<Game> game);
+        Unsummon(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;
 };
 class Recharge: public Spell {
     public:
-        Recharge(int owner, shared_ptr<Game> game);
+        Recharge(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;
 };
 class Disenchant: public Spell {
     public:
-        Disenchant(int owner, shared_ptr<Game> game);
+        Disenchant(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;
 };
 class RaiseDead: public Spell {
     public:
-        RaiseDead(int owner, shared_ptr<Game> game);
+        RaiseDead(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;
 };
 class Blizzard: public Spell {
     public:
-        Blizzard(int owner, shared_ptr<Game> game);
+        Blizzard(int owner, Game* game);
         bool expend() override;
         bool expend(int minion, int player) override;
         bool expend(int player) override;

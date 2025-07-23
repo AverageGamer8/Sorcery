@@ -19,6 +19,7 @@ class GraphicsDisplay : public sorcDisplay {
     Xwindow xw;
     int width, height, cWidth, cHeight;
 
+    void drawDesc(int x, int y, string desc);
     void printMinion(int x, int y, shared_ptr<Minion> minion);
     void printEnchantment(int x, int y, shared_ptr<Enchantment> ench);
     void printRitual(int x, int y, shared_ptr<Ritual> ritual);
@@ -27,8 +28,13 @@ class GraphicsDisplay : public sorcDisplay {
     void printPlayer(int pos, shared_ptr<Player> player);
 
    public:
+<<<<<<< HEAD
     GraphicsDisplay(int width = 960, int length = 600);
     void printGame(Game* game) override;
+=======
+    GraphicsDisplay(int width = 960, int length = 720);
+    void printGame(shared_ptr<Game> game) override;
+>>>>>>> origin/main
     void printHelp() override;
     void printDescribe(Game* game, int minion) override;
     void printHand(Game* game) override;

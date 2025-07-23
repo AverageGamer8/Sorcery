@@ -13,12 +13,12 @@ Enchantment::Enchantment(string name, string description, int cost, int owner, G
                          int atk, int def, int actions, string atkDesc, string defDesc, string type): 
     Minion{name, description, cost, owner, game, atk, def, actions, type}, atkDesc{atkDesc}, defDesc{defDesc} {}
 
-void Enchantment::attach(shared_ptr<Minion> target) {
-    minion = target;
+bool Enchantment::attach(int player, int target) {
+    minion = game->getPlayer(player)->getBoard()->getMinion(target);
+    return minion != nullptr;
 }
 
 void Enchantment::activate() {
-    //minion->activate(); doesnt exist yet?
     // maybe instead use getActivatedAbility to go and grab it?
     // and have this method just handle actions?
 }
@@ -28,7 +28,7 @@ void Enchantment::activate(int target) {
 }
 
 void Enchantment::restoreAction() {
-    if (actions < 0) actions = 0;
+    if (actions < 0) actions = 0; // actions of an enchantment can be negative
     minion->restoreAction();
 }
 
@@ -45,7 +45,8 @@ shared_ptr<Minion> Enchantment::getMinion() const {
 }
 
 string Enchantment::getName() const {
-    return name;
+    if (minion == nullptr) return name;
+    else return minion->getName();
 }
 
 string Enchantment::getDesc() const {
@@ -66,7 +67,7 @@ int Enchantment::getDefence() const {
     return def + minion->getDefence();
 }
 int Enchantment::getActions() const {
-    return actions + minion->getActions();
+    return actions + minion->getActions(); // getActions get cumulative actions available
 }
 string Enchantment::getAtkDesc() const {
     return atkDesc;

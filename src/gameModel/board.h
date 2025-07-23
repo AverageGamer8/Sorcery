@@ -24,6 +24,7 @@ class Board {
     void addRitual(std::shared_ptr<Ritual> r);
     void removeMinion(int target);
     void removeRitual();
+    void setMinion(int i, std::shared_ptr<Minion> m);
 
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);

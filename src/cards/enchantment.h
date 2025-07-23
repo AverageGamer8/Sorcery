@@ -20,7 +20,7 @@ class Enchantment: public Minion {
     virtual void restoreAction() override;
     virtual void takeDamage(int dmg) override;
 // might need a get base minion method() or just check if its an enchantment
-// might need getActivatedAbility    
+// might need getActivatedAbility
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
     string getDesc() const override;
@@ -41,7 +41,7 @@ class GiantStrength: public Enchantment {
 
 class Enrage: public Enchantment {
     public:
-     Enrage(int owner, Game* game);
+     Enrage(int owner, shared_ptr<Game> game);
      void attach(shared_ptr<Minion> target) override;
 };
 

@@ -21,7 +21,7 @@ void Minion::activate(int target) {
 }
 
 void Minion::attack() {
-    if (actions == 0) { 
+    if (getActions() == 0) { 
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -35,7 +35,7 @@ void Minion::attack() {
 }
 
 void Minion::attack(int target, std::shared_ptr<Minion> self) {
-    if (actions == 0) { 
+    if (getActions() == 0) { 
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }

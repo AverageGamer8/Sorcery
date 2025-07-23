@@ -10,7 +10,7 @@ using namespace std;
 
 Deck::Deck(int owner) : owner{owner}, seed{chrono::system_clock::now().time_since_epoch().count()} {}
 
-void Deck::loadDeck(ifstream& inf, shared_ptr<Game> game) {
+void Deck::loadDeck(ifstream& inf, Game* game) {
     string name;
     while (getline(inf, name)) {
         if (name == "Air Elemental") {

@@ -13,12 +13,12 @@ class Game;
 
 class TriggeredAbility : public Observer, public Ability {
    protected:
-    shared_ptr<Game> game;
+    Game* game;
     int player;
     Trigger::TriggerType type;
 
    public:
-    TriggeredAbility(shared_ptr<Game> game, int player, const string& desc, Trigger::TriggerType type)
+    TriggeredAbility(Game* game, int player, const string& desc, Trigger::TriggerType type)
         : Ability(desc), game{game}, player{player}, type{type} {}
 
     Trigger::TriggerType getTriggerType() const;
@@ -28,23 +28,23 @@ class TriggeredAbility : public Observer, public Ability {
     virtual ~TriggeredAbility() = default;
 };
 
-class OnStartGainMagic : public TriggeredAbility {
-   public:
-    OnStartGainMagic(shared_ptr<Game> game, int player);
-    bool activate() override;
-    bool shouldTrigger() const override;
+class OnStartGainMagic: public TriggeredAbility {
+    public:
+        OnStartGainMagic(Game* game, int player);
+        bool activate() override;
+        bool shouldTrigger() const override;
 };
-class OnEnterBuff : public TriggeredAbility {
-   public:
-    OnEnterBuff(shared_ptr<Game> game, int player);
-    bool activate() override;
-    bool shouldTrigger() const override;
+class OnEnterBuff: public TriggeredAbility {
+    public:
+        OnEnterBuff(Game* game, int player);
+        bool activate() override;
+        bool shouldTrigger() const override;
 };
-class OnEnterDestroy : public TriggeredAbility {
-   public:
-    OnEnterDestroy(shared_ptr<Game> game, int player);
-    bool activate() override;
-    bool shouldTrigger() const override;
+class OnEnterDestroy: public TriggeredAbility {
+    public:
+        OnEnterDestroy(Game* game, int player);
+        bool activate() override;
+        bool shouldTrigger() const override;
 };
 
 class OnExitGainBuff : public TriggeredAbility {

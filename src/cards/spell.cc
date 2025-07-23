@@ -8,7 +8,7 @@
 #include "enchantment.h"
 using namespace std;
 
-Spell::Spell(string name, string description, int cost, int owner, shared_ptr<Game> game, string type) : Card{name, description, type, cost, owner, game} {};
+Spell::Spell(string name, string description, int cost, int owner, Game* game, string type) : Card{name, description, type, cost, owner, game} {};
 
 string Spell::getName() const {
     return name;
@@ -27,7 +27,7 @@ int Spell::getCost() const {
 }
 
 // Specific Spells
-Banish::Banish(int owner, shared_ptr<Game> game) : Spell{"Banish", "Destroy target minion or ritual", 2, owner, game} {}
+Banish::Banish(int owner, Game* game) : Spell{"Banish", "Destroy target minion or ritual", 2, owner, game} {}
 bool Banish::expend() {
     // TODO: Handle exception - should never be played
     cout << "DEBUG: (Spell) Not proper usage: must have proper target." << endl;
@@ -43,7 +43,7 @@ bool Banish::expend(int player) {
     return true;
 }
 
-Unsummon::Unsummon(int owner, shared_ptr<Game> game) : Spell{"Unsummon", "Return target minion to its owner's hand", 1, owner, game} {}
+Unsummon::Unsummon(int owner, Game* game) : Spell{"Unsummon", "Return target minion to its owner's hand", 1, owner, game} {}
 bool Unsummon::expend() {
     // TODO: Handle exception
     cout << "DEBUG: (Spell) Not proper usage: must be used on minions." << endl;
@@ -66,7 +66,7 @@ bool Unsummon::expend(int player) {
     return false;
 }
 
-Recharge::Recharge(int owner, shared_ptr<Game> game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
+Recharge::Recharge(int owner, Game* game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
 bool Recharge::expend() {
     cout << "DEBUG (Spell) Not proper usage: must be used on rituals." << endl;
     // TODO: Handle exception
@@ -87,15 +87,25 @@ bool Recharge::expend(int player) {
     return true;
 }
 
-Disenchant::Disenchant(int owner, shared_ptr<Game> game) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner, game} {}
+Disenchant::Disenchant(int owner, Game* game) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner, game} {}
 bool Disenchant::expend() {
     // TODO: Handle exception
     cout << "DEBUG (Spell) Not proper usage: must be used on minions." << endl;
     return false;
 }
 bool Disenchant::expend(int player, int minion) {
-    // TODO: Destroy top enchantment on minion
-    return false;
+    auto target = game->getPlayer(player)->getBoard()->getMinion(minion);
+    if (!target) {
+        cout << "No minion selected" << endl;
+        return false;
+    }
+    if (target->getType() != "Enchantment") {
+        cout << "No enchantments on minion selected" << endl;
+        return false;
+    }
+    auto ench = static_pointer_cast<Enchantment>(target);
+    game->getPlayer(player)->getBoard()->setMinion(minion, ench->getMinion());
+    return true;
 }
 bool Disenchant::expend(int player) {
     // TODO: Handle exception
@@ -103,7 +113,7 @@ bool Disenchant::expend(int player) {
     return false;
 }
 
-RaiseDead::RaiseDead(int owner, shared_ptr<Game> game) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
+RaiseDead::RaiseDead(int owner, Game* game) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
 bool RaiseDead::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     if (curr->getHand()->isFull()) {
@@ -133,7 +143,7 @@ bool RaiseDead::expend(int player) {
     return false;
 }
 
-Blizzard::Blizzard(int owner, shared_ptr<Game> game) : Spell{"Blizzard", "Deal 2 damage to all minions", 3, owner, game} {}
+Blizzard::Blizzard(int owner, Game* game) : Spell{"Blizzard", "Deal 2 damage to all minions", 3, owner, game} {}
 bool Blizzard::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     auto opp = game->getPlayer(game->getInactiveIndex());

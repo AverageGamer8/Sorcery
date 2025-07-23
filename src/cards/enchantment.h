@@ -13,7 +13,7 @@ class Enchantment: public Minion {
     string atkDesc, defDesc;
 
    public:
-    Enchantment(string name, string description, int cost, int owner, shared_ptr<Game> game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
+    Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
     virtual void activate() override;
     virtual void activate(int target) override;
@@ -36,31 +36,31 @@ class Enchantment: public Minion {
 
 class GiantStrength: public Enchantment {
     public:
-     GiantStrength(int owner, shared_ptr<Game> game);
+     GiantStrength(int owner, Game* game);
 };
 
 class Enrage: public Enchantment {
     public:
-     Enrage(int owner, shared_ptr<Game> game);
+     Enrage(int owner, Game* game);
      bool attach(int player, int target) override;
 };
 
 class Haste: public Enchantment {
     public:
-     Haste(int owner, shared_ptr<Game> game);
+     Haste(int owner, Game* game);
      void restoreAction();
 };
 
 class MagicFatigue: public Enchantment {
     public:
-     MagicFatigue(int owner, shared_ptr<Game> game);
+     MagicFatigue(int owner, Game* game);
      void activate() override;
      void activate(int target) override;
 };
 
 class Silence: public Enchantment {
     public:
-     Silence(int owner, shared_ptr<Game> game);
+     Silence(int owner, Game* game);
      void activate() override;
      void activate(int target) override;
 };

@@ -21,7 +21,7 @@ Trigger::TriggerType TriggeredAbility::getTriggerType() const {
 // ================== Ritual Abilities ===================
 // Note: activate returns false when out of charges.
 
-OnStartGainMagic::OnStartGainMagic(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "At the start of your turn, gain 1 magic", Trigger::TriggerType::TurnStart} {}
+OnStartGainMagic::OnStartGainMagic(Game* game, int player) : TriggeredAbility{game, player, "At the start of your turn, gain 1 magic", Trigger::TriggerType::TurnStart} {}
 bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     auto p = game->getPlayer(player);
     cout << "DEBUG: TriggeredAbility) OnStartGainMagic: activated " << endl;

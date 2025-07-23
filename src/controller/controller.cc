@@ -2,7 +2,7 @@
 
 #include <iostream>  // TODO remove debug
 
-Controller::Controller(std::shared_ptr<Game> game,
+Controller::Controller(Game* game,
                        std::shared_ptr<Viewer> viewer)
     : game{game}, viewer{viewer} {}
 

@@ -35,7 +35,7 @@ void Minion::detachAbilities() {
 }
 
 void Minion::attack() {
-    if (actions == 0) {
+    if (getActions() == 0) { 
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -48,8 +48,8 @@ void Minion::attack() {
     --actions;
 }
 
-void Minion::attack(int target, shared_ptr<Minion> self) {
-    if (actions == 0) {
+void Minion::attack(int target, std::shared_ptr<Minion> self) {
+    if (getActions() == 0) { 
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -118,11 +118,11 @@ void Minion::setAttack(int atk) {
 }
 
 // Specific Minions
-AirElemental::AirElemental(int owner, shared_ptr<Game> game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0, nullptr, nullptr} {}
-EarthElemental::EarthElemental(int owner, shared_ptr<Game> game) : Minion{"Earth Elemental", "", 3, owner, game, 4, 4, 0, nullptr, nullptr} {}
-BoneGolem::BoneGolem(int owner, shared_ptr<Game> game) : Minion{"Bone Golem", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnExitGainBuff>(game, owner)} {}
-FireElemental::FireElemental(int owner, shared_ptr<Game> game) : Minion{"Fire Elemental", "", 2, owner, game, 2, 2, 0, nullptr, make_shared<OnEnterDamage>(game, owner)} {}
-PotionSeller::PotionSeller(int owner, shared_ptr<Game> game) : Minion{"Potion Seller", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnTurnEndBuff>(game, owner)} {}
-NovicePyromancer::NovicePyromancer(int owner, shared_ptr<Game> game) : Minion{"Novice Pyromancer", "", 1, owner, game, 0, 1, 0, make_shared<DealDamage>(game), nullptr} {}
-ApprenticeSummoner::ApprenticeSummoner(int owner, shared_ptr<Game> game) : Minion{"Apprentice Summoner", "", 1, owner, game, 1, 1, 0, make_shared<SummonAirElemental>(game), nullptr} {}
-MasterSummoner::MasterSummoner(int owner, shared_ptr<Game> game) : Minion{"Master Summoner", "", 3, owner, game, 2, 3, 0, make_shared<SummonThreeAirElemental>(game), nullptr} {}
+AirElemental::AirElemental(int owner, Game* game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0, nullptr, nullptr} {}
+EarthElemental::EarthElemental(int owner, Game* game) : Minion{"Earth Elemental", "", 3, owner, game, 4, 4, 0, nullptr, nullptr} {}
+BoneGolem::BoneGolem(int owner, Game* game) : Minion{"Bone Golem", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnExitGainBuff>(game, owner)} {}
+FireElemental::FireElemental(int owner, Game* game) : Minion{"Fire Elemental", "", 2, owner, game, 2, 2, 0, nullptr, make_shared<OnEnterDamage>(game, owner)} {}
+PotionSeller::PotionSeller(int owner, Game* game) : Minion{"Potion Seller", "", 2, owner, game, 1, 3, 0, nullptr, make_shared<OnTurnEndBuff>(game, owner)} {}
+NovicePyromancer::NovicePyromancer(int owner, Game* game) : Minion{"Novice Pyromancer", "", 1, owner, game, 0, 1, 0, make_shared<DealDamage>(game), nullptr} {}
+ApprenticeSummoner::ApprenticeSummoner(int owner, Game* game) : Minion{"Apprentice Summoner", "", 1, owner, game, 1, 1, 0, make_shared<SummonAirElemental>(game), nullptr} {}
+MasterSummoner::MasterSummoner(int owner, Game* game) : Minion{"Master Summoner", "", 3, owner, game, 2, 3, 0, make_shared<SummonThreeAirElemental>(game), nullptr} {}

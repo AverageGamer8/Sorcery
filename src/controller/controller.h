@@ -8,11 +8,11 @@
 #include "../view/viewer.h"
 
 class Controller {
-    std::shared_ptr<Game> game;
+    Game* game;
     std::shared_ptr<Viewer> viewer;
 
    public:
-    Controller(std::shared_ptr<Game> game, std::shared_ptr<Viewer> viewer);
+    Controller(Game* game, std::shared_ptr<Viewer> viewer);
 
     void end();
     void draw();

@@ -16,7 +16,7 @@ class Deck {
 
     public:
         Deck(int player);
-        void loadDeck(ifstream& inf, shared_ptr<Game> game);
+        void loadDeck(ifstream& inf, Game* game);
         void shuffleDeck();
         vector<shared_ptr<Card>>& getCards();
         shared_ptr<Card> popTopCard();

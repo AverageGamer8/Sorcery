@@ -9,7 +9,7 @@
 
 class Viewer {
     std::vector<std::shared_ptr<sorcDisplay>> displays;
-    std::shared_ptr<Game> game;
+    Game* game;
 
    public:
     enum Command {  // TODO: Add more enums with more controller commands
@@ -20,7 +20,7 @@ class Viewer {
         BOARD
     };
     Viewer(std::vector<std::shared_ptr<sorcDisplay>> displays,
-           std::shared_ptr<Game> game);
+           Game* game);
     void display(Command command);
     void display(Command command, int minion);
 };

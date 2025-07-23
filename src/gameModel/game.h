@@ -39,9 +39,11 @@ class Game {
     Trigger &getTrigger(Trigger::TriggerType type);
     std::shared_ptr<Player> getPlayer(int index);
     std::shared_ptr<Player> getActivePlayer();
-    shared_ptr<Player> getInactivePlayer();
+    std::shared_ptr<Player> getInactivePlayer();
     int getInactiveIndex();
     int getActiveIndex();
+
+    void notifyTrigger(Trigger::TriggerType type);
 };
 
 #endif

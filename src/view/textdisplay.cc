@@ -109,7 +109,22 @@ card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
             ritual->getActivationCost(),
             card->getDesc(),
             ritual->getCharges());
-    } else {  // TODO: Other cards
+    } else if (card->getType() == "Enchantment") {
+        auto enchantment = static_pointer_cast<Enchantment>(card);
+        if (enchantment->getAtkDesc().empty() || enchantment->getDefDesc().empty()) {
+            return display_enchantment(
+                card->getName(),
+                card->getCost(),
+                card->getDesc());
+        } else {
+            return display_enchantment_attack_defence(
+                card->getName(),
+                card->getCost(),
+                card->getDesc(),
+                enchantment->getAtkDesc(),
+                enchantment->getDefDesc());
+        }
+    } else {
         return CARD_TEMPLATE_BORDER;
     }
 }

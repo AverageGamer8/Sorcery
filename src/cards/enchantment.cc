@@ -10,8 +10,10 @@
 using namespace std;
 
 Enchantment::Enchantment(string name, string description, int cost, int owner, Game* game,
-                         int atk, int def, int actions, string atkDesc, string defDesc, string type): 
-    Minion{name, description, cost, owner, game, atk, def, actions, type}, atkDesc{atkDesc}, defDesc{defDesc} {}
+                         int atk, int def, int actions, shared_ptr<ActivatedAbility> activatedAbility, 
+                         shared_ptr<TriggeredAbility> triggeredAbility, string atkDesc, string defDesc, string type) : 
+    Minion{name, description, cost, owner, game, atk, def, actions, activatedAbility, triggeredAbility, 
+        type}, atkDesc{atkDesc}, defDesc{defDesc} {}
 
 bool Enchantment::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
@@ -97,8 +99,8 @@ void Enchantment::consumeAction() {
 }
 
 // Specific Enchantments
-GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, "+2", "+2"} { }
-Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, "*2", "*2"} { }
+GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, nullptr, nullptr, "+2", "+2"} { }
+Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, nullptr, nullptr, "*2", "*2"} { }
 bool Enrage::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
     if (minion != nullptr) {
@@ -108,12 +110,12 @@ bool Enrage::attach(int player, int target) {
     }
     return false;
 }
-Haste::Haste(int owner, Game* game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1} { }
+Haste::Haste(int owner, Game* game): Enchantment{"Haste", "Enchanted minion gains +1 action per turn", 1, owner, game, 0, 0, 1, nullptr, nullptr} { }
 void Haste::restoreAction() {
     if (actions < 1) actions = 1;
     minion->restoreAction();
 }
-MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0} { }
+MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
 bool MagicFatigue::activate() { // override activate ability with same ability but costs 2 more
     // check if magic >= cost + 2, dont activate if not
     // go through game? find active player check magic
@@ -127,7 +129,7 @@ bool MagicFatigue::activate(int target) {
     int curMP = game->getActivePlayer()->getMagic();
     return true;
 }
-Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0} { }
+Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
 bool Silence::activate() {
     cout << "Blocked by Silence Enchantment." << endl;
     return false; // your not getting that

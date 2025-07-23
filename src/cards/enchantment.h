@@ -16,7 +16,9 @@ class Enchantment: public Minion {
     void consumeAction() override;
 
    public:
-    Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, int actions, string atkDesc = "", string defDesc = "", string type = "Enchantment");
+    Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, 
+        int actions, shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, 
+        string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
     virtual bool activate() override;
     virtual bool activate(int target) override;

@@ -10,7 +10,7 @@
 using namespace std;
 
 Minion::Minion(string name, string description, int cost, int owner,
-               shared_ptr<Game> game, int atk, int def, int actions,
+               Game* game, int atk, int def, int actions,
                shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, string type)
     : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions}, activatedAbility{activatedAbility}, triggeredAbility{triggeredAbility} {}
 

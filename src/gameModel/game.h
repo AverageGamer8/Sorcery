@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../trigger.h"
+#include "../cards/abilities/trigger.h"
 #include "player.h"
 
 class Player;

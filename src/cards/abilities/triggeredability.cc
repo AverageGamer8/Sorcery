@@ -3,7 +3,7 @@
 #include <iostream>  // TODO: remove debugs
 #include <memory>
 
-#include "./gameModel/game.h"
+#include "../../gameModel/game.h"
 
 using namespace std;
 
@@ -39,7 +39,7 @@ bool OnStartGainMagic::shouldTrigger() const {
     return game->getActiveIndex() == player;
 }
 
-OnEnterBuff::OnEnterBuff(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play under your control, it gains +1/+1", Trigger::TriggerType::MinionEnter} {}
+OnEnterBuff::OnEnterBuff(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play under your control, it gains +1/+1", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterBuff::activate() {
     auto p = game->getPlayer(player);
     cout << "DEBUG: (TriggeredAbility) OnEnterBuff: activated " << endl;
@@ -63,7 +63,7 @@ bool OnEnterBuff::shouldTrigger() const {
     return true;
 }
 
-OnEnterDestroy::OnEnterDestroy(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play, destroy it", Trigger::TriggerType::MinionEnter} {}
+OnEnterDestroy::OnEnterDestroy(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play, destroy it", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterDestroy::activate() {
     auto p = game->getPlayer(player);
     cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: activated " << endl;
@@ -91,7 +91,7 @@ bool OnEnterDestroy::shouldTrigger() const {
 
 // ================== Minion Abilities =====================
 
-OnExitGainBuff::OnExitGainBuff(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "Gain +1/+1 whenever a minion leaves play.", Trigger::TriggerType::MinionExit} {}
+OnExitGainBuff::OnExitGainBuff(Game* game, int player) : TriggeredAbility{game, player, "Gain +1/+1 whenever a minion leaves play.", Trigger::TriggerType::MinionExit} {}
 bool OnExitGainBuff::activate() {
     auto p = game->getPlayer(player);
     cout << "DEBUG: (TriggeredAbility) OnExitGainBuff: activated " << endl;
@@ -107,7 +107,7 @@ bool OnExitGainBuff::shouldTrigger() const {
     return true;
 }
 
-OnEnterDamage::OnEnterDamage(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "Whenever an opponents's minion enters play, deal 1 damage to it.", Trigger::TriggerType::MinionEnter} {}
+OnEnterDamage::OnEnterDamage(Game* game, int player) : TriggeredAbility{game, player, "Whenever an opponents's minion enters play, deal 1 damage to it.", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterDamage::activate() {
     cout << "DEBUG: (TriggeredAbility) OnEnterDamage: activated " << endl;
     auto p = game->getActivePlayer();
@@ -119,7 +119,7 @@ bool OnEnterDamage::activate() {
 bool OnEnterDamage::shouldTrigger() const {
     return true;
 }
-OnTurnEndBuff::OnTurnEndBuff(shared_ptr<Game> game, int player) : TriggeredAbility{game, player, "At the end of your turn, all you minions gain +0/+1.", Trigger::TriggerType::TurnEnd} {}
+OnTurnEndBuff::OnTurnEndBuff(Game* game, int player) : TriggeredAbility{game, player, "At the end of your turn, all you minions gain +0/+1.", Trigger::TriggerType::TurnEnd} {}
 bool OnTurnEndBuff::activate() {
     cout << "DEBUG: (TriggeredAbility) OnTurnEndBuff: activated " << endl;
     auto p = game->getPlayer(player);

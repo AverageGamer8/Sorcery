@@ -15,6 +15,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 SOURCES = $(wildcard *.cc) \
           $(wildcard cards/*.cc) \
+		  $(wildcard cards/abilities/*.cc) \
           $(wildcard controller/*.cc) \
           $(wildcard gameModel/*.cc) \
           $(wildcard view/*.cc)
@@ -34,6 +35,9 @@ ${EXEC} : ${OBJECTS} -lX11				# link step
 cards/%.o: cards/%.cc
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
+cards/abilities/%.o: cards/abilities/%.cc
+	${CXX} ${CXXFLAGS} -c $< -o $@
+	
 controller/%.o: controller/%.cc
 	${CXX} ${CXXFLAGS} -c $< -o $@
 

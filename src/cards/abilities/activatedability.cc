@@ -3,13 +3,13 @@
 #include <iostream>  // TODO: remove debugs
 #include <memory>
 
-#include "./gameModel/game.h"
+#include "../../gameModel/game.h"
 
 using namespace std;
 
 int ActivatedAbility::getCost() const { return cost; }
 
-DealDamage::DealDamage(shared_ptr<Game> game) : ActivatedAbility(game, "Deal 1 damage to target minion", 1) {}
+DealDamage::DealDamage(Game* game) : ActivatedAbility(game, "Deal 1 damage to target minion", 1) {}
 bool DealDamage::activate() {
     cout << "DEBUG: (ActivatedAbility) Not proper usage: must have target." << endl;
     return false;
@@ -21,7 +21,7 @@ bool DealDamage::activate(int target) {
     return true;
 }
 
-SummonAirElemental::SummonAirElemental(shared_ptr<Game> game) : ActivatedAbility(game, "Summon a 1/1 air elemental", 1) {}
+SummonAirElemental::SummonAirElemental(Game* game) : ActivatedAbility(game, "Summon a 1/1 air elemental", 1) {}
 bool SummonAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {
@@ -37,7 +37,7 @@ bool SummonAirElemental::activate(int target) {
     return false;
 }
 
-SummonThreeAirElemental::SummonThreeAirElemental(shared_ptr<Game> game) : ActivatedAbility(game, "Summon up to three 1/1 air elementals", 2) {}
+SummonThreeAirElemental::SummonThreeAirElemental(Game* game) : ActivatedAbility(game, "Summon up to three 1/1 air elementals", 2) {}
 bool SummonThreeAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {

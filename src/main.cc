@@ -4,13 +4,12 @@
 #include <sstream>
 #include <string>
 
-#include "concreteability.h"  // TEMPORARY FOR TESTING
 #include "controller/controller.h"
 #include "gameModel/game.h"
 #include "gameModel/player.h"
 #include "view/display.h"
-#include "view/textdisplay.h"
 #include "view/graphicsdisplay.h"
+#include "view/textdisplay.h"
 #include "view/viewer.h"
 
 using namespace std;
@@ -145,6 +144,7 @@ int main(int argc, char **argv) {
         game->getPlayer(0)->drawCard();
         game->getPlayer(1)->drawCard();
     }
+    game->setActivePlayer(0);
 
     // output it
     cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 
     auto textDisplay = make_shared<TextDisplay>(cout);
     vector<shared_ptr<sorcDisplay>> displays;  // TODO: expand this once graphics are implemented
-    displays.emplace_back(textDisplay);    // for now, just text.
+    displays.emplace_back(textDisplay);        // for now, just text.
     if (graphicsEnabled) {
         auto graphicsDisplay = make_shared<GraphicsDisplay>();
         displays.emplace_back(graphicsDisplay);
@@ -162,20 +162,6 @@ int main(int argc, char **argv) {
     auto viewer = make_shared<Viewer>(displays, game.get());
 
     auto controller = make_unique<Controller>(game.get(), viewer);
-
-    // ============= DEBUG: using the triggers example =============
-
-    // ConcreteAbility is an example class to use it.
-    // this stuff should probably be done in the cards.
-    game->setActivePlayer(0);
-    // auto ta = make_shared<ConcreteAbility>(game, 0);
-
-    // attaching the trigger to START TURN events
-    // game->getTrigger(Trigger::TriggerType::MinionEnter).attach(ta);
-
-    // game->startTurn();  // activates here
-    // game->endTurn();
-    // game->startTurn();  // activates here
 
     // ================== Game Loop ==================
 
@@ -218,7 +204,7 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                if (!controller->discard(card)) break;
+                if (!controller->discard(card - 1)) break;
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
                 continue;
@@ -234,14 +220,14 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int attackingMinion = stoi(tokens[1]);
-                if (!controller->attack(attackingMinion)) {
+                if (!controller->attack(attackingMinion - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
             } else if (args == 2) {
                 int attackingMinion = stoi(tokens[1]);
                 int receivingMinion = stoi(tokens[2]);
-                if (!controller->attack(attackingMinion, receivingMinion)) {
+                if (!controller->attack(attackingMinion - 1, receivingMinion - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
@@ -260,7 +246,7 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                if (!controller->play(card)) {
+                if (!controller->play(card - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
@@ -269,12 +255,12 @@ int main(int argc, char **argv) {
                 int player = stoi(tokens[2]);
                 int minion;
                 if (tokens[3] == "r") {  // Target ritual
-                    minion = -1;
+                    minion = 0;
                 } else {  // Target Minion
                     minion = stoi(tokens[3]);
                 }
                 // cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
-                if (!controller->play(card, player, minion)) {
+                if (!controller->play(card - 1, player - 1, minion - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
@@ -293,7 +279,7 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int minion = stoi(tokens[1]);
-                if (!controller->use(minion)) {
+                if (!controller->use(minion - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
@@ -301,7 +287,7 @@ int main(int argc, char **argv) {
                 int activeMinion = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
                 int receivingMinion = stoi(tokens[3]);
-                if (!controller->use(activeMinion, player, receivingMinion)) {
+                if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }
@@ -320,7 +306,7 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                if (!controller->describe(card)) {
+                if (!controller->describe(card - 1)) {
                     cout << "DEBUG: (Main) Invalid bounds provided." << endl;
                     continue;
                 }

@@ -49,19 +49,19 @@ class OnEnterDestroy: public TriggeredAbility {
 
 class OnExitGainBuff : public TriggeredAbility {
    public:
-    OnExitGainBuff(shared_ptr<Game> game, int player);
+    OnExitGainBuff(Game* game, int player);
     bool activate() override;
     bool shouldTrigger() const override;
 };
 class OnEnterDamage : public TriggeredAbility {
    public:
-    OnEnterDamage(shared_ptr<Game> game, int player);
+    OnEnterDamage(Game* game, int player);
     bool activate() override;
     bool shouldTrigger() const override;
 };
 class OnTurnEndBuff : public TriggeredAbility {
    public:
-    OnTurnEndBuff(shared_ptr<Game> game, int player);
+    OnTurnEndBuff(Game* game, int player);
     bool activate() override;
     bool shouldTrigger() const override;
 };

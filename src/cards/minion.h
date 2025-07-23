@@ -4,8 +4,8 @@
 #include <string>
 
 #include "card.h"
-#include "../activatedability.h"
-#include "../triggeredability.h"
+#include "abilities/activatedability.h"
+#include "abilities/triggeredability.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ class Minion : public Card {
 
    public:
     Minion(string name, string description, int cost, int owner, 
-        shared_ptr<Game> game, int atk, int def, int actions, 
+        Game* game, int atk, int def, int actions, 
         shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
         string type = "Minion");
     void attack();

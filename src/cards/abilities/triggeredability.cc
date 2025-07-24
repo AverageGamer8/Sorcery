@@ -27,8 +27,8 @@ bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     cout << "DEBUG: TriggeredAbility) OnStartGainMagic: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
-        cout << "No more charges..." << endl;
+    if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
+        cout << "Not enough charges..." << endl;
         return false;
     }
     p->setMagic(p->getMagic() + 1);
@@ -45,8 +45,8 @@ bool OnEnterBuff::activate() {
     cout << "DEBUG: (TriggeredAbility) OnEnterBuff: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
-        cout << "No more charges..." << endl;
+    if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
+        cout << "Not enough charges..." << endl;
         return false;
     }
     // buff new minion
@@ -69,8 +69,8 @@ bool OnEnterDestroy::activate() {
     cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
-        cout << "No more charges..." << endl;
+    if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
+        cout << "Not enough charges..." << endl;
         return false;
     }
     if (!ritual) return true;

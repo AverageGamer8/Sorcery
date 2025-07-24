@@ -174,9 +174,10 @@ int main(int argc, char **argv) {
         try {
             auto graphicsDisplay = make_shared<GraphicsDisplay>();
             displays.emplace_back(graphicsDisplay);
+            graphicsDisplay->printBoard(game.get());
         } catch(...) {
-            cout << "Unable to create XWindow." << endl;
-            cout << "Please setup XWindow before enabling graphics on next execution." << endl;
+            cerr << "Unable to create XWindow." << endl;
+            cerr << "Please setup XWindow before enabling graphics on next execution." << endl;
         }
     }
     auto viewer = make_shared<Viewer>(displays, game.get());
@@ -311,7 +312,7 @@ int main(int argc, char **argv) {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
                 continue;
             }
-        } else if (command.substr(0, 8) == "describe") {
+        } else if (command.substr(0, 7) == "inspect") {
             stringstream cmd{command};
             string token;
             vector<string> tokens;

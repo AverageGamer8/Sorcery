@@ -86,18 +86,16 @@ bool Controller::use(int activeMinion, int onPlayer, int receivingMinion, bool t
 }
 
 // ======================= Display Controls ====================
-
 // Calls virtual function on all displays
 
 void Controller::help() {
     viewer->display(Viewer::HELP);
 }
 
-bool Controller::describe(int minion) {  // TODO!! figure out how to pass minion?
+bool Controller::describe(int minion) {
     if (minion < 0 || minion >= game->getActivePlayer()->getMinions().size()) return false;
     viewer->display(Viewer::DESCRIBE, minion);
     return true;
-    // my current solution: use overloaded display().
 }
 
 void Controller::hand() {

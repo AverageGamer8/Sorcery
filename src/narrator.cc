@@ -17,7 +17,9 @@ void Narrator::printLine() {
     std::string line = "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~";
     for (char c : line) {
         std::cout << c << std::flush;
-        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs / 20));
+        if (delayed) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(delayMs / 20));
+        }
     }
     std::cout << std::endl;
 }

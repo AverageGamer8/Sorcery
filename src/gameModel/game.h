@@ -22,24 +22,24 @@ class Game {
    public:
     Game(std::vector<std::shared_ptr<Player>> players);
 
+    // ================== Gameplay =====================
     void setActivePlayer(int player);
 
-    void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion); // TODO: might not be best way. minion passes itself.
-    bool playCard(int card); // TODO: wrapper for player
+    void handleMinionDeath(int player, int minion);
+    void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion);  // TODO: might not be best way. minion passes itself.
+    bool playCard(int card, bool testingEnabled);
 
     void startTurn();
     void endTurn();
-    // void addMinion();  // should we have it in player or game? easy to trigger in game.
-    // void destroyMinion();
 
-
-    void setWinner(int winner);
-    int getWinner() const;
+    // ============ Getters and Setters =====================
 
     Trigger &getTrigger(Trigger::TriggerType type);
     std::shared_ptr<Player> getPlayer(int index);
     std::shared_ptr<Player> getActivePlayer();
     shared_ptr<Player> getInactivePlayer();
+    void setWinner(int winner);
+    int getWinner() const;
     int getInactiveIndex();
     int getActiveIndex();
 };

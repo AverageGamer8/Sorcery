@@ -19,10 +19,10 @@ class Controller {
     bool discard(int card);
     bool attack(int attackingMinion);
     bool attack(int attackingMinion, int receivingMinion);
-    bool play(int card);
-    bool play(int card, int onPlayer, int minion);
-    bool use(int minion);
-    bool use(int activeMinion, int onPlayer, int receivingMinion);
+    bool play(int card, bool testingEnabled);
+    bool play(int card, int onPlayer, int minion, bool testingEnabled);
+    bool use(int minion, bool testingEnabled);
+    bool use(int activeMinion, int onPlayer, int receivingMinion, bool testingEnabled);
 
     // ======================= Display Controls ====================
 

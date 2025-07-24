@@ -26,7 +26,7 @@ bool Enchantment::activate() {
     return true;
 }
 
-bool Enchantment::activate(int target) {
+bool Enchantment::activate(int player, int minion) {
     //minion->activate(target); doesnt exist yet?
 
     return true;
@@ -124,7 +124,7 @@ bool MagicFatigue::activate() { // override activate ability with same ability b
     // get enchantment ability cost
     return true;
 }
-bool MagicFatigue::activate(int target) {
+bool MagicFatigue::activate(int player, int minion) {
     // check if magic >= cost + 2, dont activate if not
     int curMP = game->getActivePlayer()->getMagic();
     return true;
@@ -134,7 +134,7 @@ bool Silence::activate() {
     cout << "Blocked by Silence Enchantment." << endl;
     return false; // your not getting that
 }
-bool Silence::activate(int target) {
+bool Silence::activate(int player, int minion) {
     cout << "Blocked by Silence Enchantment." << endl;
     return false;
 }

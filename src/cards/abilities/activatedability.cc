@@ -14,10 +14,13 @@ bool DealDamage::activate() {
     cout << "DEBUG: (ActivatedAbility) Not proper usage: must have target." << endl;
     return false;
 }
-bool DealDamage::activate(int target) {
-    auto p = game->getInactivePlayer();
-    auto minion = p->getBoard()->getMinion(target);
-    minion->takeDamage(1);
+bool DealDamage::activate(int player, int minion) {
+    auto p = game->getPlayer(player);
+    auto m = p->getBoard()->getMinion(minion);
+    m->takeDamage(1);
+    if (m->getDefence() <= 0) {
+        game->handleMinionDeath(player, minion);
+    }
     return true;
 }
 
@@ -32,7 +35,7 @@ bool SummonAirElemental::activate() {
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
     return true;
 }
-bool SummonAirElemental::activate(int target) {
+bool SummonAirElemental::activate(int player, int minion) {
     cout << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
     return false;
 }
@@ -51,7 +54,7 @@ bool SummonThreeAirElemental::activate() {
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
     return true;
 }
-bool SummonThreeAirElemental::activate(int target) {
+bool SummonThreeAirElemental::activate(int player, int minion) {
     cout << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
     return false;
 }

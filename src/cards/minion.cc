@@ -15,13 +15,13 @@ Minion::Minion(string name, string description, int cost, int owner,
     : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions}, activatedAbility{activatedAbility}, triggeredAbility{triggeredAbility} {}
 
 bool Minion::activate() {
-    if (!activatedAbility) return false; 
+    if (!activatedAbility) return false;
     return activatedAbility->activate();
 }
 
-bool Minion::activate(int target) {
+bool Minion::activate(int player, int minion) {
     if (!activatedAbility) return false;
-    return activatedAbility->activate(target); 
+    return activatedAbility->activate(player, minion);
 }
 
 void Minion::attachAbilities() {
@@ -35,7 +35,7 @@ void Minion::detachAbilities() {
 }
 
 void Minion::attack() {
-    if (getActions() == 0) { 
+    if (getActions() == 0) {
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -49,7 +49,7 @@ void Minion::attack() {
 }
 
 void Minion::attack(int target, std::shared_ptr<Minion> self) {
-    if (getActions() == 0) { 
+    if (getActions() == 0) {
         cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
         return;
     }
@@ -80,6 +80,8 @@ void Minion::takeDamage(int dmg) {
     if (def <= 0) {  // or is it better to put it outside of minion
         // game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
         //  could be easier to just have the minion itself call put to graveyard methods
+        game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
+        
     }
 }
 

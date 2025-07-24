@@ -21,7 +21,7 @@ class Enchantment: public Minion {
         string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
     virtual bool activate() override;
-    virtual bool activate(int target) override;
+    virtual bool activate(int player, int minion) override;
     virtual void restoreAction() override;
     virtual void takeDamage(int dmg) override;
 // might need a get base minion method() or just check if its an enchantment
@@ -63,14 +63,14 @@ class MagicFatigue: public Enchantment {
     public:
      MagicFatigue(int owner, Game* game);
      bool activate() override;
-     bool activate(int target) override;
+     bool activate(int player, int minion) override;
 };
 
 class Silence: public Enchantment {
     public:
      Silence(int owner, Game* game);
      bool activate() override;
-     bool activate(int target) override;
+     bool activate(int player, int minion) override;
 };
 
 #endif

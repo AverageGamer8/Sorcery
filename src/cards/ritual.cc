@@ -10,7 +10,7 @@ using namespace std;
 
 Ritual::Ritual(string name, string description, int cost, int owner, Game* game,
                shared_ptr<TriggeredAbility> triggerAbility, int activationCost, int charges, string type)
-    : Card{name, description, type, cost, owner, game}, activationCost{activationCost}, charges{charges} {}
+    : Card{name, description, type, cost, owner, game}, triggerAbility{triggerAbility}, activationCost{activationCost}, charges{charges} {}
 
 string Ritual::getName() const { return name; }
 

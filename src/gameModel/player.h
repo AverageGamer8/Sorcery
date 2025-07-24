@@ -17,12 +17,11 @@ class Player {
     string name;
     int life;
     int magic;
-    // TODO: add more fields.
+
     shared_ptr<Hand> hand;
     shared_ptr<Deck> deck;
     shared_ptr<Board> board;
     shared_ptr<Graveyard> graveyard;
-
 
     bool hasMagicCost(int cost) const;
 
@@ -30,22 +29,21 @@ class Player {
     Player(string name, int life, int magic);
 
     // ================== Gameplay =========================
-    bool playCard(int index);
-    bool playCard(int index, int player, int minion);
-    bool playCard(int index, int player);
+    bool playCard(int index, bool testingEnabled);
+    bool playCard(int index, int player, int minion, bool testingEnabled);
+    bool playCard(int index, int player, bool testingEnabled);
 
     void drawCard();
     void discardCard(int index);
     void shuffleDeck();
 
-    bool activateCard(int index);
-    bool activateCard(int index, int player);
-    bool activateCard(int index, int player, int minion);
+    bool activateCard(int index, bool testingEnabled);
+    bool activateCard(int index, int player, int minion, bool testingEnabled);
 
-    void minionAttack(int index); // minion v player
-    void minionAttack(int index, int target); // minion v minion
+    void minionAttack(int index); // minion vs. player
+    void minionAttack(int index, int target); // minion vs. minion
     bool isAlive();
-    bool isHandFull();  // TODO PUT IN HAND class
+    bool isHandFull();
     bool hasRitual() const;
     bool isGraveyardEmpty() const;
 

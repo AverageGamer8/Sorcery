@@ -84,18 +84,17 @@ void GraphicsDisplay::printSorcery() {
 void GraphicsDisplay::printHelp() {
     xw.fillRectangle(0, cHeight * 2, cWidth * 2, cHeight, BLANK);
     const string temp = "";
-    xw.drawString(0, cHeight * 2 + offset, 
-        temp + "Commands:\n\t"
-        + "help -- Display this message,\n\t"
-        + "end -- End the current player’s turn,\n\t"
-        + "quit -- End the game,\n\t"
-        + "attack minion other-minion -- Orders minion to attack other-minion,\n\t"
-        + "attack minion -- Orders minion to attack the opponent,\n\t"
-        + "play card [target-player target-card] -- Play card, optionally targeting target-card owned by target-player,\n\t"
-        + "use minion [target-player target-card] -- Use minion’s special ability, optionally targeting target-card owned by target-player,\n\t"
-        + "inspect minion -- View a minion’s card and all enchantments on that minion,\n\t"
-        + "hand -- Describe all cards in your hand,\n\t"
-        + "board -- Describe all cards on the board.");
+    xw.drawString(0, cHeight * 2 + (1 * offset), "Commands:");
+    xw.drawString(0, cHeight * 2 + (2 * offset), "help -- Display this message,");
+    xw.drawString(0, cHeight * 2 + (3 * offset), "end -- End the current player’s turn,");
+    xw.drawString(0, cHeight * 2 + (4 * offset), "quit -- End the game,");
+    xw.drawString(0, cHeight * 2 + (5 * offset), "attack minion other-minion -- Orders minion to attack other-minion,");
+    xw.drawString(0, cHeight * 2 + (6 * offset), "attack minion -- Orders minion to attack the opponent,");
+    xw.drawString(cWidth * 3, cHeight * 2 + (1 * offset), "play card [target-player target-card] -- Play card, optionally targeting target-card owned by target-player,");
+    xw.drawString(cWidth * 3, cHeight * 2 + (2 * offset), "use minion [target-player target-card] -- Use minion’s special ability, optionally targeting target-card owned by target-player,\n\t");
+    xw.drawString(cWidth * 3, cHeight * 2 + (3 * offset), "inspect minion -- View a minion’s card and all enchantments on that minion,\n\t");
+    xw.drawString(cWidth * 3, cHeight * 2 + (4 * offset), "hand -- Describe all cards in your hand,\n\t");
+    xw.drawString(cWidth * 3, cHeight * 2 + (5 * offset), "board -- Describe all cards on the board.");
 }
 
 void GraphicsDisplay::printDescribe(Game* game, int minion) {
@@ -128,7 +127,6 @@ void GraphicsDisplay::printHand(Game* game) {
     for (int i = 0; i < hand->getSize(); i++) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
-        printCard(x, y, card);
         printCard(x, y, card);
         if (card->getType() == "Minion") printMinion(x, y, static_pointer_cast<Minion>(card));
         else if (card->getType() == "Enchantment") printEnchantment(x, y, static_pointer_cast<Enchantment>(card));

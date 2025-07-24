@@ -110,5 +110,21 @@ void Game::notifyTrigger(Trigger::TriggerType type) {
     auto activePlayer = getActivePlayer();
     auto inactivePlayer = getInactivePlayer();
 
-    for (auto& trigger : )
+    for (auto& minion : activePlayer->getBoard()->getMinions()) {
+        if (minion->getTriggeredAbility() && minion->getTriggeredAbility()->getTriggerType() == type) {
+            minion->getTriggeredAbility()->notify();
+        }
+    }
+    if (activePlayer->hasRitual() && activePlayer->getBoard()->getRitual()->getTriggeredAbility()->getTriggerType() == type) {
+        activePlayer->getBoard()->getRitual()->getTriggeredAbility()->notify();
+    }
+
+    for (auto& minion : inactivePlayer->getBoard()->getMinions()) {
+        if (minion->getTriggeredAbility() && minion->getTriggeredAbility()->getTriggerType() == type) {
+            minion->getTriggeredAbility()->notify();
+        }
+    }
+    if (inactivePlayer->hasRitual() && inactivePlayer->getBoard()->getRitual()->getTriggeredAbility()->getTriggerType() == type) {
+        inactivePlayer->getBoard()->getRitual()->getTriggeredAbility()->notify();
+    }
 }

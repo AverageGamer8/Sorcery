@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../cards/abilities/trigger.h"
+#include "../cards/abilities/triggeredability.h"
 #include "player.h"
 
 class Player;

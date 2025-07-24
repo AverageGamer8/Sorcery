@@ -20,6 +20,7 @@ class Ritual : public Card {
     int getActivationCost() const;
     int getCharges() const;
     void setCharges(int charges);
+    shared_ptr<TriggeredAbility> getTriggeredAbility() const;
 
     void attachAbilities();
     void detachAbilities();

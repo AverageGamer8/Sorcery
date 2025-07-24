@@ -28,6 +28,10 @@ void Ritual::setCharges(int charges) {
     this->charges = charges;
 }
 
+shared_ptr<TriggeredAbility> Ritual::getTriggeredAbility() const {
+    return triggerAbility;
+}
+
 void Ritual::attachAbilities() {
     if (!triggerAbility) return;
     game->getTrigger(triggerAbility->getTriggerType()).attach(triggerAbility);

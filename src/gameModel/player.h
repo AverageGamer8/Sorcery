@@ -11,8 +11,6 @@
 #include "hand.h"
 #include "../cards/minion.h"
 #include "graveyard.h"
-#include "../trigger.h"
-#include "../triggeredability.h"
 
 using namespace std;
 
@@ -25,8 +23,6 @@ class Player {
     shared_ptr<Deck> deck;
     shared_ptr<Board> board;
     shared_ptr<Graveyard> graveyard;
-    map<Trigger::TriggerType, vector<shared_ptr<TriggeredAbility>>> triggers;
-
 
     bool hasMagicCost(int cost) const;
 
@@ -53,8 +49,6 @@ class Player {
     bool hasRitual() const;
     bool isGraveyardEmpty() const;
 
-    void addTrigger(Trigger::TriggerType type, shared_ptr<>)
-
     // ================== Getters and Setters =====================
     const string getName() const;
     const int getLife() const;
@@ -64,7 +58,6 @@ class Player {
     const shared_ptr<Board>& getBoard() const;
     const shared_ptr<Graveyard>& getGraveyard() const;
     const vector<shared_ptr<Minion>>& getMinions() const;
-    const map<Trigger::TriggerType, vector<shared_ptr<TriggeredAbility>>>& getTriggers(Trigger::TriggerType type) const;
 
     void setName(string name);
     void setLife(int life);

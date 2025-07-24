@@ -33,6 +33,7 @@ bool SummonAirElemental::activate() {
     }
     int index = game->getActiveIndex();
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
+    game->notifyTrigger(Trigger::TriggerType::MinionEnter);
     return true;
 }
 bool SummonAirElemental::activate(int player, int minion) {
@@ -47,11 +48,13 @@ bool SummonThreeAirElemental::activate() {
         cout << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
         return false;
     }
-    // If over 5, board will handle.
     int index = game->getActiveIndex();
-    p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
-    p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
-    p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
+    for (int i = 0; i < 3; i++) {
+        if (!p->getBoard()->isFull()) {
+            p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
+            game->notifyTrigger(Trigger::TriggerType::MinionEnter);
+        }
+    }
     return true;
 }
 bool SummonThreeAirElemental::activate(int player, int minion) {

@@ -11,7 +11,7 @@ const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
 const int BLANK = Xwindow::White;
 const int EMPTY = Xwindow::Black;
 const int offset = 10, cOffset = 2 * offset;
-const int lineCap = 20;
+const int lineCap = 24;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
     xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
@@ -24,13 +24,16 @@ void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
 }
 
 void GraphicsDisplay::drawDesc(int x, int y, string desc) {
-    istringstream iss{desc}; string out = "";
-    for (int line = 0; iss >> out; line++) {
-        string tmp = "";
-        while (out.length() < lineCap && iss >> tmp) out += " " + tmp;
-        xw.drawString(x + offset, y + (cHeight * (line * 0.1 + 0.4)) + offset, out);
-        out = "";
+    istringstream iss{desc}; string out = "", tmp; int line = 0;
+    for (; iss >> tmp; line++) {
+        while (iss && out.length() + tmp.length() < lineCap) {
+            out += tmp + " ";
+            iss >> tmp;
+        }
+        xw.drawString(x + (offset / 2), y + (cHeight * (line * 0.1 + 0.4)) + offset, out);
+        out = tmp + " ";
     }
+    if (line == 1) xw.drawString(x + (offset / 2), y + (cHeight * (0.1 + 0.4)) + offset, out);
 }
 
 void GraphicsDisplay::printPlayer(int pos, shared_ptr<Player> player) {
@@ -63,11 +66,11 @@ void GraphicsDisplay::printEnchantment(int x, int y, shared_ptr<Enchantment> enc
     xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, "Enchantment");
     if (ench->getAtkDesc() != "") {
         xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
-        xw.drawString(x + cOffset, y + (cHeight * 0.8) + cOffset, ench->getAtkDesc());
+        xw.drawString(x + offset, y + (cHeight * 0.8) + cOffset, ench->getAtkDesc());
     }
     if (ench->getDefDesc() != "") {
         xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
-        xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, ench->getDefDesc());
+        xw.drawString(x + (cWidth * 0.8) + offset, y + (cHeight * 0.8) + cOffset, ench->getDefDesc());
     }
     drawDesc(x, y, ench->getEnchDesc());
 }
@@ -142,11 +145,10 @@ void GraphicsDisplay::printDescribe(Game* game, int minion) {
 }
 
 void GraphicsDisplay::printHand(Game* game) {
-    cout << "DEBUG: (GraphicsDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
-
     int y = cHeight * 5;
+    xw.fillRectangle(0, y, width, cHeight, BLANK);
     for (int i = 0; i < hand->getSize(); i++) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
@@ -160,6 +162,7 @@ void GraphicsDisplay::printHand(Game* game) {
 
 void GraphicsDisplay::printBoard(Game* game) {
     xw.fillRectangle(0, 0, width, height);
+    // print player 0
     auto player = game->getPlayer(0);
     printPlayer(0, player);
     auto ritual = player->getBoard()->getRitual();
@@ -178,13 +181,13 @@ void GraphicsDisplay::printBoard(Game* game) {
         printCard(cWidth * i, cHeight, static_pointer_cast<Card>(minions[i]));
         printMinion(cWidth * i, cHeight, minions[i]);
     }
-
+    // print player 1
     player = game->getPlayer(1);
     printPlayer(1, player);
     ritual = player->getBoard()->getRitual();
     if (ritual) {
-        printCard(0, 0, static_pointer_cast<Card>(ritual));
-        printRitual(0, 0, ritual);
+        printCard(0, cHeight * 4, static_pointer_cast<Card>(ritual));
+        printRitual(0, cHeight * 4, ritual);
     } else xw.fillRectangle(0, cHeight * 4, cWidth, cHeight, Xwindow::Blue);
     if (!player->getGraveyard()->isEmpty()) {
         auto graveTop = player->getGraveyard()->getTopMinion();

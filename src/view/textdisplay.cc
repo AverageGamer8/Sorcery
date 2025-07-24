@@ -1,7 +1,7 @@
 #include "textdisplay.h"
 #include <algorithm>
 
-#include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
+#include "../cards/spell.h"
 using namespace std;
 
 const int MAX_ACTIVE_MINIONS = 5;
@@ -21,13 +21,13 @@ void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
 void TextDisplay::printHelp() {
     out << "Commands:\n\t"
         << "help -- Display this message,\n\t"
-        << "end -- End the current player’s turn,\n\t"
+        << "end -- End the current player's turn,\n\t"
         << "quit -- End the game,\n\t"
         << "attack minion other-minion -- Orders minion to attack other-minion,\n\t"
         << "attack minion -- Orders minion to attack the opponent,\n\t"
         << "play card [target-player target-card] -- Play card, optionally targeting target-card owned by target-player,\n\t"
-        << "use minion [target-player target-card] -- Use minion’s special ability, optionally targeting target-card owned by target-player,\n\t"
-        << "inspect minion -- View a minion’s card and all enchantments on that minion,\n\t"
+        << "use minion [target-player target-card] -- Use minion's special ability, optionally targeting target-card owned by target-player,\n\t"
+        << "inspect minion -- View a minion's card and all enchantments on that minion,\n\t"
         << "hand -- Describe all cards in your hand,\n\t"
         << "board -- Describe all cards on the board."
         << endl;
@@ -42,12 +42,13 @@ void TextDisplay::printDescribe(Game* game, int minion) {
         enchs.emplace_back(getEnchantmentInfo(ench));
         minionCard = ench->getMinion();
     }
-    reverse(enchs.begin(), enchs.end());
-    printTemplatesRow(enchs);
+    if (!enchs.empty()) {
+        reverse(enchs.begin(), enchs.end());
+        printTemplatesRow(enchs);
+    }
 }
 
 void TextDisplay::printHand(Game* game) {
-    // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
@@ -80,7 +81,7 @@ card_template_t TextDisplay::getMinionInfo(shared_ptr<Minion> minion) const {
             minion->getCost(),
             minion->getAttack(),
             minion->getDefence(),
-            activatedAbility->getCost(),
+            minion->getActivateCost(),
             activatedAbility->getDesc());
     } else {
         return display_minion_no_ability(

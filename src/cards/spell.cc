@@ -35,6 +35,7 @@ bool Banish::expend() {
 }
 bool Banish::expend(int player, int target) {
     auto p = game->getPlayer(player);
+    game->notifyTrigger(Trigger::TriggerType::MinionExit);
     p->getBoard()->removeMinion(target);
     return true;
 }
@@ -56,6 +57,7 @@ bool Unsummon::expend(int player, int minion) {
         cout << "DEBUG: (Spell) Can't Unsummon, " << p->getName() << "'s hand is full." << endl;
         return false;
     }
+    game->notifyTrigger(Trigger::TriggerType::MinionExit);
     p->getHand()->addCard(p->getBoard()->removeMinion(minion));
     return true;
 }
@@ -112,7 +114,7 @@ bool Disenchant::expend(int player) {
     return false;
 }
 
-RaiseDead::RaiseDead(int owner, Game* game) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
+RaiseDead::RaiseDead(int owner, Game* game) : Spell{"Raise Dead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
 bool RaiseDead::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     if (curr->getHand()->isFull()) {

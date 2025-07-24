@@ -52,6 +52,7 @@ shared_ptr<Minion> Board::removeMinion(int target) {
 void Board::removeRitual() { ritual = nullptr; }
 
 void Board::setMinion(int i, shared_ptr<Minion> m) {
+    if (i >= minions.size()) return;
     minions[i] = m;
 }
 

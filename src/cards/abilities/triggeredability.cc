@@ -27,12 +27,12 @@ bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     cout << "DEBUG: TriggeredAbility) OnStartGainMagic: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() <= 0) {
-        p->getBoard()->removeRitual();
+    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
+        cout << "No more charges..." << endl;
         return false;
     }
     p->setMagic(p->getMagic() + 1);
-    ritual->setCharges(ritual->getCharges() - 1);
+    ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     return true;
 }
 bool OnStartGainMagic::shouldTrigger() const {
@@ -45,8 +45,8 @@ bool OnEnterBuff::activate() {
     cout << "DEBUG: (TriggeredAbility) OnEnterBuff: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() <= 0) {
-        p->getBoard()->removeRitual();
+    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
+        cout << "No more charges..." << endl;
         return false;
     }
     // buff new minion
@@ -56,7 +56,7 @@ bool OnEnterBuff::activate() {
     minion->setDefence(minion->getDefence() + 1);
     minion->setAttack(minion->getAttack() + 1);
     cout << "DEBUG: (TriggeredAbility) OnEnterBuff: Buffed newly entered minion +1/+1" << endl;
-    ritual->setCharges(ritual->getCharges() - 1);
+    ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     return true;
 }
 bool OnEnterBuff::shouldTrigger() const {
@@ -69,8 +69,8 @@ bool OnEnterDestroy::activate() {
     cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: activated " << endl;
 
     auto ritual = p->getBoard()->getRitual();
-    if (ritual && ritual->getCharges() <= 0) {
-        p->getBoard()->removeRitual();
+    if (ritual && ritual->getCharges() >= ritual->getActivationCost()) {
+        cout << "No more charges..." << endl;
         return false;
     }
     if (!ritual) return true;
@@ -79,8 +79,9 @@ bool OnEnterDestroy::activate() {
     auto& minions = activePlayer->getBoard()->getMinions();
     if (minions.empty()) return true;
     auto newMinion = minions.back();
+    game->notifyTrigger(Trigger::TriggerType::MinionExit);
     activePlayer->getBoard()->removeMinion(minions.size() - 1);
-    ritual->setCharges(ritual->getCharges() - 1);
+    ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: Destroyed newly entered minion: " << newMinion->getName() << endl;
     return true;
 }

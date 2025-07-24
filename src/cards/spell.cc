@@ -35,6 +35,7 @@ bool Banish::expend() {
 }
 bool Banish::expend(int player, int target) {
     auto p = game->getPlayer(player);
+    game->notifyTrigger(Trigger::TriggerType::MinionExit);
     p->getBoard()->removeMinion(target);
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
     return true;
@@ -57,9 +58,8 @@ bool Unsummon::expend(int player, int minion) {
         cerr << "DEBUG: (Spell) Can't Unsummon, " << p->getName() << "'s hand is full." << endl;
         return false;
     }
-    p->getHand()->addCard(p->getBoard()->getMinion(minion));
-    p->getBoard()->removeMinion(minion); // should remove enchantments too
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
+    p->getHand()->addCard(p->getBoard()->removeMinion(minion));
     return true;
 }
 bool Unsummon::expend(int player) {
@@ -115,7 +115,7 @@ bool Disenchant::expend(int player) {
     return false;
 }
 
-RaiseDead::RaiseDead(int owner, Game* game) : Spell{"RaiseDead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
+RaiseDead::RaiseDead(int owner, Game* game) : Spell{"Raise Dead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
 bool RaiseDead::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     if (curr->getHand()->isFull()) {
@@ -151,16 +151,20 @@ bool Blizzard::expend() {
     auto opp = game->getPlayer(game->getInactiveIndex());
     auto currMinions = curr->getBoard()->getMinions();
     auto oppMinions = opp->getBoard()->getMinions();
-    for (int i = 0; i < currMinions.size(); ++i) {
+    auto currSize = currMinions.size();
+    auto oppSize = oppMinions.size();
+    for (int i = 0; i < currSize; ++i) {
         currMinions[i]->takeDamage(2);
         if (currMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getActiveIndex(), i);
+            i--; currSize--;
         }
     }
-    for (int i = 0; i < oppMinions.size(); ++i) {
+    for (int i = 0; i < oppSize; ++i) {
         oppMinions[i]->takeDamage(2);
         if (oppMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getInactiveIndex(), i);
+            i--; oppSize--;
         }
     }
     return true;

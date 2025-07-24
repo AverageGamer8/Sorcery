@@ -171,8 +171,13 @@ int main(int argc, char **argv) {
     vector<shared_ptr<sorcDisplay>> displays;
     displays.emplace_back(textDisplay);
     if (graphicsEnabled) {
-        auto graphicsDisplay = make_shared<GraphicsDisplay>();
-        displays.emplace_back(graphicsDisplay);
+        try {
+            auto graphicsDisplay = make_shared<GraphicsDisplay>();
+            displays.emplace_back(graphicsDisplay);
+        } catch(...) {
+            cout << "Unable to create XWindow." << endl;
+            cout << "Please setup XWindow before enabling graphics on next execution." << endl;
+        }
     }
     auto viewer = make_shared<Viewer>(displays, game.get());
 

@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <vector>
+#include "../cards/enchantment.h"
 using namespace std;
+
 
 bool Board::isFull() const {
     return minions.size() >= MAX_BOARD_SIZE;
@@ -32,19 +34,25 @@ void Board::addMinion(shared_ptr<Minion> m) {
     minions.emplace_back(m);
 }
 
-void Board::removeMinion(int target) {
+shared_ptr<Minion> Board::removeMinion(int target) {
     int size = minions.size();
-    if (target >= size)
-        return;
-    if (getMinion(target)->getTriggeredAbility()) {
-        getMinion(target)->detachAbilities();
-    }
+    if (target >= size) return nullptr;
+    auto minion = getMinion(target);
     minions.erase(minions.begin() + target);
+    while (minion->getType() == "Enchantment") {
+        auto ench = static_pointer_cast<Enchantment>(minion);
+        minion = ench->getMinion();
+    }
+    if (minion->getTriggeredAbility()) {
+        minion->detachAbilities();
+    }
+    return minion;
 }
 
 void Board::removeRitual() { ritual = nullptr; }
 
 void Board::setMinion(int i, shared_ptr<Minion> m) {
+    if (i >= minions.size()) return;
     minions[i] = m;
 }
 

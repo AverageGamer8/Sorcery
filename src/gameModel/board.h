@@ -22,7 +22,7 @@ class Board {
     bool hasRitual() const;
     void addMinion(std::shared_ptr<Minion> m);
     void addRitual(std::shared_ptr<Ritual> r);
-    void removeMinion(int target);
+    shared_ptr<Minion> removeMinion(int target);
     void removeRitual();
     void setMinion(int i, std::shared_ptr<Minion> m);
 

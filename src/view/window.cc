@@ -13,7 +13,7 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
   d = XOpenDisplay(NULL);
   if (d == NULL) {
     cerr << "Cannot open display" << endl;
-    exit(1);
+    throw 24;
   }
   s = DefaultScreen(d);
   w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, width, height, 1,
@@ -31,7 +31,7 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
   // Set up colours.
   XColor xcolour;
   Colormap cmap;
-  char color_vals[5][10]={"white", "black", "red", "green", "blue"};
+  char color_vals[5][15]={"linen", "gray", "orange red", "green yellow", "cyan"};
 
   cmap=DefaultColormap(d,DefaultScreen(d));
   for(int i=0; i < 5; ++i) {
@@ -51,7 +51,7 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
 
   XSynchronize(d,True);
 
-  usleep(1000);
+  usleep(10);
 }
 
 Xwindow::~Xwindow() {

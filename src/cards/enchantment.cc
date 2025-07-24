@@ -125,12 +125,14 @@ void Haste::restoreAction() {
     if (actions < 1) actions = 1;
     minion->restoreAction();
 }
-MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
+MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"Magic Fatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
 int MagicFatigue::getActivateCost() const {
     return minion->getActivateCost() + 2;
 }
 Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
-shared_ptr<ActivatedAbility> Silence::getActivatedAbility() const {
-    return nullptr;
+bool Silence::activate() {
+    return false;
 }
-
+bool Silence::activate(int player, int target) {
+    return false;
+}

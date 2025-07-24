@@ -142,7 +142,10 @@ bool Player::activateCard(int index, bool testingEnabled) {
         cout << "DEBUG: (Player) Minion has no actions left." << endl;
         return false;
     }
-    if (!m->activate()) return false;
+    if (!m->activate()) {
+        cout << "Failed to activate." << endl;
+        return false;
+    }
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
@@ -175,7 +178,10 @@ bool Player::activateCard(int index, int player, int minion, bool testingEnabled
         cout << "DEBUG: (Player) Minion has no actions left." << endl;
         return false;
     }
-    if (!m->activate(player, minion)) return false;
+    if (!m->activate(player, minion)) {
+        cout << "Failed to activate." << endl;
+        return false;
+    }
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }

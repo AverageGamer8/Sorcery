@@ -20,8 +20,8 @@ class Enchantment: public Minion, public std::enable_shared_from_this<Enchantmen
         int actions, shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, 
         string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
-    bool activate() override;
-    bool activate(int player, int target) override;
+    virtual bool activate() override;
+    virtual bool activate(int player, int target) override;
     virtual void restoreAction() override;
     void takeDamage(int dmg) override;
     shared_ptr<Minion> getMinion() const;
@@ -38,7 +38,7 @@ class Enchantment: public Minion, public std::enable_shared_from_this<Enchantmen
     int getActions() const override;
     string getAtkDesc() const;
     string getDefDesc() const;
-    virtual shared_ptr<ActivatedAbility> getActivatedAbility() const override;
+    shared_ptr<ActivatedAbility> getActivatedAbility() const override;
     shared_ptr<TriggeredAbility> getTriggeredAbility() const override;
     virtual int getActivateCost() const override;
 };
@@ -69,7 +69,8 @@ class MagicFatigue: public Enchantment {
 class Silence: public Enchantment {
     public:
      Silence(int owner, Game* game);
-     shared_ptr<ActivatedAbility> getActivatedAbility() const override;
+     bool activate() override;
+     bool activate(int player, int target) override;
 };
 
 #endif

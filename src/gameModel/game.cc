@@ -40,9 +40,7 @@ void Game::endTurn() {
 
 void Game::handleMinionDeath(int player, int minion) {
     auto p = getPlayer(player);
-    auto m = p->getBoard()->getMinion(minion);
-    p->getBoard()->removeMinion(minion);
-    p->getGraveyard()->addMinion(m);
+    p->getGraveyard()->addMinion(p->getBoard()->removeMinion(minion));
 }
 
 void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion) {

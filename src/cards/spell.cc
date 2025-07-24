@@ -56,8 +56,7 @@ bool Unsummon::expend(int player, int minion) {
         cout << "DEBUG: (Spell) Can't Unsummon, " << p->getName() << "'s hand is full." << endl;
         return false;
     }
-    p->getHand()->addCard(p->getBoard()->getMinion(minion));
-    p->getBoard()->removeMinion(minion); // should remove enchantments too
+    p->getHand()->addCard(p->getBoard()->removeMinion(minion));
     return true;
 }
 bool Unsummon::expend(int player) {

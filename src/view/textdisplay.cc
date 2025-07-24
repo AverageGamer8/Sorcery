@@ -1,4 +1,5 @@
 #include "textdisplay.h"
+#include <algorithm>
 
 #include "../cards/spell.h"  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
@@ -34,16 +35,15 @@ void TextDisplay::printHelp() {
 void TextDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
     auto minionCard = player->getBoard()->getMinion(minion);
-
-    card_template_t cardInfo;
-    // TODO: if minion has abilities, more fields.
-
-    cardInfo = display_minion_no_ability(
-        minionCard->getName(),
-        minionCard->getCost(),
-        minionCard->getAttack(),
-        minionCard->getDefence());
-    printCardTemplate(cardInfo);
+    vector<card_template_t> enchs;
+    printCardTemplate(getMinionInfo(minionCard)); out << endl;
+    while (minionCard->getType() == "Enchantment") {
+        auto ench = static_pointer_cast<Enchantment>(minionCard);
+        enchs.emplace_back(getEnchantmentInfo(ench));
+        minionCard = ench->getMinion();
+    }
+    reverse(enchs.begin(), enchs.end());
+    printTemplatesRow(enchs);
 }
 
 void TextDisplay::printHand(Game* game) {
@@ -64,63 +64,71 @@ void TextDisplay::printHand(Game* game) {
     printTemplatesRow(cardTemplates);
 }
 
-card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
-    if (card->getType() == "Minion") {
-        auto minion = static_pointer_cast<Minion>(card);
-        auto triggeredAbility = minion->getTriggeredAbility();
-        auto activatedAbility = minion->getActivatedAbility();
-        if (triggeredAbility) {
-            return display_minion_triggered_ability(
-                card->getName(),
-                card->getCost(),
-                minion->getAttack(),
-                minion->getDefence(),
-                triggeredAbility->getDesc());
-        } else if (activatedAbility) {
-            return display_minion_activated_ability(
-                card->getName(),
-                card->getCost(),
-                minion->getAttack(),
-                minion->getDefence(),
-                activatedAbility->getCost(),
-                activatedAbility->getDesc());
-        } else {
-            return display_minion_no_ability(
-                card->getName(),
-                card->getCost(),
-                minion->getAttack(),
-                minion->getDefence());
-        }
-    } else if (card->getType() == "Spell") {
-        auto spell = static_pointer_cast<Spell>(card);
-        return display_spell(
-            card->getName(),
-            card->getCost(),
-            card->getDesc());
-    } else if (card->getType() == "Ritual") {
-        auto ritual = static_pointer_cast<Ritual>(card);
-        return display_ritual(
-            card->getName(),
-            card->getCost(),
-            ritual->getActivationCost(),
-            card->getDesc(),
-            ritual->getCharges());
-    } else if (card->getType() == "Enchantment") {
-        auto enchantment = static_pointer_cast<Enchantment>(card);
-        if (enchantment->getAtkDesc().empty() || enchantment->getDefDesc().empty()) {
-            return display_enchantment(
-                card->getName(),
-                card->getCost(),
-                card->getDesc());
-        } else {
-            return display_enchantment_attack_defence(
-                card->getName(),
-                card->getCost(),
-                card->getDesc(),
-                enchantment->getAtkDesc(),
-                enchantment->getDefDesc());
-        }
+card_template_t TextDisplay::getMinionInfo(shared_ptr<Minion> minion) const {
+    auto triggeredAbility = minion->getTriggeredAbility();
+    auto activatedAbility = minion->getActivatedAbility();
+    if (triggeredAbility) {
+        return display_minion_triggered_ability(
+            minion->getName(),
+            minion->getCost(),
+            minion->getAttack(),
+            minion->getDefence(),
+            triggeredAbility->getDesc());
+    } else if (activatedAbility) {
+        return display_minion_activated_ability(
+            minion->getName(),
+            minion->getCost(),
+            minion->getAttack(),
+            minion->getDefence(),
+            activatedAbility->getCost(),
+            activatedAbility->getDesc());
     } else {
+        return display_minion_no_ability(
+            minion->getName(),
+            minion->getCost(),
+            minion->getAttack(),
+            minion->getDefence());
+    }
+}
+
+card_template_t TextDisplay::getEnchantmentInfo(shared_ptr<Enchantment> ench) const {
+    if (ench->getAtkDesc().empty() || ench->getDefDesc().empty()) {
+        return display_enchantment(
+            ench->getEnchName(),
+            ench->getEnchCost(),
+            ench->getEnchDesc());
+    } else {
+        return display_enchantment_attack_defence(
+            ench->getEnchName(),
+            ench->getEnchCost(),
+            ench->getEnchDesc(),
+            ench->getAtkDesc(),
+            ench->getDefDesc());
+    }
+}
+
+card_template_t TextDisplay::getRitualInfo(shared_ptr<Ritual> ritual) const {
+    return display_ritual(
+            ritual->getName(),
+            ritual->getCost(),
+            ritual->getActivationCost(),
+            ritual->getDesc(),
+            ritual->getCharges());
+}
+
+card_template_t TextDisplay::getSpellInfo(shared_ptr<Spell> spell) const {
+    return display_spell(
+            spell->getName(),
+            spell->getCost(),
+            spell->getDesc());
+}
+
+card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
+    if (card->getType() == "Minion") return getMinionInfo(static_pointer_cast<Minion>(card));
+    else if (card->getType() == "Spell") return getSpellInfo(static_pointer_cast<Spell>(card));
+    else if (card->getType() == "Ritual") return getRitualInfo(static_pointer_cast<Ritual>(card));   
+    else if (card->getType() == "Enchantment") return getEnchantmentInfo(static_pointer_cast<Enchantment>(card));
+    else {
         return CARD_TEMPLATE_BORDER;
     }
 }
@@ -149,7 +157,7 @@ vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> playe
     int numMinions = board->getMinions().size();
     for (int i = 0; i < numMinions; ++i) {
         auto minion = board->getMinion(i);
-        card_template_t cardInfo = getCardInfo(minion);
+        card_template_t cardInfo = getMinionInfo(minion);
         cardTemplates.emplace_back(cardInfo);
     }
     for (int i = 0; i < MAX_ACTIVE_MINIONS - numMinions; ++i) {

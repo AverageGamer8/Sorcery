@@ -28,8 +28,8 @@ bool Enchantment::activate() {
     return minion->activate();
 }
 
-bool Enchantment::activate(int player, int minion) {
-    return minion->activate(player, minion);
+bool Enchantment::activate(int player, int target) {
+    return minion->activate(player, target);
 }
 
 void Enchantment::restoreAction() {

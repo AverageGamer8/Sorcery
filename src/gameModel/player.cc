@@ -122,7 +122,7 @@ void Player::drawCard() {
 bool Player::activateCard(int index, bool testingEnabled) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    int cost = m->getActivatedCost();
+    int cost = m->getActivateCost();
    if (!(m->getActivatedAbility())) {
         // TODO: no activated ability
         cout << "DEBUG: (Player) Minion does not have activated ability." << endl;
@@ -153,7 +153,7 @@ bool Player::activateCard(int index, bool testingEnabled) {
 bool Player::activateCard(int index, int player, int minion, bool testingEnabled) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    int cost = m->getActivatedCost();
+    int cost = m->getActivateCost();
 
     if (!ability) {
         // TODO: no activated ability

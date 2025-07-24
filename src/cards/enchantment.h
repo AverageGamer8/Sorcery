@@ -21,7 +21,7 @@ class Enchantment: public Minion, public std::enable_shared_from_this<Enchantmen
         string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
     bool activate() override;
-    bool activate(int player, int minion) override;
+    bool activate(int player, int target) override;
     virtual void restoreAction() override;
     void takeDamage(int dmg) override;
     shared_ptr<Minion> getMinion() const;

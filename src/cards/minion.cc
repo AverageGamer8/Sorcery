@@ -77,7 +77,9 @@ void Minion::consumeAction() {
 
 void Minion::takeDamage(int dmg) {
     def -= dmg;
-    if (def <= 0) game->notifyTrigger(Trigger::TriggerType::MinionExit);
+    if (def <= 0) {
+        game->notifyTrigger(Trigger::TriggerType::MinionExit);
+    }
 }
 
 string Minion::getName() const {

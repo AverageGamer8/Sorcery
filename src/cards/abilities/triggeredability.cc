@@ -10,7 +10,7 @@ using namespace std;
 void TriggeredAbility::notify() {
     if (!shouldTrigger()) return;
     if (!activate()) {
-        cout << "DEBUG: (TriggeredAbility) No more charges. Removed ritual" << endl;
+        cout << "DEBUG: No more charges." << endl;
     }
 }
 
@@ -28,7 +28,6 @@ bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
-        cout << "Not enough charges..." << endl;
         return false;
     }
     p->setMagic(p->getMagic() + 1);
@@ -46,7 +45,6 @@ bool OnEnterBuff::activate() {
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
-        cout << "Not enough charges..." << endl;
         return false;
     }
     // buff new minion
@@ -70,7 +68,6 @@ bool OnEnterDestroy::activate() {
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
-        cout << "Not enough charges..." << endl;
         return false;
     }
     if (!ritual) return true;
@@ -116,7 +113,7 @@ bool OnEnterDamage::activate() {
     auto minion = board->getMinion(board->getMinions().size() - 1);
     minion->takeDamage(1);
     if (minion->getDefence() <= 0) {
-        game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size());
+        game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size() - 1);
     }
     return true;
 }

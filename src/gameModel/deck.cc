@@ -22,6 +22,10 @@ void Deck::loadDeck(ifstream& inf, Game* game) {
             auto card = make_shared<EarthElemental>(owner, game);
             cards.emplace_back(card);
         }
+        else if (name == "Bone Golem") {
+            auto card = make_shared<BoneGolem>(owner, game);
+            cards.emplace_back(card);
+        }
         else if (name == "Fire Elemental") {
             auto card = make_shared<FireElemental>(owner, game);
             cards.emplace_back(card);
@@ -70,6 +74,14 @@ void Deck::loadDeck(ifstream& inf, Game* game) {
             auto card = make_shared<GiantStrength>(owner, game);
             cards.emplace_back(card);
         }
+        else if (name == "Enrage") {
+            auto card = make_shared<Enrage>(owner, game);
+            cards.emplace_back(card);
+        }
+        else if (name == "Haste") {
+            auto card = make_shared<Haste>(owner, game);
+            cards.emplace_back(card);
+        }
         else if (name == "Magic Fatigue") {
             auto card = make_shared<MagicFatigue>(owner, game);
             cards.emplace_back(card);
@@ -88,14 +100,6 @@ void Deck::loadDeck(ifstream& inf, Game* game) {
         }
         else if (name == "Standstill") {
             auto card = make_shared<Standstill>(owner,game);
-            cards.emplace_back(card);
-        }
-        else if (name == "Enrage") {
-            auto card = make_shared<Enrage>(owner, game);
-            cards.emplace_back(card);
-        }
-        else if (name == "Haste") {
-            auto card = make_shared<Haste>(owner, game);
             cards.emplace_back(card);
         }
     }

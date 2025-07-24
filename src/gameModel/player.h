@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "board.h"
 #include "deck.h"

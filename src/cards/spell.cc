@@ -152,19 +152,19 @@ bool Blizzard::expend() {
     auto oppMinions = opp->getBoard()->getMinions();
     auto currSize = currMinions.size();
     auto oppSize = oppMinions.size();
-    for (int i = 0; i < currSize; ++i) {
+    for (int i = 0; i < currSize;) {
         currMinions[i]->takeDamage(2);
         if (currMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getActiveIndex(), i);
-            i--; currSize--;
-        }
+            currSize--; currMinions = curr->getBoard()->getMinions();
+        } else i++;
     }
-    for (int i = 0; i < oppSize; ++i) {
+    for (int i = 0; i < oppSize;) {
         oppMinions[i]->takeDamage(2);
         if (oppMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getInactiveIndex(), i);
-            i--; oppSize--;
-        }
+            oppSize--; oppMinions = opp->getBoard()->getMinions();
+        } else i++;
     }
     return true;
 }

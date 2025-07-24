@@ -59,11 +59,11 @@ bool Player::playCard(int index, int player, int minion) {
         auto spell = static_pointer_cast<Spell>(card);
         if (!spell->expend(player, minion)) return false;
     } else if (card->getType() == "Enchantment") {
-        // auto ench = static_pointer_cast<Enchantment>(card);
-        // if (!ench->attach(player, minion)) {
-        //     cout << "No minion to enchant." << endl;
-        //     return false;
-        // }
+        auto ench = static_pointer_cast<Enchantment>(card);
+        if (!ench->attach(player, minion)) {
+            cout << "No minion to enchant." << endl;
+            return false;
+        }
     } else {
         // todo exception, not found.
     }

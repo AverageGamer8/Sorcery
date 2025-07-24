@@ -7,7 +7,7 @@
 #include "minion.h"
 using namespace std;
 
-class Enchantment: public Minion {
+class Enchantment: public Minion, public std::enable_shared_from_this<Enchantment> {
    protected:
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
@@ -24,8 +24,6 @@ class Enchantment: public Minion {
     bool activate(int target) override;
     virtual void restoreAction() override;
     void takeDamage(int dmg) override;
-// might need a get base minion method() or just check if its an enchantment
-// might need getActivatedAbility
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
     string getDesc() const override;

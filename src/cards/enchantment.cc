@@ -17,7 +17,11 @@ Enchantment::Enchantment(string name, string description, int cost, int owner, G
 
 bool Enchantment::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
-    return minion != nullptr;
+    if (minion != nullptr) {
+        game->getPlayer(player)->getBoard()->setMinion(target, shared_from_this());
+        return true;
+    }
+    return false;
 }
 
 bool Enchantment::activate() {

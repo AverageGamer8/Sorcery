@@ -41,8 +41,9 @@ class Minion : public Card {
     virtual int getAttack() const;
     virtual int getDefence() const;
     virtual int getActions() const;
-    shared_ptr<ActivatedAbility> getActivatedAbility() const;
-    shared_ptr<TriggeredAbility> getTriggeredAbility() const;
+    virtual shared_ptr<ActivatedAbility> getActivatedAbility() const;
+    virtual shared_ptr<TriggeredAbility> getTriggeredAbility() const;
+    virtual int getActivateCost() const;
 
     void setDefence(int def);
     void setAttack(int atk);

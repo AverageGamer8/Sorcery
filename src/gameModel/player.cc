@@ -122,8 +122,12 @@ void Player::drawCard() {
 bool Player::activateCard(int index, bool testingEnabled) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    int cost = ability->getCost();
-
+    int cost = m->getActivatedCost();
+   if (!(m->getActivatedAbility())) {
+        // TODO: no activated ability
+        cout << "DEBUG: (Player) Minion does not have activated ability." << endl;
+        return false;
+    }
     if (!hasMagicCost(cost)) {
         if (!testingEnabled) {
             // TODO: exception: not enough magic.
@@ -133,18 +137,29 @@ bool Player::activateCard(int index, bool testingEnabled) {
             setMagic(0);
         }
     }
+    if (m->getActions() < 1) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Minion has no actions left." << endl;
+        return false;
+    }
     if (!m->activate()) return false;
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
+    m->consumeAction();
     return true;
 }
 
 bool Player::activateCard(int index, int player, int minion, bool testingEnabled) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    int cost = ability->getCost();
+    int cost = m->getActivatedCost();
 
+    if (!ability) {
+        // TODO: no activated ability
+        cout << "DEBUG: (Player) Minion does not have activated ability." << endl;
+        return false;
+    }
     if (!hasMagicCost(cost)) {
         if (!testingEnabled) {
             // TODO: exception: not enough magic.
@@ -154,10 +169,17 @@ bool Player::activateCard(int index, int player, int minion, bool testingEnabled
             setMagic(0);
         }
     }
+    
+    if (m->getActions() < 1) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Minion has no actions left." << endl;
+        return false;
+    }
     if (!m->activate(player, minion)) return false;
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
+    m->consumeAction();
     return true;
 }
 

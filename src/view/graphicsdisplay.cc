@@ -1,7 +1,6 @@
 #include "graphicsdisplay.h"
 #include <sstream>
 
-  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
 const int ATK = Xwindow::Red;
@@ -13,7 +12,15 @@ const int offset = 10, cOffset = 2 * offset;
 const int lineCap = 22;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width + 1, height + 1}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+
+void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + offset, y + offset, card->getName());
+    xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+    xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(card->getCost()));
+    xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, card->getType());
+}
 
 void GraphicsDisplay::drawDesc(int x, int y, string desc) {
     istringstream iss{desc}; string out = "";
@@ -52,8 +59,7 @@ void GraphicsDisplay::printEnchantment(int x, int y, shared_ptr<Enchantment> enc
         xw.fillRectangle(x + (cWidth * 0.8), y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, DEF);
         xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, ench->getDefDesc());
     }
-    drawDesc(x, y, ench->getDesc());
-    // include activated abilities here and stuff here
+    drawDesc(x, y, ench->getEnchDesc());
 }
 
 void GraphicsDisplay::printRitual(int x, int y, shared_ptr<Ritual> ritual) {
@@ -62,7 +68,6 @@ void GraphicsDisplay::printRitual(int x, int y, shared_ptr<Ritual> ritual) {
     xw.fillRectangle(x, y + (cHeight * 0.4), cWidth * 0.2, cHeight * 0.2, COST);
     xw.drawString(x + cOffset, y + (cHeight * 0.4) + cOffset, to_string(ritual->getActivationCost()));
     drawDesc(x + (cWidth * 0.2), y, ritual->getDesc());
-    // include activated abilities here and stuff here
 }
 
 void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
@@ -70,13 +75,10 @@ void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
     drawDesc(x, y, spell->getDesc());
 }
 
-void GraphicsDisplay::printSorcery(int x, int y) {
-    xw.fillRectangle(x, y, width, cHeight, BLANK);
-    xw.drawString(x + offset, y + offset, "SORCERY");
-}
-
-void GraphicsDisplay::printGame(Game* game) {
-    xw.drawString(0, 0, "GraphicsDisplay: Printing the gameeee!");
+void GraphicsDisplay::printSorcery() {
+    int x = cWidth * 2, y = cHeight * 2;
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+    xw.drawString(x + 3 * offset, y + 3 * offset, "SORCERY");
 }
 
 void GraphicsDisplay::printHelp() {
@@ -98,18 +100,23 @@ void GraphicsDisplay::printHelp() {
 
 void GraphicsDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
-    auto minionCard = player->getMinions()[minion];
+    auto target = player->getMinions()[minion];
 
-    // erase whole board
-    //xw.fillRectangle(0, 0, width, height);
-    // needs get individual enchantment method???
-    // might need get base minion method???
-    printMinion(0, 0, minionCard);
-    for (int i = 0; i < 100; i++) { // need individual enchantments
-
+    xw.fillRectangle(0, 0, width, height);
+    printCard(0, 0, static_pointer_cast<Card>(target));
+    printMinion(0, 0, target);
+    int pos = 0;
+    while (target->getType() == "Enchantment") {
+        int x = (pos % 5) * cWidth, y = ((pos / 5) + 1) * cHeight;
+        auto ench = static_pointer_cast<Enchantment>(target);
+        xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
+        xw.drawString(x + offset, y + offset, ench->getEnchName());
+        xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
+        xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(ench->getEnchCost()));
+        xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ench->getType());
+        printEnchantment(x, y, ench);
+        target = ench->getMinion();
     }
-    // TODO: if minion has abilities, more fields.
-    // make sure to print enchantments as well
 }
 
 void GraphicsDisplay::printHand(Game* game) {
@@ -121,11 +128,8 @@ void GraphicsDisplay::printHand(Game* game) {
     for (int i = 0; i < hand->getSize(); i++) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
-        xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
-        xw.drawString(x + offset, y + offset, card->getName());
-        xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-        xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(card->getCost()));
-        xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, card->getType());
+        printCard(x, y, card);
+        printCard(x, y, card);
         if (card->getType() == "Minion") printMinion(x, y, static_pointer_cast<Minion>(card));
         else if (card->getType() == "Enchantment") printEnchantment(x, y, static_pointer_cast<Enchantment>(card));
         else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));
@@ -135,4 +139,8 @@ void GraphicsDisplay::printHand(Game* game) {
 
 void GraphicsDisplay::printBoard(Game* game) {
     // go through everything or something idk
+
+
+    printSorcery();
+    printHand(game);
 }

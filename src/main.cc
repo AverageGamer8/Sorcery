@@ -108,9 +108,9 @@ int main(int argc, char **argv) {
         Narrator::printLine();
         Narrator::announce("Two warriors have entered the arena: '" + player1Name + "' and '" + player2Name + "'.");
     } else {  // Init is provided - prompt users.
-        Narrator::announce("Please enter the name of Player 1: ");
+        cout << "Please enter the name of Player 1: " << endl;
         getline(cin, player1Name);
-        Narrator::announce("Please enter the name of Player 2: ");
+        cout << "Please enter the name of Player 2: " << endl;
         getline(cin, player2Name);
         Narrator::printLine();
         Narrator::announce("The challengers " + player1Name + " and " + player2Name + " prepare for battle.");

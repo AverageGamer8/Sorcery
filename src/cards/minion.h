@@ -27,8 +27,6 @@ class Minion : public Card {
     void attack(int target, std::shared_ptr<Minion> self);
     virtual bool activate();
     virtual bool activate(int player, int minion);
-    void attachAbilities();
-    void detachAbilities();
     virtual void restoreAction();
     virtual void consumeAction();
     virtual void takeDamage(int dmg);

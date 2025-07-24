@@ -26,16 +26,6 @@ bool Minion::activate(int player, int minion) {
     return activatedAbility->activate(player, minion);
 }
 
-void Minion::attachAbilities() {
-    if (!triggeredAbility) return;
-    game->getTrigger(triggeredAbility->getTriggerType()).attach(triggeredAbility);
-    Narrator::announce(name + "'s triggered ability has been attached to the board.");
-}
-void Minion::detachAbilities() {
-    if (!triggeredAbility) return;
-    game->getTrigger(triggeredAbility->getTriggerType()).detach(triggeredAbility);
-    Narrator::announce(name + "'s triggered ability has been removed from the board.");
-}
 
 void Minion::attack() {
     if (getActions() == 0) {

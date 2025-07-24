@@ -32,15 +32,6 @@ shared_ptr<TriggeredAbility> Ritual::getTriggeredAbility() const {
     return triggerAbility;
 }
 
-void Ritual::attachAbilities() {
-    if (!triggerAbility) return;
-    game->getTrigger(triggerAbility->getTriggerType()).attach(triggerAbility);
-}
-void Ritual::detachAbilities() {
-    if (!triggerAbility) return;
-    game->getTrigger(triggerAbility->getTriggerType()).detach(triggerAbility);
-}
-
 DarkRitual::DarkRitual(int owner, Game* game)
     : Ritual{"Dark Ritual", "At the start of your turn, gain 1 magic", 0, owner, game,
              make_shared<OnStartGainMagic>(game, owner), 1, 5} {}

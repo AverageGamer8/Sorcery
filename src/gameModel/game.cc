@@ -91,21 +91,6 @@ int Game::getActiveIndex() {
     return activePlayer;
 }
 
-Trigger& Game::getTrigger(Trigger::TriggerType type) {
-    switch (type) {
-        case Trigger::TriggerType::TurnStart:
-            return turnStart;
-        case Trigger::TriggerType::TurnEnd:
-            return turnEnd;
-        case Trigger::TriggerType::MinionEnter:
-            return minionEnter;
-        case Trigger::TriggerType::MinionExit:
-            return minionExit;
-        default:
-            cerr << "Game::getTrigger: Invalid type." << endl;
-    }
-}
-
 void Game::notifyTrigger(Trigger::TriggerType type) {
     auto activePlayer = getActivePlayer();
     auto inactivePlayer = getInactivePlayer();

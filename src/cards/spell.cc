@@ -149,8 +149,8 @@ Blizzard::Blizzard(int owner, Game* game) : Spell{"Blizzard", "Deal 2 damage to 
 bool Blizzard::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     auto opp = game->getPlayer(game->getInactiveIndex());
-    auto currMinions = curr->getBoard()->getMinions();
-    auto oppMinions = opp->getBoard()->getMinions();
+    auto& currMinions = curr->getBoard()->getMinions();
+    auto& oppMinions = opp->getBoard()->getMinions();
     auto currSize = currMinions.size();
     auto oppSize = oppMinions.size();
     for (int i = 0; i < currSize; ++i) {

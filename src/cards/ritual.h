@@ -21,9 +21,6 @@ class Ritual : public Card {
     int getCharges() const;
     void setCharges(int charges);
     shared_ptr<TriggeredAbility> getTriggeredAbility() const;
-
-    void attachAbilities();
-    void detachAbilities();
     
     string getName() const override;
     string getDesc() const override;

@@ -25,12 +25,12 @@ void Game::startTurn() {
     }
 
     player->drawCard();
-    turnStart.notifyObservers();
+    notifyTrigger(Trigger::TriggerType::TurnStart);
 }
 void Game::endTurn() {
     std::cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
               << std::endl;
-    turnEnd.notifyObservers();
+    notifyTrigger(Trigger::TriggerType::TurnEnd);
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
 }
 
@@ -48,14 +48,14 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
     if (oppMinion->getDefence() <= 0) {
         opp->getBoard()->removeMinion(receivingMinion);
         opp->getGraveyard()->addMinion(oppMinion);
-        minionExit.notifyObservers();
+        notifyTrigger(Trigger::TriggerType::MinionExit);
     }
     attackingMinion->takeDamage(oppMinion->getAttack());
     if (attackingMinion->getDefence() <= 0) {
         int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
         attacker->getBoard()->removeMinion(attackerIndex);
         attacker->getGraveyard()->addMinion(attackingMinion);
-        minionExit.notifyObservers();
+        notifyTrigger(Trigger::TriggerType::MinionExit);
     }
 
     cout << "DEBUG: Game: Battle Results\n"
@@ -70,7 +70,7 @@ bool Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
     auto cardPtr = player->getHand()->getCardAtIndex(card);
     if (!player->playCard(card)) return false;
     if (cardPtr->getType() == "Minion") {
-        minionEnter.notifyObservers();
+        notifyTrigger(Trigger::TriggerType::MinionEnter);
     }
     return true;
 }

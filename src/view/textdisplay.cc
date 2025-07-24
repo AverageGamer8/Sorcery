@@ -17,10 +17,6 @@ void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
     }
 }
 
-void TextDisplay::printGame(Game* game) {
-    out << "TextDisplay: Printing the gameeee!" << endl;
-}
-
 void TextDisplay::printHelp() {
     out << "Commands:\n\t"
         << "help -- Display this message,\n\t"
@@ -71,23 +67,23 @@ void TextDisplay::printHand(Game* game) {
 card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
     if (card->getType() == "Minion") {
         auto minion = static_pointer_cast<Minion>(card);
-        auto triggered = static_pointer_cast<TriggeredAbility>(minion->getTriggeredAbility());
-        auto activated = static_pointer_cast<ActivatedAbility>(minion->getActivatedAbility());
-        if (triggered) {
+        auto triggeredAbility = minion->getTriggeredAbility();
+        auto activatedAbility = minion->getActivatedAbility();
+        if (triggeredAbility) {
             return display_minion_triggered_ability(
                 card->getName(),
                 card->getCost(),
                 minion->getAttack(),
                 minion->getDefence(),
-                minion->getTriggeredAbility()->getDesc());
-        } else if (activated) {
+                triggeredAbility->getDesc());
+        } else if (activatedAbility) {
             return display_minion_activated_ability(
                 card->getName(),
                 card->getCost(),
                 minion->getAttack(),
                 minion->getDefence(),
-                minion->getActivatedAbility()->getCost(),
-                minion->getActivatedAbility()->getDesc());
+                activatedAbility->getCost(),
+                activatedAbility->getDesc());
         } else {
             return display_minion_no_ability(
                 card->getName(),

@@ -1,12 +1,15 @@
 #include "game.h"
 
 #include <iostream>  // for DEBUG not needed later
-Game::Game(std::vector<std::shared_ptr<Player>> players)
+
+using namespace std;
+
+Game::Game(vector<shared_ptr<Player>> players)
     : players{players} {}
 
 void Game::startTurn() {
-    std::cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
-              << std::endl;
+    cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
+         << endl;
     auto player = getActivePlayer();
 
     // Replenish magic and minion actions
@@ -27,11 +30,19 @@ void Game::startTurn() {
     player->drawCard();
     turnStart.notifyObservers();
 }
+
 void Game::endTurn() {
-    std::cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
-              << std::endl;
+    cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
+         << endl;
     turnEnd.notifyObservers();
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
+}
+
+void Game::handleMinionDeath(int player, int minion) {
+    auto p = getPlayer(player);
+    auto m = p->getBoard()->getMinion(minion);
+    p->getBoard()->removeMinion(minion);
+    p->getGraveyard()->addMinion(m);
 }
 
 void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion) {
@@ -46,16 +57,12 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
 
     oppMinion->takeDamage(attackingMinion->getAttack());
     if (oppMinion->getDefence() <= 0) {
-        opp->getBoard()->removeMinion(receivingMinion);
-        opp->getGraveyard()->addMinion(oppMinion);
-        minionExit.notifyObservers();
+        handleMinionDeath(getInactiveIndex(), receivingMinion);
     }
     attackingMinion->takeDamage(oppMinion->getAttack());
     if (attackingMinion->getDefence() <= 0) {
         int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
-        attacker->getBoard()->removeMinion(attackerIndex);
-        attacker->getGraveyard()->addMinion(attackingMinion);
-        minionExit.notifyObservers();
+        handleMinionDeath(getActiveIndex(), attackerIndex);
     }
 
     cout << "DEBUG: Game: Battle Results\n"
@@ -65,10 +72,10 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
          << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
 }
 
-bool Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
+bool Game::playCard(int card, bool testingEnabled) {  // Wrapper to notify MinionEnter observers
     auto player = getActivePlayer();
     auto cardPtr = player->getHand()->getCardAtIndex(card);
-    if (!player->playCard(card)) return false;
+    if (!player->playCard(card, testingEnabled)) return false;
     if (cardPtr->getType() == "Minion") {
         minionEnter.notifyObservers();
     }
@@ -77,7 +84,7 @@ bool Game::playCard(int card) {  // Wrapper to notify MinionEnter observers
 
 void Game::setActivePlayer(int player) { activePlayer = player; }
 void Game::setWinner(int winner) { winningPlayer = winner; }
-int Game::getWinner() const { return winningPlayer; }  // TODO
+int Game::getWinner() const { return winningPlayer; }
 
 shared_ptr<Player> Game::getPlayer(int index) { return players[index]; }
 shared_ptr<Player> Game::getActivePlayer() { return getPlayer(activePlayer); }
@@ -91,7 +98,7 @@ int Game::getActiveIndex() {
     return activePlayer;
 }
 
-Trigger &Game::getTrigger(Trigger::TriggerType type) {  // easier to call, could also use 4 getters as well.
+Trigger &Game::getTrigger(Trigger::TriggerType type) {
     switch (type) {
         case Trigger::TriggerType::TurnStart:
             return turnStart;
@@ -102,6 +109,6 @@ Trigger &Game::getTrigger(Trigger::TriggerType type) {  // easier to call, could
         case Trigger::TriggerType::MinionExit:
             return minionExit;
         default:
-            std::cerr << "Game::getTrigger: invalid type." << std::endl;
+            cerr << "Game::getTrigger: Invalid type." << endl;
     }
 }

@@ -1,0 +1,22 @@
+Bobby Jones
+Mr. Goose
+hand
+play 2
+discard 1
+discard 1
+end
+play 2
+discard 1
+discard 1
+discard 1
+draw
+draw
+draw
+hand
+play 4
+play 3
+board
+end
+hand
+draw
+play 4

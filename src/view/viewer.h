@@ -13,7 +13,6 @@ class Viewer {
 
    public:
     enum Command {  // TODO: Add more enums with more controller commands
-        PRINT,
         HELP,
         DESCRIBE,
         HAND,

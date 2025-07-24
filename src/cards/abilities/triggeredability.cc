@@ -60,7 +60,7 @@ bool OnEnterBuff::activate() {
     return true;
 }
 bool OnEnterBuff::shouldTrigger() const {
-    return true;
+    return game->getActiveIndex() == player;
 }
 
 OnEnterDestroy::OnEnterDestroy(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play, destroy it", Trigger::TriggerType::MinionEnter} {}
@@ -79,10 +79,9 @@ bool OnEnterDestroy::activate() {
     auto& minions = activePlayer->getBoard()->getMinions();
     if (minions.empty()) return true;
     auto newMinion = minions.back();
-    activePlayer->getGraveyard()->addMinion(newMinion);
     activePlayer->getBoard()->removeMinion(minions.size() - 1);
     ritual->setCharges(ritual->getCharges() - 1);
-    cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: Destroyed newly entered minion, sent to graveyard." << endl;
+    cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: Destroyed newly entered minion: " << newMinion->getName() << endl;
     return true;
 }
 bool OnEnterDestroy::shouldTrigger() const {
@@ -113,11 +112,15 @@ bool OnEnterDamage::activate() {
     auto p = game->getActivePlayer();
     auto board = p->getBoard();
     if (board->getMinions().empty()) return true;
-    board->getMinion(board->getMinions().size() - 1)->takeDamage(1);
+    auto minion = board->getMinion(board->getMinions().size() - 1);
+    minion->takeDamage(1);
+    if (minion->getDefence() <= 0) {
+        game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size());
+    }
     return true;
 }
 bool OnEnterDamage::shouldTrigger() const {
-    return true;
+    return game->getActiveIndex() != player;
 }
 OnTurnEndBuff::OnTurnEndBuff(Game* game, int player) : TriggeredAbility{game, player, "At the end of your turn, all you minions gain +0/+1.", Trigger::TriggerType::TurnEnd} {}
 bool OnTurnEndBuff::activate() {

@@ -23,7 +23,6 @@ class TextDisplay : public sorcDisplay {
 
    public:
     TextDisplay(std::ostream& out);
-    void printGame(Game* game) override;
     void printHelp() override;
     void printDescribe(Game* game, int minion) override;
     void printHand(Game* game) override;

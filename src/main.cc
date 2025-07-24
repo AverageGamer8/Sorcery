@@ -60,10 +60,10 @@ int main(int argc, char **argv) {
             cout << "DEBUG: initFile received - " << initFile << endl;
         } else if (curArg == "-testing") {
             testingEnabled = true;
-            cout << "DEBUG: testingEnabled received - " << testingEnabled << endl;
+            cout << "DEBUG: Testing Enabled." << endl;
         } else if (curArg == "-graphics") {
             graphicsEnabled = true;
-            cout << "DEBUG: graphics received - " << graphicsEnabled << endl;
+            cout << "DEBUG: Graphics Enabled." << endl;
         } else {
             cerr << "Invalid argument " << curArg << "." << endl;
             return 1;
@@ -221,14 +221,14 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int attackingMinion = stoi(tokens[1]);
                 if (!controller->attack(attackingMinion - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 2) {
                 int attackingMinion = stoi(tokens[1]);
                 int receivingMinion = stoi(tokens[2]);
                 if (!controller->attack(attackingMinion - 1, receivingMinion - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -246,8 +246,8 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int card = stoi(tokens[1]);
-                if (!controller->play(card - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                if (!controller->play(card - 1, testingEnabled)) {
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
@@ -260,8 +260,8 @@ int main(int argc, char **argv) {
                     minion = stoi(tokens[3]);
                 }
                 // cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
-                if (!controller->play(card - 1, player - 1, minion - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                if (!controller->play(card - 1, player - 1, minion - 1, testingEnabled)) {
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -279,16 +279,16 @@ int main(int argc, char **argv) {
             int args = tokens.size() - 1;
             if (args == 1) {
                 int minion = stoi(tokens[1]);
-                if (!controller->use(minion - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                if (!controller->use(minion - 1, testingEnabled)) {
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
                 int activeMinion = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
                 int receivingMinion = stoi(tokens[3]);
-                if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1, testingEnabled)) {
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -307,7 +307,7 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int card = stoi(tokens[1]);
                 if (!controller->describe(card - 1)) {
-                    cout << "DEBUG: (Main) Invalid bounds provided." << endl;
+                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {

@@ -17,23 +17,23 @@ Enchantment::Enchantment(string name, string description, int cost, int owner, G
 
 bool Enchantment::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
-    return minion != nullptr;
+    if (minion != nullptr) {
+        game->getPlayer(player)->getBoard()->setMinion(target, shared_from_this());
+        return true;
+    }
+    return false;
 }
 
 bool Enchantment::activate() {
-    // maybe instead use getActivatedAbility to go and grab it?
-    // and have this method just handle actions?
-    return true;
+    return minion->activate();
 }
 
-bool Enchantment::activate(int target) {
-    //minion->activate(target); doesnt exist yet?
-
-    return true;
+bool Enchantment::activate(int player, int minion) {
+    return minion->activate(player, minion);
 }
 
 void Enchantment::restoreAction() {
-    actions = 0; // actions of an enchantment can be negative
+    actions = 0;
     minion->restoreAction();
 }
 
@@ -98,6 +98,16 @@ void Enchantment::consumeAction() {
     else minion->consumeAction();
 }
 
+shared_ptr<ActivatedAbility> Enchantment::getActivatedAbility() const {
+    return minion->getActivatedAbility();
+}
+shared_ptr<TriggeredAbility> Enchantment::getTriggeredAbility() const {
+    return minion->getTriggeredAbility();
+}
+int Enchantment::getActivateCost() const {
+    return minion->getActivateCost();
+}
+
 // Specific Enchantments
 GiantStrength::GiantStrength(int owner, Game* game): Enchantment{"Giant Strength", "", 1, owner, game, 2, 2, 0, nullptr, nullptr, "+2", "+2"} { }
 Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game, 0, 0, 0, nullptr, nullptr, "*2", "*2"} { }
@@ -116,26 +126,11 @@ void Haste::restoreAction() {
     minion->restoreAction();
 }
 MagicFatigue::MagicFatigue(int owner, Game* game): Enchantment{"MagicFatigue", "Enchanted minion's activated ability costs 2 more", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
-bool MagicFatigue::activate() { // override activate ability with same ability but costs 2 more
-    // check if magic >= cost + 2, dont activate if not
-    // go through game? find active player check magic
-    int curMP = game->getActivePlayer()->getMagic();
-    // get base ability cost
-    // get enchantment ability cost
-    return true;
-}
-bool MagicFatigue::activate(int target) {
-    // check if magic >= cost + 2, dont activate if not
-    int curMP = game->getActivePlayer()->getMagic();
-    return true;
+int MagicFatigue::getActivateCost() const {
+    return minion->getActivateCost() + 2;
 }
 Silence::Silence(int owner, Game* game): Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0, nullptr, nullptr} { }
-bool Silence::activate() {
-    cout << "Blocked by Silence Enchantment." << endl;
-    return false; // your not getting that
-}
-bool Silence::activate(int target) {
-    cout << "Blocked by Silence Enchantment." << endl;
-    return false;
+shared_ptr<ActivatedAbility> Silence::getActivatedAbility() const {
+    return nullptr;
 }
 

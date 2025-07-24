@@ -44,36 +44,36 @@ bool Controller::attack(int attackingMinion, int receivingMinion) {
     return true;
 }
 
-bool Controller::play(int card) {
+bool Controller::play(int card, bool testingEnabled) {
     if (card < 0 || card >= game->getActivePlayer()->getHand()->getSize()) return false;
-    if (!game->playCard(card)) return false;  // Minion enters.
+    if (!game->playCard(card, testingEnabled)) return false;  // Minion enters.
     return true;
 }
 
-bool Controller::play(int card, int onPlayer, int minion) {
+bool Controller::play(int card, int onPlayer, int minion, bool testingEnabled) {
     auto player = game->getActivePlayer();
     auto receivingPlayer = game->getPlayer(onPlayer);
     if (card < 0 || card >= player->getHand()->getSize() 
         || onPlayer < 0 || onPlayer >= 2
-        || minion < 0 || minion >= receivingPlayer->getMinions().size()) {
+        || (minion != -1 && (minion < 0 || minion >= receivingPlayer->getMinions().size()))) {
         return false;
     }
     if (minion == -1) { // ritual
-        if (player->playCard(card, onPlayer)) return false;
+        if (!player->playCard(card, onPlayer, testingEnabled)) return false;
         return true;
     }
-    player->playCard(card, onPlayer, minion);
+    player->playCard(card, onPlayer, minion, testingEnabled);
     return true;
 }
 
-bool Controller::use(int minion) {
+bool Controller::use(int minion, bool testingEnabled) {
     auto player = game->getActivePlayer();
     if (minion < 0 || minion >= player->getMinions().size()) return false;
-    player->activateCard(minion);
+    player->activateCard(minion, testingEnabled);
     return true;
 }
 
-bool Controller::use(int activeMinion, int onPlayer, int receivingMinion) {
+bool Controller::use(int activeMinion, int onPlayer, int receivingMinion, bool testingEnabled) {
     auto player = game->getActivePlayer();
     auto receivingPlayer = game->getPlayer(onPlayer);
     if (activeMinion < 0 || activeMinion >= player->getMinions().size()
@@ -81,7 +81,7 @@ bool Controller::use(int activeMinion, int onPlayer, int receivingMinion) {
         || receivingMinion < 0 || receivingMinion >= receivingPlayer->getMinions().size()) {
             return false;
         }
-    player->activateCard(activeMinion, onPlayer, receivingMinion);
+    player->activateCard(activeMinion, onPlayer, receivingMinion, testingEnabled);
     return true;
 }
 

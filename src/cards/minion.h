@@ -26,7 +26,7 @@ class Minion : public Card {
     // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
     void attack(int target, std::shared_ptr<Minion> self);
     virtual bool activate();
-    virtual bool activate(int target);
+    virtual bool activate(int player, int minion);
     void attachAbilities();
     void detachAbilities();
     virtual void restoreAction();
@@ -41,8 +41,9 @@ class Minion : public Card {
     virtual int getAttack() const;
     virtual int getDefence() const;
     virtual int getActions() const;
-    shared_ptr<ActivatedAbility> getActivatedAbility() const;
-    shared_ptr<TriggeredAbility> getTriggeredAbility() const;
+    virtual shared_ptr<ActivatedAbility> getActivatedAbility() const;
+    virtual shared_ptr<TriggeredAbility> getTriggeredAbility() const;
+    virtual int getActivateCost() const;
 
     void setDefence(int def);
     void setAttack(int atk);

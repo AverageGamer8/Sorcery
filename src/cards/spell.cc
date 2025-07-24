@@ -147,12 +147,21 @@ Blizzard::Blizzard(int owner, Game* game) : Spell{"Blizzard", "Deal 2 damage to 
 bool Blizzard::expend() {
     auto curr = game->getPlayer(game->getActiveIndex());
     auto opp = game->getPlayer(game->getInactiveIndex());
-    for (auto& minion : curr->getBoard()->getMinions()) {
-        minion->takeDamage(2);
+    auto currMinions = curr->getBoard()->getMinions();
+    auto oppMinions = opp->getBoard()->getMinions();
+    for (int i = 0; i < currMinions.size(); ++i) {
+        currMinions[i]->takeDamage(2);
+        if (currMinions[i]->getDefence() <= 0) {
+            game->handleMinionDeath(game->getActiveIndex(), i);
+        }
     }
-    for (auto& minion : opp->getBoard()->getMinions()) {
-        minion->takeDamage(2);
+    for (int i = 0; i < oppMinions.size(); ++i) {
+        oppMinions[i]->takeDamage(2);
+        if (oppMinions[i]->getDefence() <= 0) {
+            game->handleMinionDeath(game->getInactiveIndex(), i);
+        }
     }
+    return true;
 }
 bool Blizzard::expend(int player, int minion) {
     // TODO: Handle exception

@@ -7,7 +7,7 @@
 #include "minion.h"
 using namespace std;
 
-class Enchantment: public Minion {
+class Enchantment: public Minion, public std::enable_shared_from_this<Enchantment> {
    protected:
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
@@ -20,12 +20,10 @@ class Enchantment: public Minion {
         int actions, shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, 
         string atkDesc = "", string defDesc = "", string type = "Enchantment");
     virtual bool attach(int player, int target);
-    virtual bool activate() override;
-    virtual bool activate(int target) override;
+    bool activate() override;
+    bool activate(int player, int minion) override;
     virtual void restoreAction() override;
-    virtual void takeDamage(int dmg) override;
-// might need a get base minion method() or just check if its an enchantment
-// might need getActivatedAbility
+    void takeDamage(int dmg) override;
     shared_ptr<Minion> getMinion() const;
     string getName() const override;
     string getDesc() const override;
@@ -40,6 +38,9 @@ class Enchantment: public Minion {
     int getActions() const override;
     string getAtkDesc() const;
     string getDefDesc() const;
+    virtual shared_ptr<ActivatedAbility> getActivatedAbility() const override;
+    shared_ptr<TriggeredAbility> getTriggeredAbility() const override;
+    virtual int getActivateCost() const override;
 };
 
 class GiantStrength: public Enchantment {
@@ -62,15 +63,13 @@ class Haste: public Enchantment {
 class MagicFatigue: public Enchantment {
     public:
      MagicFatigue(int owner, Game* game);
-     bool activate() override;
-     bool activate(int target) override;
+     int getActivateCost() const override;
 };
 
 class Silence: public Enchantment {
     public:
      Silence(int owner, Game* game);
-     bool activate() override;
-     bool activate(int target) override;
+     shared_ptr<ActivatedAbility> getActivatedAbility() const override;
 };
 
 #endif

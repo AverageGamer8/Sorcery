@@ -163,6 +163,7 @@ int main(int argc, char **argv) {
 
     Narrator::announce("Both warriors draw their opening hands - " + to_string(MAX_CARDS_IN_HAND) + " cards each.");
     Narrator::announce("The arena is set. Let the battle commence!");
+    Narrator::announce("Tip: For a list of commands, type 'help'.");
 
     // ========== Initialize MVC ===========
 

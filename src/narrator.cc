@@ -12,8 +12,9 @@ void Narrator::setDelayed(bool delay) {
 }
 
 void Narrator::printLine() {
-    std::string line = "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~";
+    if (!enabled) return;
 
+    std::string line = "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~";
     for (char c : line) {
         std::cout << c << std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMs / 20));

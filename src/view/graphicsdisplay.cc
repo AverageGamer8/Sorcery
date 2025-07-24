@@ -1,7 +1,6 @@
 #include "graphicsdisplay.h"
 #include <sstream>
 
-  // TODO: investigate dependecny this shouldnt be needed
 using namespace std;
 
 const int ATK = Xwindow::Red;
@@ -13,9 +12,9 @@ const int offset = 10, cOffset = 2 * offset;
 const int lineCap = 22;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width + 1, height + 1}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
 
-GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
+void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
     xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
     xw.drawString(x + offset, y + offset, card->getName());
     xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
@@ -77,7 +76,8 @@ void GraphicsDisplay::printSpell(int x, int y, shared_ptr<Spell> spell) {
 }
 
 void GraphicsDisplay::printSorcery() {
-    xw.fillRectangle(cWidth * 2, cHeight * 2, cWidth, cHeight, BLANK);
+    int x = cWidth * 2, y = cHeight * 2;
+    xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
     xw.drawString(x + 3 * offset, y + 3 * offset, "SORCERY");
 }
 
@@ -100,22 +100,22 @@ void GraphicsDisplay::printHelp() {
 
 void GraphicsDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
-    auto minion = player->getMinions()[minion];
+    auto target = player->getMinions()[minion];
 
     xw.fillRectangle(0, 0, width, height);
-    printCard(0, 0, static_pointer_cast<Card>(minion));
-    printMinion(0, 0, minion);
+    printCard(0, 0, static_pointer_cast<Card>(target));
+    printMinion(0, 0, target);
     int pos = 0;
-    while (card->getType() == "Enchantment") {
+    while (target->getType() == "Enchantment") {
         int x = (pos % 5) * cWidth, y = ((pos / 5) + 1) * cHeight;
+        auto ench = static_pointer_cast<Enchantment>(target);
         xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
-        xw.drawString(x + offset, y + offset, card->getEnchName());
+        xw.drawString(x + offset, y + offset, ench->getEnchName());
         xw.fillRectangle(x + (cWidth * 0.8), y, cWidth * 0.2, cHeight * 0.2, COST);
-        xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(card->getEnchCost()));
-        xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, card->getType());
-        auto ench = static_pointer_cast<Enchantment>(minion);
+        xw.drawString(x + (cWidth * 0.8) + cOffset, y + cOffset, to_string(ench->getEnchCost()));
+        xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ench->getType());
         printEnchantment(x, y, ench);
-        minion = ench->getMinion();
+        target = ench->getMinion();
     }
 }
 
@@ -140,6 +140,6 @@ void GraphicsDisplay::printBoard(Game* game) {
     // go through everything or something idk
 
 
-    printSorcery()
+    printSorcery();
     printHand(game);
 }

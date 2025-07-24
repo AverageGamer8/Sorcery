@@ -17,10 +17,6 @@ void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
     }
 }
 
-void TextDisplay::printGame(Game* game) {
-    out << "TextDisplay: Printing the gameeee!" << endl;
-}
-
 void TextDisplay::printHelp() {
     out << "Commands:\n\t"
         << "help -- Display this message,\n\t"

@@ -113,6 +113,9 @@ shared_ptr<ActivatedAbility> Minion::getActivatedAbility() const {
 shared_ptr<TriggeredAbility> Minion::getTriggeredAbility() const {
     return triggeredAbility;
 }
+int Minion::getActivateCost() const {
+    return activatedAbility ? activatedAbility->getCost() : 0;
+}
 void Minion::setDefence(int def) {
     this->def = def;
 }

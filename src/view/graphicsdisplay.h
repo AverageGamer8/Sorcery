@@ -30,7 +30,6 @@ class GraphicsDisplay : public sorcDisplay {
 
    public:
     GraphicsDisplay(int width = 960, int length = 720);
-    void printGame(Game* game) override;
     void printHelp() override;
     void printDescribe(Game* game, int minion) override;
     void printHand(Game* game) override;

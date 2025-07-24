@@ -117,26 +117,48 @@ bool Player::activateCard(int index) {
 bool Player::activateCard(int index, int player) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    if (!hasMagicCost(ability->getCost())) {
+    if (!(m->getActivatedAbility())) {
+        // TODO: no activated ability
+        cout << "DEBUG: (Player) Minion does not have activated ability." << endl;
+        return false;
+    }
+    if (!hasMagicCost(m->getActivateCost())) {
         // TODO: exception not enough magic.
         cout << "DEBUG: (Player) Does not have enough magic to use the card." << endl;
         return false;
     }
+    if (m->getActions() < 1) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Minion has no actions left." << endl;
+        return false;
+    }
     if (!m->activate()) return false;
-    setMagic(getMagic() - ability->getCost());
+    setMagic(getMagic() - m->getActivateCost());
+    m->consumeAction();
     return true;
 }
 
 bool Player::activateCard(int index, int player, int minion) {
     auto m = getBoard()->getMinion(index);
     auto ability = m->getActivatedAbility();
-    if (!hasMagicCost(ability->getCost())) {
+    if (!(m->getActivatedAbility())) {
+        // TODO: no activated ability
+        cout << "DEBUG: (Player) Minion does not have activated ability." << endl;
+        return false;
+    }
+    if (!hasMagicCost(m->getActivateCost())) {
         // TODO: exception not enough magic.
         cout << "DEBUG: (Player) Does not have enough magic to use the card." << endl;
         return false;
     }
+    if (m->getActions() < 1) {
+        // TODO: exception not enough magic.
+        cout << "DEBUG: (Player) Minion has no actions left." << endl;
+        return false;
+    }
     if (!m->activate(minion)) return false;
-    setMagic(getMagic() - ability->getCost());
+    setMagic(getMagic() - m->getActivateCost());
+    m->consumeAction();
     return true;
 }
 

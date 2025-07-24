@@ -35,7 +35,6 @@ shared_ptr<TriggeredAbility> Ritual::getTriggeredAbility() const {
 void Ritual::attachAbilities() {
     if (!triggerAbility) return;
     game->getTrigger(triggerAbility->getTriggerType()).attach(triggerAbility);
-    cout << "DEBUG: Ritual: attached trigger." << endl;
 }
 void Ritual::detachAbilities() {
     if (!triggerAbility) return;

@@ -6,7 +6,7 @@ using namespace std;
 
 void Hand::debugPrintHand() {  // debug function.
     for (auto& c : cards) {
-        cout << "DEBUG: (Hand) CARD - " << c->getName() << endl;
+        cerr << "DEBUG: (Hand) CARD - " << c->getName() << endl;
     }
 }
 
@@ -21,7 +21,7 @@ void Hand::addCard(shared_ptr<Card> card) {
 
 void Hand::discardCard(int index) {
     if (index >= cards.size()) {
-        cout << "DEBUG: (Hand) Can't discard, out of range." << endl;
+        cerr << "DEBUG: (Hand) Can't discard, out of range." << endl;
         return;
     }
     cards.erase(cards.begin() + index);

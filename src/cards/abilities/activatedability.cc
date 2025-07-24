@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "../../gameModel/game.h"
+#include "../../narrator.h"
 
 using namespace std;
 
@@ -11,13 +12,14 @@ int ActivatedAbility::getCost() const { return cost; }
 
 DealDamage::DealDamage(Game* game) : ActivatedAbility(game, "Deal 1 damage to target minion", 1) {}
 bool DealDamage::activate() {
-    cout << "DEBUG: (ActivatedAbility) Not proper usage: must have target." << endl;
+    cerr << "DEBUG: (ActivatedAbility) Not proper usage: must have target." << endl;
     return false;
 }
 bool DealDamage::activate(int player, int minion) {
     auto p = game->getPlayer(player);
     auto m = p->getBoard()->getMinion(minion);
     m->takeDamage(1);
+    Narrator::announce(p->getName() + "'s " + m->getName() + " takes 1 damage from an activated ability.");
     if (m->getDefence() <= 0) {
         game->handleMinionDeath(player, minion);
     }
@@ -28,15 +30,17 @@ SummonAirElemental::SummonAirElemental(Game* game) : ActivatedAbility(game, "Sum
 bool SummonAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {
-        cout << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
+        cerr << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
+        Narrator::announce(p->getName() + " tried to summon Air Elementals, but their board is full.");
         return false;
     }
     int index = game->getActiveIndex();
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
+    Narrator::announce(p->getName() + " summons a 1/1 Air Elemental.");
     return true;
 }
 bool SummonAirElemental::activate(int player, int minion) {
-    cout << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
+    cerr << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
     return false;
 }
 
@@ -44,7 +48,8 @@ SummonThreeAirElemental::SummonThreeAirElemental(Game* game) : ActivatedAbility(
 bool SummonThreeAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {
-        cout << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
+        cerr << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
+        Narrator::announce(p->getName() + " tried to summon an Air Elemental, but their board is full.");
         return false;
     }
     // If over 5, board will handle.
@@ -52,9 +57,10 @@ bool SummonThreeAirElemental::activate() {
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
+    Narrator::announce(p->getName() + " summons up to three 1/1 Air Elementals in a gust of magic.");
     return true;
 }
 bool SummonThreeAirElemental::activate(int player, int minion) {
-    cout << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
+    cerr << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
     return false;
 }

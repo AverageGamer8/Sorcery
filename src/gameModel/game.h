@@ -27,7 +27,7 @@ class Game {
     void setActivePlayer(int player);
 
     void handleMinionDeath(int player, int minion);
-    void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion);  // TODO: might not be best way. minion passes itself.
+    void battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion);
     bool playCard(int card, bool testingEnabled);
 
     void startTurn();

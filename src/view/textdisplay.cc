@@ -5,14 +5,19 @@ using namespace std;
 
 const int MAX_ACTIVE_MINIONS = 5;
 const int HORIZONTAL_LINE_WIDTH = 165;
+const int printDelayMs = 30;
 
-TextDisplay::TextDisplay(ostream& out) : out{out} {}
+TextDisplay::TextDisplay(ostream& out, bool enablePrintDelay)
+    : out{out}, enablePrintDelay{enablePrintDelay} {}
 
 void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
     for (int i = 0; i < cardInfo.size(); ++i) {
         out << cardInfo[i];
         if (i < cardInfo.size() - 1) {
             out << endl;
+            if (enablePrintDelay) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(printDelayMs));
+            }
         }
     }
 }
@@ -47,7 +52,6 @@ void TextDisplay::printDescribe(Game* game, int minion) {
 }
 
 void TextDisplay::printHand(Game* game) {
-    // cout << "DEBUG: (TextDisplay) printhand run. " << endl;
     auto player = game->getActivePlayer();
     auto hand = player->getHand();
 
@@ -55,7 +59,7 @@ void TextDisplay::printHand(Game* game) {
     for (int i = 0; i < hand->getSize(); ++i) {
         auto card = hand->getCardAtIndex(i);
         if (!card) {
-            cout << "DEBUG: (TextDisplay) Hand: no card at index." << endl;
+            cerr << "DEBUG: (TextDisplay) Hand: no card at index." << endl;
             return;
         }
         card_template_t cardInfo = getCardInfo(card);
@@ -126,7 +130,7 @@ card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
 }
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
     if (cardTemplates.empty()) {
-        cout << "DEBUG: TextDisplay: empty template given to print" << endl;  // todo exception
+        cerr << "DEBUG: TextDisplay: empty template given to print" << endl;  // todo exception
         return;
     }
     int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card!
@@ -137,6 +141,9 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
         }
         if (line < height - 1) {
             out << endl;
+            if (enablePrintDelay) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(printDelayMs));
+            }
         }
     }
     cout << endl;

@@ -7,6 +7,7 @@
 #include "controller/controller.h"
 #include "gameModel/game.h"
 #include "gameModel/player.h"
+#include "narrator.h"
 #include "view/display.h"
 #include "view/graphicsdisplay.h"
 #include "view/textdisplay.h"
@@ -27,12 +28,13 @@ int main(int argc, char **argv) {
     string initFile;
     bool graphicsEnabled = false;
     bool testingEnabled = false;
+    bool narrateEnabled = false;
+    bool delayEnabled = false;
 
     // =================== Argument parsing ===================================
 
     for (int i = 1; i < argc; i++) {
         string curArg = argv[i];
-        // cout << curArg << endl;
 
         if (curArg == "-deck1") {
             ++i;
@@ -64,11 +66,21 @@ int main(int argc, char **argv) {
         } else if (curArg == "-graphics") {
             graphicsEnabled = true;
             cout << "DEBUG: Graphics Enabled." << endl;
+        } else if (curArg == "-narrate") {
+            narrateEnabled = true;
+            cout << "DEBUG: Narrator Enabled." << endl;
+        } else if (curArg == "-delay") {
+            delayEnabled = true;
+            
+            cout << "DEBUG: Text Delay Enabled." << endl;
         } else {
             cerr << "Invalid argument " << curArg << "." << endl;
             return 1;
         }
     }
+
+    Narrator::setEnabled(narrateEnabled);
+    Narrator::setDelayed(delayEnabled);
 
     // ====================== Read Files =========================================
 
@@ -93,13 +105,15 @@ int main(int argc, char **argv) {
             return 1;
         }
 
-        cout << "DEBUG: received - player1: " << player1Name
-             << ", player2: " << player2Name << endl;
+        Narrator::printLine();
+        Narrator::announce("Two warriors have entered the arena: '" + player1Name + "' and '" + player2Name + "'.");
     } else {  // Init is provided - prompt users.
-        cout << "Please enter name of Player 1: ";
+        Narrator::announce("Please enter the name of Player 1: ");
         getline(cin, player1Name);
-        cout << "Please enter name of Player 2: ";
+        Narrator::announce("Please enter the name of Player 2: ");
         getline(cin, player2Name);
+        Narrator::printLine();
+        Narrator::announce("The challengers " + player1Name + " and " + player2Name + " prepare for battle.");
     }
 
     // =============== Initialize game objects ================================
@@ -137,6 +151,7 @@ int main(int argc, char **argv) {
     if (!testingEnabled) {
         game->getPlayer(0)->shuffleDeck();
         game->getPlayer(1)->shuffleDeck();
+        Narrator::announce("The decks are shuffled, fate now decides the order of battle.");
     }
 
     // Starting Hand: Draw 5 cards for both players.
@@ -146,15 +161,14 @@ int main(int argc, char **argv) {
     }
     game->setActivePlayer(0);
 
-    // output it
-    cout << "DEBUG: (Main) Created - player1: " << game->getPlayer(0)->getName() << endl;
-    cout << "DEBUG: (Main) Created - player2: " << game->getPlayer(1)->getName() << endl;
+    Narrator::announce("Both warriors draw their opening hands - " + to_string(MAX_CARDS_IN_HAND) + " cards each.");
+    Narrator::announce("The arena is set. Let the battle commence!");
 
     // ========== Initialize MVC ===========
 
-    auto textDisplay = make_shared<TextDisplay>(cout);
-    vector<shared_ptr<sorcDisplay>> displays;  // TODO: expand this once graphics are implemented
-    displays.emplace_back(textDisplay);        // for now, just text.
+    auto textDisplay = make_shared<TextDisplay>(cout, delayEnabled);
+    vector<shared_ptr<sorcDisplay>> displays;
+    displays.emplace_back(textDisplay);
     if (graphicsEnabled) {
         auto graphicsDisplay = make_shared<GraphicsDisplay>();
         displays.emplace_back(graphicsDisplay);
@@ -169,9 +183,6 @@ int main(int argc, char **argv) {
         string command;
         if ((init && getline(init, command)) || getline(cin, command)) {
             if (command.empty()) continue;
-
-            cout << "DEBUG: received command: " << command << endl;
-
         } else {
             break;
         }
@@ -180,17 +191,17 @@ int main(int argc, char **argv) {
         } else if (command == "end") {
             controller->end();
         } else if (command == "quit") {
-            cout << "Exiting the program..." << endl;
+            Narrator::announce("The battle ends as both warriors retreat... Play again next time!");
             return 0;
         } else if (command == "draw") {
             if (!testingEnabled) {
-                cout << "Invalid input: Testing Mode is not enabled." << endl;
+                Narrator::announce("Manual draw is available only in testing mode.");
                 continue;
             }
             controller->draw();
         } else if (command.substr(0, 7) == "discard") {
             if (!testingEnabled) {
-                cout << "Invalid input: Testing Mode is not enabled." << endl;
+                Narrator::announce("Discarding is available only in testing mode.");
                 continue;
             }
 
@@ -221,21 +232,21 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int attackingMinion = stoi(tokens[1]);
                 if (!controller->attack(attackingMinion - 1)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "The attack fails - invalid command provided." << endl;
                     continue;
                 }
             } else if (args == 2) {
                 int attackingMinion = stoi(tokens[1]);
                 int receivingMinion = stoi(tokens[2]);
                 if (!controller->attack(attackingMinion - 1, receivingMinion - 1)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "The attack fails - invalid command provided." << endl;
                     continue;
                 }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 2." << endl;
                 continue;
             }
-        } else if (command.substr(0, 4) == "play") {  // TODO: testing allows you to use spell,activate without magic, set to 0.
+        } else if (command.substr(0, 4) == "play") {
             stringstream cmd{command};
             string token;
             vector<string> tokens;
@@ -247,21 +258,20 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int card = stoi(tokens[1]);
                 if (!controller->play(card - 1, testingEnabled)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
                 int card = stoi(tokens[1]);
                 int player = stoi(tokens[2]);
                 int minion;
-                if (tokens[3] == "r") {  // Target ritual
+                if (tokens[3] == "r") {
                     minion = 0;
-                } else {  // Target Minion
+                } else {
                     minion = stoi(tokens[3]);
                 }
-                // cout << "DEBUG: card " << card << ", player: " << player << ", minion " << minion << endl;
                 if (!controller->play(card - 1, player - 1, minion - 1, testingEnabled)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -280,7 +290,7 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int minion = stoi(tokens[1]);
                 if (!controller->use(minion - 1, testingEnabled)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
@@ -288,7 +298,7 @@ int main(int argc, char **argv) {
                 int player = stoi(tokens[2]);
                 int receivingMinion = stoi(tokens[3]);
                 if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1, testingEnabled)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -307,7 +317,7 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int card = stoi(tokens[1]);
                 if (!controller->describe(card - 1)) {
-                    cout << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -323,7 +333,10 @@ int main(int argc, char **argv) {
             continue;
         }
     }
-    cout << "YOU DIE: " << game->getPlayer((game->getWinner() + 1) % 2)->getName()
-         << ". Congratulations " << game->getPlayer(game->getWinner())->getName()
-         << "! You are the winner!" << endl;
+    string loser = game->getPlayer((game->getWinner() + 1) % 2)->getName();
+    string winner = game->getPlayer(game->getWinner())->getName();
+
+    Narrator::announce("The final blow has been struck!");
+    Narrator::announce(loser + " falls to their knees, defeated.");
+    Narrator::announce("Victory belongs to " + winner + "!");
 }

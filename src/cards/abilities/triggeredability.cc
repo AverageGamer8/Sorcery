@@ -4,13 +4,14 @@
 #include <memory>
 
 #include "../../gameModel/game.h"
+#include "../../narrator.h"
 
 using namespace std;
 
 void TriggeredAbility::notify() {
     if (!shouldTrigger()) return;
     if (!activate()) {
-        cout << "DEBUG: (TriggeredAbility) No more charges. Removed ritual" << endl;
+        Narrator::announce("A ritual has run out of charges and quietly fades into the void.");
     }
 }
 
@@ -24,11 +25,12 @@ Trigger::TriggerType TriggeredAbility::getTriggerType() const {
 OnStartGainMagic::OnStartGainMagic(Game* game, int player) : TriggeredAbility{game, player, "At the start of your turn, gain 1 magic", Trigger::TriggerType::TurnStart} {}
 bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     auto p = game->getPlayer(player);
-    cout << "DEBUG: TriggeredAbility) OnStartGainMagic: activated " << endl;
+    Narrator::announce(p->getName()+ "'s Dark Magic ritual activates with the new turn, granting them 1 magic.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() <= 0) {
         p->getBoard()->removeRitual();
+        Narrator::announce(p->getName() + "'s  Dark Magic ritual, has run out of charges and fades away.");
         return false;
     }
     p->setMagic(p->getMagic() + 1);
@@ -42,11 +44,12 @@ bool OnStartGainMagic::shouldTrigger() const {
 OnEnterBuff::OnEnterBuff(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play under your control, it gains +1/+1", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterBuff::activate() {
     auto p = game->getPlayer(player);
-    cout << "DEBUG: (TriggeredAbility) OnEnterBuff: activated " << endl;
+    Narrator::announce(p->getName() + "'s Aura of Power ritual has activated.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() <= 0) {
         p->getBoard()->removeRitual();
+        Narrator::announce(p->getName() + "'s Aura of Power ritual, has run out of charges and fades away.");
         return false;
     }
     // buff new minion
@@ -55,7 +58,7 @@ bool OnEnterBuff::activate() {
     auto minion = minions.back();
     minion->setDefence(minion->getDefence() + 1);
     minion->setAttack(minion->getAttack() + 1);
-    cout << "DEBUG: (TriggeredAbility) OnEnterBuff: Buffed newly entered minion +1/+1" << endl;
+    Narrator::announce(p->getName() + "'s Aura of Power ritual, has buffed their " + minion->getName() + " by +1/+1.");
     ritual->setCharges(ritual->getCharges() - 1);
     return true;
 }
@@ -66,11 +69,12 @@ bool OnEnterBuff::shouldTrigger() const {
 OnEnterDestroy::OnEnterDestroy(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play, destroy it", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterDestroy::activate() {
     auto p = game->getPlayer(player);
-    cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: activated " << endl;
+    Narrator::announce(p->getName() + "'s Standstill ritual has activated.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() <= 0) {
         p->getBoard()->removeRitual();
+        Narrator::announce(p->getName() + "'s Standstill ritual has run out of charges and fades away.");
         return false;
     }
     if (!ritual) return true;
@@ -81,7 +85,7 @@ bool OnEnterDestroy::activate() {
     auto newMinion = minions.back();
     activePlayer->getBoard()->removeMinion(minions.size() - 1);
     ritual->setCharges(ritual->getCharges() - 1);
-    cout << "DEBUG: (TriggeredAbility) OnEnterDestroy: Destroyed newly entered minion: " << newMinion->getName() << endl;
+    Narrator::announce(activePlayer->getName() + "'s Standstill ritual activates, destroying the newly summoned " + newMinion->getName() + ".");
     return true;
 }
 bool OnEnterDestroy::shouldTrigger() const {
@@ -93,11 +97,11 @@ bool OnEnterDestroy::shouldTrigger() const {
 OnExitGainBuff::OnExitGainBuff(Game* game, int player) : TriggeredAbility{game, player, "Gain +1/+1 whenever a minion leaves play.", Trigger::TriggerType::MinionExit} {}
 bool OnExitGainBuff::activate() {
     auto p = game->getPlayer(player);
-    cout << "DEBUG: (TriggeredAbility) OnExitGainBuff: activated " << endl;
     for (auto& m : p->getBoard()->getMinions()) {
         if (m->getName() == "Bone Golem") {
             m->setDefence(m->getDefence() + 1);
             m->setAttack(m->getAttack() + 1);
+            Narrator::announce(p->getName() + "'s Bone Golem gains +1/+1 from the fallen.");
         }
     }
     return true;
@@ -108,12 +112,12 @@ bool OnExitGainBuff::shouldTrigger() const {
 
 OnEnterDamage::OnEnterDamage(Game* game, int player) : TriggeredAbility{game, player, "Whenever an opponents's minion enters play, deal 1 damage to it.", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterDamage::activate() {
-    cout << "DEBUG: (TriggeredAbility) OnEnterDamage: activated " << endl;
     auto p = game->getActivePlayer();
     auto board = p->getBoard();
     if (board->getMinions().empty()) return true;
     auto minion = board->getMinion(board->getMinions().size() - 1);
     minion->takeDamage(1);
+    Narrator::announce(p->getName() + "'s " + minion->getName() + " takes 1 damage from Fire Elemental's burn.");
     if (minion->getDefence() <= 0) {
         game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size());
     }
@@ -124,8 +128,8 @@ bool OnEnterDamage::shouldTrigger() const {
 }
 OnTurnEndBuff::OnTurnEndBuff(Game* game, int player) : TriggeredAbility{game, player, "At the end of your turn, all you minions gain +0/+1.", Trigger::TriggerType::TurnEnd} {}
 bool OnTurnEndBuff::activate() {
-    cout << "DEBUG: (TriggeredAbility) OnTurnEndBuff: activated " << endl;
     auto p = game->getPlayer(player);
+    Narrator::announce(p->getName() + "'s Potion Seller grants +0/+1 to all their minions.");
     auto minions = p->getBoard()->getMinions();
     for (auto& m : minions) {
         m->setDefence(m->getDefence() + 1);

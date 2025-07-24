@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include <iostream>  // for DEBUG not needed later
+#include "../narrator.h"
 
 using namespace std;
 
@@ -8,12 +8,12 @@ Game::Game(vector<shared_ptr<Player>> players)
     : players{players} {}
 
 void Game::startTurn() {
-    cout << "DEBUG (Game): Player " << activePlayer << " starts their turn."
-         << endl;
+    Narrator::printLine();
+    Narrator::announce("Player " + to_string(getActiveIndex() + 1) + ": '" + getActivePlayer()->getName() + "' starts their turn...");
     auto player = getActivePlayer();
 
-    // Replenish magic and minion actions
-    player->setMagic(player->getMagic() + 1);  // Gains 1 magic.
+    player->setMagic(player->getMagic() + 1);
+    Narrator::announce("Magic restored and minions refreshed!");
 
     auto hand = player->getHand();
     auto board = player->getBoard();
@@ -28,12 +28,12 @@ void Game::startTurn() {
     }
 
     player->drawCard();
+    Narrator::announce("A new card is drawn from the deck.");
     notifyTrigger(Trigger::TriggerType::TurnStart);
 }
 
 void Game::endTurn() {
-    std::cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
-              << std::endl;
+    Narrator::announce("Player " + to_string(getActiveIndex() + 1) + ": '" + getActivePlayer()->getName() + "' ends their turn.");
     notifyTrigger(Trigger::TriggerType::TurnEnd);
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
 }
@@ -49,27 +49,22 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
     auto attacker = getActivePlayer();
     auto opp = getInactivePlayer();
     auto oppMinion = opp->getBoard()->getMinion(receivingMinion);
-    cout << "DEBUG: Game: Minion Battle\n"
-         << "  Attacker: " << attackingMinion->getName()
-         << " (ATK: " << attackingMinion->getAttack() << ", DEF: " << attackingMinion->getDefence() << ")\n"
-         << "  Defender: " << oppMinion->getName()
-         << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
+    Narrator::announce(attackingMinion->getName() + " (ATK:" + to_string(attackingMinion->getAttack()) +
+                       ", DEF:" + to_string(attackingMinion->getDefence()) + ") battles " +
+                       oppMinion->getName() + " (ATK:" + to_string(oppMinion->getAttack()) +
+                       ", DEF:" + to_string(oppMinion->getDefence()) + ")!");
 
     oppMinion->takeDamage(attackingMinion->getAttack());
     if (oppMinion->getDefence() <= 0) {
+        Narrator::announce(oppMinion->getName() + " has fallen while defending!");
         handleMinionDeath(getInactiveIndex(), receivingMinion);
     }
     attackingMinion->takeDamage(oppMinion->getAttack());
     if (attackingMinion->getDefence() <= 0) {
+        Narrator::announce(attackingMinion->getName() + " has been defeated while attacking!");
         int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
         handleMinionDeath(getActiveIndex(), attackerIndex);
     }
-
-    cout << "DEBUG: Game: Battle Results\n"
-         << "  Attacker: " << attackingMinion->getName()
-         << " (ATK: " << attackingMinion->getAttack() << ", DEF: " << attackingMinion->getDefence() << ")\n"
-         << "  Defender: " << oppMinion->getName()
-         << " (ATK: " << oppMinion->getAttack() << ", DEF: " << oppMinion->getDefence() << ")\n";
 }
 
 bool Game::playCard(int card, bool testingEnabled) {  // Wrapper to notify MinionEnter observers
@@ -98,7 +93,7 @@ int Game::getActiveIndex() {
     return activePlayer;
 }
 
-Trigger &Game::getTrigger(Trigger::TriggerType type) {
+Trigger& Game::getTrigger(Trigger::TriggerType type) {
     switch (type) {
         case Trigger::TriggerType::TurnStart:
             return turnStart;

@@ -6,6 +6,7 @@
 
 #include "../gameModel/game.h"
 #include "../gameModel/player.h"
+#include "../narrator.h"
 #include "card.h"
 using namespace std;
 
@@ -14,6 +15,7 @@ Minion::Minion(string name, string description, int cost, int owner,
                shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, string type)
     : Card{name, description, type, cost, owner, game}, atk{atk}, def{def}, actions{actions}, activatedAbility{activatedAbility}, triggeredAbility{triggeredAbility} {}
 
+// ============================= Gameplay =================================
 bool Minion::activate() {
     if (!activatedAbility) return false;
     return activatedAbility->activate();
@@ -27,16 +29,17 @@ bool Minion::activate(int player, int minion) {
 void Minion::attachAbilities() {
     if (!triggeredAbility) return;
     game->getTrigger(triggeredAbility->getTriggerType()).attach(triggeredAbility);
-    cout << "DEBUG: Ritual: attached trigger." << endl;
+    Narrator::announce(name + "'s triggered ability has been attached to the board.");
 }
 void Minion::detachAbilities() {
     if (!triggeredAbility) return;
     game->getTrigger(triggeredAbility->getTriggerType()).detach(triggeredAbility);
+    Narrator::announce(name + "'s triggered ability has been removed from the board.");
 }
 
 void Minion::attack() {
     if (getActions() == 0) {
-        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        Narrator::announce(name + " has no actions left and too tired to attack.");
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
@@ -45,28 +48,18 @@ void Minion::attack() {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }
+    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     consumeAction();
 }
 
 void Minion::attack(int target, std::shared_ptr<Minion> self) {
     if (getActions() == 0) {
-        cout << "DEBUG: (Minion) " << name << " is out of actions." << endl;
+        Narrator::announce(name + " has no actions left and too tired to attack.");
         return;
     }
     game->battleMinion(self, target);
     consumeAction();
 }
-
-// TODO: investigate why shared_from_this() causes segfault. maybe something to do with dependency?
-// void Minion::attack(int target) {
-//     if (actions == 0) {
-//         cout << "DEBUG: (Minion) " << name << "is out of actions." << endl;
-//         return;
-//     }
-//     auto attackingMinion = shared_from_this();
-//     game->battleMinion(attackingMinion, target);
-//     --actions;
-// }
 
 void Minion::restoreAction() {
     actions = 1;
@@ -77,38 +70,23 @@ void Minion::consumeAction() {
 
 void Minion::takeDamage(int dmg) {
     def -= dmg;
-    if (def <= 0) {  // or is it better to put it outside of minion
-        // game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
-        //  could be easier to just have the minion itself call put to graveyard methods
+    Narrator::announce(name + " takes " + to_string(dmg) + " damage. (" + to_string(def) + " DEF left)");
+    if (def <= 0) {
+        Narrator::announce(name + " has died!");
         game->notifyTrigger(Trigger::TriggerType::MinionExit);
-        
     }
 }
 
-string Minion::getName() const {
-    return name;
-}
+// ============================= Getters and Setters =================================
 
-string Minion::getDesc() const {
-    return description;
-}
+string Minion::getName() const { return name; }
+string Minion::getDesc() const { return description; }
+string Minion::getType() const { return type; }
+int Minion::getCost() const { return cost; }
+int Minion::getAttack() const { return atk; }
+int Minion::getDefence() const { return def; }
+int Minion::getActions() const { return actions; }
 
-string Minion::getType() const {
-    return type;
-}
-
-int Minion::getCost() const {
-    return cost;
-}
-int Minion::getAttack() const {
-    return atk;
-}
-int Minion::getDefence() const {
-    return def;
-}
-int Minion::getActions() const {
-    return actions;
-}
 shared_ptr<ActivatedAbility> Minion::getActivatedAbility() const {
     return activatedAbility;
 }
@@ -118,12 +96,9 @@ shared_ptr<TriggeredAbility> Minion::getTriggeredAbility() const {
 int Minion::getActivateCost() const {
     return activatedAbility ? activatedAbility->getCost() : 0;
 }
-void Minion::setDefence(int def) {
-    this->def = def;
-}
-void Minion::setAttack(int atk) {
-    this->atk = atk;
-}
+
+void Minion::setDefence(int def) { this->def = def; }
+void Minion::setAttack(int atk) { this->atk = atk; }
 
 // Specific Minions
 AirElemental::AirElemental(int owner, Game* game) : Minion{"Air Elemental", "", 0, owner, game, 1, 1, 0, nullptr, nullptr} {}

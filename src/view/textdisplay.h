@@ -1,8 +1,10 @@
 #ifndef TEXTDISPLAY_H
 #define TEXTDISPLAY_H
 
+#include <chrono>
 #include <iostream>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include "ascii_graphics.h"
@@ -12,6 +14,7 @@ using namespace std;
 
 class TextDisplay : public sorcDisplay {
     ostream& out;
+    bool enablePrintDelay = false;
 
     void printCardTemplate(const card_template_t& cardInfo);
     void printTemplatesRow(vector<card_template_t> cardTemplates) const;
@@ -22,7 +25,7 @@ class TextDisplay : public sorcDisplay {
     card_template_t buildVerticalCardBorder() const;
 
    public:
-    TextDisplay(std::ostream& out);
+    TextDisplay(std::ostream& out, bool enablePrintDelay);
     void printHelp() override;
     void printDescribe(Game* game, int minion) override;
     void printHand(Game* game) override;

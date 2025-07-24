@@ -28,13 +28,13 @@ void Game::startTurn() {
     }
 
     player->drawCard();
-    turnStart.notifyObservers();
+    notifyTrigger(Trigger::TriggerType::TurnStart);
 }
 
 void Game::endTurn() {
-    cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
-         << endl;
-    turnEnd.notifyObservers();
+    std::cout << "DEBUG (Game): Player " << activePlayer << " ends their turn."
+              << std::endl;
+    notifyTrigger(Trigger::TriggerType::TurnEnd);
     activePlayer = (activePlayer == 0) ? 1 : 0;  // swap turn
 }
 
@@ -77,7 +77,7 @@ bool Game::playCard(int card, bool testingEnabled) {  // Wrapper to notify Minio
     auto cardPtr = player->getHand()->getCardAtIndex(card);
     if (!player->playCard(card, testingEnabled)) return false;
     if (cardPtr->getType() == "Minion") {
-        minionEnter.notifyObservers();
+        notifyTrigger(Trigger::TriggerType::MinionEnter);
     }
     return true;
 }
@@ -110,5 +110,28 @@ Trigger &Game::getTrigger(Trigger::TriggerType type) {
             return minionExit;
         default:
             cerr << "Game::getTrigger: Invalid type." << endl;
+    }
+}
+
+void Game::notifyTrigger(Trigger::TriggerType type) {
+    auto activePlayer = getActivePlayer();
+    auto inactivePlayer = getInactivePlayer();
+
+    for (auto& minion : activePlayer->getBoard()->getMinions()) {
+        if (minion->getTriggeredAbility() && minion->getTriggeredAbility()->getTriggerType() == type) {
+            minion->getTriggeredAbility()->notify();
+        }
+    }
+    if (activePlayer->hasRitual() && activePlayer->getBoard()->getRitual()->getTriggeredAbility()->getTriggerType() == type) {
+        activePlayer->getBoard()->getRitual()->getTriggeredAbility()->notify();
+    }
+
+    for (auto& minion : inactivePlayer->getBoard()->getMinions()) {
+        if (minion->getTriggeredAbility() && minion->getTriggeredAbility()->getTriggerType() == type) {
+            minion->getTriggeredAbility()->notify();
+        }
+    }
+    if (inactivePlayer->hasRitual() && inactivePlayer->getBoard()->getRitual()->getTriggeredAbility()->getTriggerType() == type) {
+        inactivePlayer->getBoard()->getRitual()->getTriggeredAbility()->notify();
     }
 }

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../cards/abilities/trigger.h"
+#include "../cards/abilities/triggeredability.h"
 #include "player.h"
 
 class Player;
@@ -42,6 +43,8 @@ class Game {
     int getWinner() const;
     int getInactiveIndex();
     int getActiveIndex();
+
+    void notifyTrigger(Trigger::TriggerType type);
 };
 
 #endif

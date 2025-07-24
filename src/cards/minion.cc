@@ -80,7 +80,7 @@ void Minion::takeDamage(int dmg) {
     if (def <= 0) {  // or is it better to put it outside of minion
         // game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
         //  could be easier to just have the minion itself call put to graveyard methods
-        game->getTrigger(Trigger::TriggerType::MinionExit).notifyObservers();
+        game->notifyTrigger(Trigger::TriggerType::MinionExit);
         
     }
 }

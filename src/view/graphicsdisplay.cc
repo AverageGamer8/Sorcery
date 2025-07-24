@@ -129,6 +129,7 @@ void GraphicsDisplay::printHand(Game* game) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
         printCard(x, y, card);
+        printCard(x, y, card);
         if (card->getType() == "Minion") printMinion(x, y, static_pointer_cast<Minion>(card));
         else if (card->getType() == "Enchantment") printEnchantment(x, y, static_pointer_cast<Enchantment>(card));
         else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));

@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
     Narrator::announce("Tip: For a list of commands, type 'help'.");
 
     // ========== Initialize MVC ===========
-
+    game->startTurn();
     auto textDisplay = make_shared<TextDisplay>(cout, delayEnabled);
     vector<shared_ptr<sorcDisplay>> displays;
     displays.emplace_back(textDisplay);
@@ -187,7 +187,6 @@ int main(int argc, char **argv) {
     auto controller = make_unique<Controller>(game.get(), viewer);
 
     // ================== Game Loop ==================
-
     while (game->getWinner() == -1) {
         string command;
         if ((init && getline(init, command)) || getline(cin, command)) {

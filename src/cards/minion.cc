@@ -1,11 +1,9 @@
 #include "minion.h"
 
-#include <iostream>  // todo remove debug
 #include <memory>
 #include <string>
 
 #include "../gameModel/game.h"
-#include "../gameModel/player.h"
 #include "../narrator.h"
 #include "card.h"
 using namespace std;
@@ -33,21 +31,21 @@ void Minion::attack() {
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
+    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     opp->setLife(opp->getLife() - getAttack());
     if (opp->getLife() <= 0) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }
-    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     consumeAction();
 }
 
-void Minion::attack(int target, std::shared_ptr<Minion> self) {
+void Minion::attack(int target) {
     if (getActions() == 0) {
         Narrator::announce(name + " has no actions left and too tired to attack.");
         return;
     }
-    game->battleMinion(self, target);
+    game->battleMinion(shared_from_this(), target);
     consumeAction();
 }
 
@@ -58,13 +56,22 @@ void Minion::consumeAction() {
     actions--;
 }
 
-void Minion::takeDamage(int dmg) {
+bool Minion::takeDamage(int dmg) {
     def -= dmg;
     Narrator::announce(name + " takes " + to_string(dmg) + " damage. (" + to_string(def) + " DEF left)");
     if (def <= 0) {
         Narrator::announce(name + " has died!");
         game->notifyTrigger(Trigger::TriggerType::MinionExit);
+        return true;
     }
+    return false;
+}
+
+void Minion::increaseAtk(int amount) {
+    atk += amount;
+}
+void Minion::increaseDef(int amount) {
+    def += amount;
 }
 
 // ============================= Getters and Setters =================================

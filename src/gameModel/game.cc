@@ -6,7 +6,7 @@
 using namespace std;
 
 Game::Game(vector<shared_ptr<Player>> players)
-    : players{players} {}
+    : players{players} { }
 
 void Game::startTurn() {
     Narrator::printLine();
@@ -53,13 +53,11 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
                        oppMinion->getName() + " (ATK:" + to_string(oppMinion->getAttack()) +
                        ", DEF:" + to_string(oppMinion->getDefence()) + ")!");
 
-    oppMinion->takeDamage(attackingMinion->getAttack());
-    if (oppMinion->getDefence() <= 0) {
+    if (oppMinion->takeDamage(attackingMinion->getAttack())) {
         Narrator::announce(oppMinion->getName() + " has fallen while defending!");
         handleMinionDeath(getInactiveIndex(), receivingMinion);
     }
-    attackingMinion->takeDamage(oppMinion->getAttack());
-    if (attackingMinion->getDefence() <= 0) {
+    if (attackingMinion->takeDamage(oppMinion->getAttack())) {
         Narrator::announce(attackingMinion->getName() + " has been defeated while attacking!");
         int attackerIndex;
         try {

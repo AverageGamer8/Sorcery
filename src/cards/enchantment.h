@@ -3,17 +3,13 @@
 
 #include <string>
 
-#include "card.h"
 #include "minion.h"
 using namespace std;
 
-class Enchantment: public Minion, public std::enable_shared_from_this<Enchantment> {
+class Enchantment: public Minion {
    protected:
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
-
-   private:
-    void consumeAction() override;
 
    public:
     Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, 
@@ -24,8 +20,11 @@ class Enchantment: public Minion, public std::enable_shared_from_this<Enchantmen
     virtual bool activate() override;
     virtual bool activate(int player, int target) override;
     virtual void restoreAction() override;
-    void takeDamage(int dmg) override;
+    bool takeDamage(int dmg) override;
+    void increaseAtk(int amount) override;
+    void increaseDef(int amount) override;
     shared_ptr<Minion> getMinion() const;
+    void consumeAction() override;
     string getName() const override;
     string getDesc() const override;
     string getType() const override;

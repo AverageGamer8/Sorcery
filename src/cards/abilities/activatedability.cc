@@ -18,9 +18,7 @@ bool DealDamage::activate() {
 bool DealDamage::activate(int player, int minion) {
     auto p = game->getPlayer(player);
     auto m = p->getBoard()->getMinion(minion);
-    m->takeDamage(1);
-    Narrator::announce(p->getName() + "'s " + m->getName() + " takes 1 damage from an activated ability.");
-    if (m->getDefence() <= 0) {
+    if (m->takeDamage(1)) {
         game->handleMinionDeath(player, minion);
     }
     return true;
@@ -51,7 +49,6 @@ bool SummonThreeAirElemental::activate() {
         throw ArgException("Cannot summon minions, " + p->getName() + "'s board is full.");
     }
     int index = game->getActiveIndex();
-            game->notifyTrigger(Trigger::TriggerType::MinionEnter);
             
     Narrator::announce(p->getName() + " summons up to three 1/1 Air Elementals in a gust of magic.");
     for (int i = 0; i < 3; i++) {

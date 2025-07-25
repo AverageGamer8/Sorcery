@@ -32,8 +32,8 @@ bool Player::playCard(int index, bool testingEnabled) {
     }
     if (card->getType() == "Minion") {
         auto minion = static_pointer_cast<Minion>(card);
-        board->addMinion(minion);
         Narrator::announce(name + " summons the minion '" + minion->getName() + "' (cost: " + to_string(minion->getCost()) + ").");
+        board->addMinion(minion);
     } else if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
         try {
@@ -46,8 +46,8 @@ bool Player::playCard(int index, bool testingEnabled) {
         Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
     } else if (card->getType() == "Ritual") {
         auto ritual = static_pointer_cast<Ritual>(card);
-        board->addRitual(ritual);
         Narrator::announce(name + " activates the ritual '" + ritual->getName() + "' (cost: " + to_string(ritual->getCost()) + ").");
+        board->addRitual(ritual);
     } else {
         throw ArgException("Unrecognised card type. Only Minion, Spell, Ritual allowed.");
     }
@@ -83,10 +83,11 @@ bool Player::playCard(int index, int player, int minion, bool testingEnabled) {
         Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
     } else if (card->getType() == "Enchantment") {
         auto ench = static_pointer_cast<Enchantment>(card);
+        Narrator::announce(name + " enchants '" + ench->getName() + "' (cost: " + to_string(ench->getCost()) + ").");
         if (!ench->attach(player, minion)) {
             throw ArgException("No minion to enchant.");
         }
-        Narrator::announce(name + " enchants '" + ench->getName() + "' (cost: " + to_string(ench->getCost()) + ").");
+        Narrator::announce(ench->getName() + " has been enchanted.");
     } else {
         throw ArgException("Unrecognised card type. Only Spell, Ritual allowed.");
     }
@@ -117,6 +118,10 @@ bool Player::playCard(int index, int player, bool testingEnabled) {  // Explicit
         return false;
     }
     Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
+    if (!spell->expend(player)) {
+        cerr << "Spell cast failed." << endl;
+        return false;
+    }
 
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
@@ -217,8 +222,7 @@ void Player::minionAttack(int index, int target) {
     if (!minion) {
         throw ArgException("Index out of bounds of board.");
     }
-
-    minion->attack(target, minion); 
+    minion->attack(target); 
 }
 
 bool Player::isAlive() { return life <= 0; }

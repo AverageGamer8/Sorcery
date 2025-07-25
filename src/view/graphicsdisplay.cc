@@ -9,12 +9,14 @@ const int ATK = Xwindow::Red;
 const int DEF = Xwindow::Blue, MP = Xwindow::Blue;
 const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
 const int BLANK = Xwindow::White;
-const int EMPTY = Xwindow::Black;
+const int EMPTY = Xwindow::Gray, BORDER = Xwindow::Black;
 const int offset = 10, cOffset = 2 * offset;
 const int lineCap = 24;
+const int borderThickness = 3;
+
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height, EMPTY); }
 
 void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
     xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
@@ -121,7 +123,7 @@ void GraphicsDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
     auto target = player->getMinions()[minion];
 
-    xw.fillRectangle(0, 0, width, height);
+    xw.fillRectangle(0, 0, width, height, EMPTY);
     printCard(0, 0, static_pointer_cast<Card>(target));
     printMinion(0, 0, target);
     vector<shared_ptr<Enchantment>> enchs;
@@ -158,10 +160,11 @@ void GraphicsDisplay::printHand(Game* game) {
         else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));
         else if (card->getType() == "Spell") printSpell(x, y, static_pointer_cast<Spell>(card));
     }
+    xw.fillRectangle(0, cHeight * 5 - borderThickness, width, borderThickness, BORDER);
 }
 
 void GraphicsDisplay::printBoard(Game* game) {
-    xw.fillRectangle(0, 0, width, height);
+    xw.fillRectangle(0, 0, width, height, EMPTY);
     // print player 0
     auto player = game->getPlayer(0);
     printPlayer(0, player);
@@ -169,12 +172,18 @@ void GraphicsDisplay::printBoard(Game* game) {
     if (ritual) {
         printCard(0, 0, static_pointer_cast<Card>(ritual));
         printRitual(0, 0, ritual);
-    } else xw.fillRectangle(0, 0, cWidth, cHeight, Xwindow::Blue);
+    } else {
+        xw.fillRectangle(0, 0, cWidth, cHeight, Xwindow::Blue);
+        xw.drawString(2 * cOffset, 2 * cOffset, "Ritual: Empty");
+    }
     if (!player->getGraveyard()->isEmpty()) {
         auto graveTop = player->getGraveyard()->getTopMinion();
         printCard(cWidth * 4, 0, static_pointer_cast<Card>(graveTop));
         printMinion(cWidth * 4, 0, graveTop);
-    } else xw.fillRectangle(cWidth * 4, 0, cWidth, cHeight, Xwindow::Green);
+    } else {
+        xw.fillRectangle(cWidth * 4, 0, cWidth, cHeight, Xwindow::Green);
+        xw.drawString(cWidth * 4 + 2 * cOffset, 2 * cOffset, "Graveyard: Empty");
+    }
     auto minions = player->getBoard()->getMinions();
     for (int i = 0; i < 5; i++) xw.fillRectangle(cWidth * i, cHeight, cWidth, cHeight, BLANK);
     for (size_t i = 0; i < minions.size(); i++) {
@@ -188,12 +197,18 @@ void GraphicsDisplay::printBoard(Game* game) {
     if (ritual) {
         printCard(0, cHeight * 4, static_pointer_cast<Card>(ritual));
         printRitual(0, cHeight * 4, ritual);
-    } else xw.fillRectangle(0, cHeight * 4, cWidth, cHeight, Xwindow::Blue);
+    } else {
+        xw.fillRectangle(0, cHeight * 4, cWidth, cHeight, Xwindow::Blue);
+        xw.drawString(2 * cOffset, cHeight * 4 + 2 * cOffset, "Ritual: Empty");
+    }
     if (!player->getGraveyard()->isEmpty()) {
         auto graveTop = player->getGraveyard()->getTopMinion();
         printCard(cWidth * 4, cHeight * 4, static_pointer_cast<Card>(graveTop));
         printMinion(cWidth * 4, cHeight * 4, graveTop);
-    } else xw.fillRectangle(cWidth * 4, cHeight * 4, cWidth, cHeight, Xwindow::Green);
+    } else {
+        xw.fillRectangle(cWidth * 4, cHeight * 4, cWidth, cHeight, Xwindow::Green);
+        xw.drawString(cWidth * 4 + 2 * cOffset, cHeight * 4 + 2 * cOffset, "Graveyard: Empty");
+    }
     minions = player->getBoard()->getMinions();
     for (int i = 0; i < 5; i++) xw.fillRectangle(cWidth * i, cHeight * 3, cWidth, cHeight, BLANK);
     for (size_t i = 0; i < minions.size(); i++) {

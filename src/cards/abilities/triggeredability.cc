@@ -97,8 +97,8 @@ bool OnExitGainBuff::activate() {
     auto p = game->getPlayer(player);
     for (auto& m : p->getBoard()->getMinions()) {
         if (m->getName() == "Bone Golem") {
-            m->setDefence(m->getDefence() + 1);
-            m->setAttack(m->getAttack() + 1);
+            m->increaseDef(1);
+            m->increaseAtk(1);
             Narrator::announce(p->getName() + "'s Bone Golem gains +1/+1 from the fallen.");
         }
     }
@@ -114,8 +114,8 @@ bool OnEnterDamage::activate() {
     auto board = p->getBoard();
     if (board->getMinions().empty()) return true;
     auto minion = board->getMinion(board->getMinions().size() - 1);
-    minion->takeDamage(1);
     Narrator::announce(p->getName() + "'s " + minion->getName() + " takes 1 damage from Fire Elemental's burn.");
+    minion->takeDamage(1);
     if (minion->getDefence() <= 0) {
         game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size() - 1);
     }
@@ -130,7 +130,7 @@ bool OnTurnEndBuff::activate() {
     Narrator::announce(p->getName() + "'s Potion Seller grants +0/+1 to all their minions.");
     auto minions = p->getBoard()->getMinions();
     for (auto& m : minions) {
-        m->setDefence(m->getDefence() + 1);
+        m->increaseDef(1);
     }
     return true;
 }

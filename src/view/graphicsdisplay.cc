@@ -169,12 +169,18 @@ void GraphicsDisplay::printBoard(Game* game) {
     if (ritual) {
         printCard(0, 0, static_pointer_cast<Card>(ritual));
         printRitual(0, 0, ritual);
-    } else xw.fillRectangle(0, 0, cWidth, cHeight, Xwindow::Blue);
+    } else {
+        xw.fillRectangle(0, 0, cWidth, cHeight, Xwindow::Blue);
+        xw.drawString(2 * cOffset, 2 * cOffset, "Ritual: Empty");
+    }
     if (!player->getGraveyard()->isEmpty()) {
         auto graveTop = player->getGraveyard()->getTopMinion();
         printCard(cWidth * 4, 0, static_pointer_cast<Card>(graveTop));
         printMinion(cWidth * 4, 0, graveTop);
-    } else xw.fillRectangle(cWidth * 4, 0, cWidth, cHeight, Xwindow::Green);
+    } else {
+        xw.fillRectangle(cWidth * 4, 0, cWidth, cHeight, Xwindow::Green);
+        xw.drawString(cWidth * 4 + 2 * cOffset, 2 * cOffset, "Graveyard: Empty");
+    }
     auto minions = player->getBoard()->getMinions();
     for (int i = 0; i < 5; i++) xw.fillRectangle(cWidth * i, cHeight, cWidth, cHeight, BLANK);
     for (size_t i = 0; i < minions.size(); i++) {
@@ -188,12 +194,18 @@ void GraphicsDisplay::printBoard(Game* game) {
     if (ritual) {
         printCard(0, cHeight * 4, static_pointer_cast<Card>(ritual));
         printRitual(0, cHeight * 4, ritual);
-    } else xw.fillRectangle(0, cHeight * 4, cWidth, cHeight, Xwindow::Blue);
+    } else {
+        xw.fillRectangle(0, cHeight * 4, cWidth, cHeight, Xwindow::Blue);
+        xw.drawString(2 * cOffset, cHeight * 4 + 2 * cOffset, "Ritual: Empty");
+    }
     if (!player->getGraveyard()->isEmpty()) {
         auto graveTop = player->getGraveyard()->getTopMinion();
         printCard(cWidth * 4, cHeight * 4, static_pointer_cast<Card>(graveTop));
         printMinion(cWidth * 4, cHeight * 4, graveTop);
-    } else xw.fillRectangle(cWidth * 4, cHeight * 4, cWidth, cHeight, Xwindow::Green);
+    } else {
+        xw.fillRectangle(cWidth * 4, cHeight * 4, cWidth, cHeight, Xwindow::Green);
+        xw.drawString(cWidth * 4 + 2 * cOffset, cHeight * 4 + 2 * cOffset, "Graveyard: Empty");
+    }
     minions = player->getBoard()->getMinions();
     for (int i = 0; i < 5; i++) xw.fillRectangle(cWidth * i, cHeight * 3, cWidth, cHeight, BLANK);
     for (size_t i = 0; i < minions.size(); i++) {

@@ -33,16 +33,16 @@ bool Player::playCard(int index, bool testingEnabled) {
     }
     if (card->getType() == "Minion") {
         auto minion = static_pointer_cast<Minion>(card);
-        board->addMinion(minion);
         Narrator::announce(name + " summons the minion '" + minion->getName() + "' (cost: " + to_string(minion->getCost()) + ").");
+        board->addMinion(minion);
     } else if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
-        if (!spell->expend()) return false;
         Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
+        if (!spell->expend()) return false;
     } else if (card->getType() == "Ritual") {
         auto ritual = static_pointer_cast<Ritual>(card);
-        board->addRitual(ritual);
         Narrator::announce(name + " activates the ritual '" + ritual->getName() + "' (cost: " + to_string(ritual->getCost()) + ").");
+        board->addRitual(ritual);
     } else {
         cerr << "DEBUG: (Player) Unrecognised card type. Only Minion, Spell. Ritual allowed" << endl;
         // TODO: exception. unrecognised card. Only minion,spell,ritual allowed.
@@ -71,15 +71,16 @@ bool Player::playCard(int index, int player, int minion, bool testingEnabled) {
 
     if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
-        if (!spell->expend(player, minion)) return false;
         Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
+        if (!spell->expend(player, minion)) return false;
     } else if (card->getType() == "Enchantment") {
         auto ench = static_pointer_cast<Enchantment>(card);
+        Narrator::announce(name + " enchants '" + ench->getName() + "' (cost: " + to_string(ench->getCost()) + ").");
         if (!ench->attach(player, minion)) {
             cerr << "No minion to enchant." << endl;
             return false;
         }
-        Narrator::announce(name + " enchants '" + ench->getName() + "' (cost: " + to_string(ench->getCost()) + ").");
+        Narrator::announce(ench->getName() + " has been enchanted.");
     } else {
         // todo exception, not found.
     }
@@ -104,8 +105,11 @@ bool Player::playCard(int index, int player, bool testingEnabled) {  // Explicit
     }
 
     auto spell = static_pointer_cast<Spell>(card);
-    if (!spell->expend(player)) return false;
     Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
+    if (!spell->expend(player)) {
+        cerr << "Spell cast failed." << endl;
+        return false;
+    }
 
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
@@ -149,8 +153,8 @@ bool Player::activateCard(int index, bool testingEnabled) {
         cerr << "DEBUG: (Player) Minion has no actions left." << endl;
         return false;
     }
-    if (!m->activate()) return false;
     Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
+    if (!m->activate()) return false;
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
@@ -183,8 +187,8 @@ bool Player::activateCard(int index, int player, int minion, bool testingEnabled
         cerr << "DEBUG: (Player) Minion has no actions left." << endl;
         return false;
     }
-    if (!m->activate(player, minion)) return false;
     Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
+    if (!m->activate(player, minion)) return false;
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
@@ -207,8 +211,7 @@ void Player::minionAttack(int index, int target) {
         cerr << "DEBUG: Player: index out of bounds of board." << endl;
         return;
     }
-
-    minion->attack(target, minion); 
+    minion->attack(target); 
 }
 
 bool Player::isAlive() { return life <= 0; }

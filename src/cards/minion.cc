@@ -1,11 +1,9 @@
 #include "minion.h"
 
-#include <iostream>  // todo remove debug
 #include <memory>
 #include <string>
 
 #include "../gameModel/game.h"
-#include "../gameModel/player.h"
 #include "../narrator.h"
 #include "card.h"
 using namespace std;
@@ -29,12 +27,12 @@ bool Minion::activate(int player, int minion) {
 void Minion::attachAbilities() {
     if (!triggeredAbility) return;
     game->getTrigger(triggeredAbility->getTriggerType()).attach(triggeredAbility);
-    Narrator::announce(name + "'s triggered ability has been attached to the board.");
+    //Narrator::announce(name + "'s triggered ability has been attached to the board.");
 }
 void Minion::detachAbilities() {
     if (!triggeredAbility) return;
     game->getTrigger(triggeredAbility->getTriggerType()).detach(triggeredAbility);
-    Narrator::announce(name + "'s triggered ability has been removed from the board.");
+    //Narrator::announce(name + "'s triggered ability has been removed from the board.");
 }
 
 void Minion::attack() {
@@ -43,21 +41,21 @@ void Minion::attack() {
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
+    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     opp->setLife(opp->getLife() - getAttack());
     if (opp->getLife() <= 0) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }
-    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     consumeAction();
 }
 
-void Minion::attack(int target, std::shared_ptr<Minion> self) {
+void Minion::attack(int target) {
     if (getActions() == 0) {
         Narrator::announce(name + " has no actions left and too tired to attack.");
         return;
     }
-    game->battleMinion(self, target);
+    game->battleMinion(shared_from_this(), target);
     consumeAction();
 }
 
@@ -75,6 +73,13 @@ void Minion::takeDamage(int dmg) {
         Narrator::announce(name + " has died!");
         game->notifyTrigger(Trigger::TriggerType::MinionExit);
     }
+}
+
+void Minion::increaseAtk(int amount) {
+    atk += amount;
+}
+void Minion::increaseDef(int amount) {
+    def += amount;
 }
 
 // ============================= Getters and Setters =================================

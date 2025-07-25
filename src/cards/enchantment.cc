@@ -1,12 +1,7 @@
 #include "enchantment.h"
 
-#include <memory>
-#include <string>
-#include <iostream> // debug
 
 #include "../gameModel/game.h"
-#include "../gameModel/player.h"
-#include "card.h"
 using namespace std;
 
 Enchantment::Enchantment(string name, string description, int cost, int owner, Game* game,
@@ -45,6 +40,13 @@ void Enchantment::takeDamage(int dmg) {
     }
 }
 
+void Enchantment::increaseAtk(int amount) {
+    minion->increaseAtk(amount);
+}
+void Enchantment::increaseDef(int amount) {
+    minion->increaseDef(amount);
+}
+
 shared_ptr<Minion> Enchantment::getMinion() const {
     return minion;
 }
@@ -77,14 +79,14 @@ int Enchantment::getEnchCost() const {
     return cost;
 }
 
-int Enchantment::getAttack() const {
+int Enchantment::getAttack() const { // gets cumulative atk
     return atk + minion->getAttack();
 }
-int Enchantment::getDefence() const {
+int Enchantment::getDefence() const { // gets cumulative def
     return def + minion->getDefence();
 }
 int Enchantment::getActions() const {
-    return actions + minion->getActions(); // getActions get cumulative actions available
+    return actions + minion->getActions(); // get cumulative actions available
 }
 string Enchantment::getAtkDesc() const {
     return atkDesc;
@@ -114,6 +116,7 @@ Enrage::Enrage(int owner, Game* game): Enchantment{"Enrage", "", 2, owner, game,
 bool Enrage::attach(int player, int target) {
     minion = game->getPlayer(player)->getBoard()->getMinion(target);
     if (minion != nullptr) {
+        game->getPlayer(player)->getBoard()->setMinion(target, shared_from_this());
         atk = minion->getAttack() * 1;
         def = minion->getDefence() * 1;
         return true;

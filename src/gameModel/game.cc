@@ -5,7 +5,7 @@
 using namespace std;
 
 Game::Game(vector<shared_ptr<Player>> players)
-    : players{players} {}
+    : players{players} { }
 
 void Game::startTurn() {
     Narrator::printLine();

@@ -70,9 +70,14 @@ bool Unsummon::expend(int player) {
 
 Recharge::Recharge(int owner, Game* game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
 bool Recharge::expend() {
-    cerr << "DEBUG (Spell) Not proper usage: must be used on rituals." << endl;
-    // TODO: Handle exception
-    return false;
+    auto ritual = game->getActivePlayer()->getBoard()->getRitual();
+    if (!ritual) {
+        cerr << "DEBUG (Spell) Ritual is invalid." << endl;
+        return false;
+    }
+    ritual->setCharges(ritual->getCharges() + 3);
+    return true;
+    
 }
 bool Recharge::expend(int player, int minion) {
     // TODO: Handle exception
@@ -80,13 +85,9 @@ bool Recharge::expend(int player, int minion) {
     return false;
 }
 bool Recharge::expend(int player) {
-    auto ritual = game->getPlayer(player)->getBoard()->getRitual();
-    if (!ritual) {
-        cerr << "DEBUG (Spell) Ritual is invalid." << endl;
-        return false;
-    }
-    ritual->setCharges(ritual->getCharges() + 3);
-    return true;
+    cerr << "DEBUG (Spell) Not proper usage: must be used on your own ritual." << endl;
+    // TODO: Handle exception
+    return false;
 }
 
 Disenchant::Disenchant(int owner, Game* game) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner, game} {}
@@ -153,14 +154,14 @@ bool Blizzard::expend() {
     auto oppMinions = opp->getBoard()->getMinions();
     auto currSize = currMinions.size();
     auto oppSize = oppMinions.size();
-    for (int i = 0; i < currSize;) {
+    for (size_t i = 0; i < currSize;) {
         currMinions[i]->takeDamage(2);
         if (currMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getActiveIndex(), i);
             currSize--; currMinions = curr->getBoard()->getMinions();
         } else i++;
     }
-    for (int i = 0; i < oppSize;) {
+    for (size_t i = 0; i < oppSize;) {
         oppMinions[i]->takeDamage(2);
         if (oppMinions[i]->getDefence() <= 0) {
             game->handleMinionDeath(game->getInactiveIndex(), i);

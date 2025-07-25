@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Minion : public Card {
+class Minion : public Card, public enable_shared_from_this<Minion> {
    protected:
     int atk;
     int def;
@@ -23,8 +23,7 @@ class Minion : public Card {
         shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
         string type = "Minion");
     void attack();
-    // void attack(int target); // TODO: causes segfault, solution: pass in self. , std::enable_shared_from_this<Minion>
-    void attack(int target, std::shared_ptr<Minion> self);
+    void attack(int target);
     virtual bool activate();
     virtual bool activate(int player, int minion);
     void attachAbilities();
@@ -32,6 +31,8 @@ class Minion : public Card {
     virtual void restoreAction();
     virtual void consumeAction();
     virtual void takeDamage(int dmg);
+    virtual void increaseAtk(int amount);
+    virtual void increaseDef(int amount);
 
     string getName() const override;
     string getDesc() const override;

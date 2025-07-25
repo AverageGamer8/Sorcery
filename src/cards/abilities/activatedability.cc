@@ -19,7 +19,6 @@ bool DealDamage::activate(int player, int minion) {
     auto p = game->getPlayer(player);
     auto m = p->getBoard()->getMinion(minion);
     m->takeDamage(1);
-    Narrator::announce(p->getName() + "'s " + m->getName() + " takes 1 damage from an activated ability.");
     if (m->getDefence() <= 0) {
         game->handleMinionDeath(player, minion);
     }

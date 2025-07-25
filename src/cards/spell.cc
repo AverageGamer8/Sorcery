@@ -65,18 +65,18 @@ bool Unsummon::expend(int player) {
 
 Recharge::Recharge(int owner, Game* game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
 bool Recharge::expend() {
-    throw ArgException("Recharge must be used on rituals.");
-}
-bool Recharge::expend(int player, int minion) {
-    throw ArgException("Recharge must be used on rituals.");
-}
-bool Recharge::expend(int player) {
-    auto ritual = game->getPlayer(player)->getBoard()->getRitual();
+    auto ritual = game->getPlayer(owner)->getBoard()->getRitual();
     if (!ritual) {
         throw ArgException("Ritual is invalid.");
     }
     ritual->setCharges(ritual->getCharges() + 3);
     return true;
+}
+bool Recharge::expend(int player, int minion) {
+    throw ArgException("Recharge must be used on rituals.");
+}
+bool Recharge::expend(int player) {
+    throw ArgException("Recharge must be used on rituals.");
 }
 
 Disenchant::Disenchant(int owner, Game* game) : Spell{"Disenchant", "Destroy the top enchantment on target minion", 1, owner, game} {}

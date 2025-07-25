@@ -1,9 +1,9 @@
 #ifndef DECK_H
 #define DECK_H
 
+#include <fstream>
 #include <memory>
 #include <vector>
-#include <fstream>
 using namespace std;
 
 class Card;
@@ -14,12 +14,12 @@ class Deck {
     vector<shared_ptr<Card>> cards;
     long long seed;
 
-    public:
-        Deck(int player);
-        void loadDeck(ifstream& inf, Game* game);
-        void shuffleDeck();
-        vector<shared_ptr<Card>>& getCards();
-        shared_ptr<Card> popTopCard();
+   public:
+    Deck(int player);
+    void loadDeck(ifstream& inf, Game* game);
+    void shuffleDeck();
+    vector<shared_ptr<Card>>& getCards();
+    shared_ptr<Card> popTopCard();
 };
 
 #endif

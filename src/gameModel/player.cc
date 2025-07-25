@@ -1,11 +1,11 @@
 #include "player.h"
 
-#include <iostream>  // TODO: remove debugs later.
+#include <iostream>
 
-#include "../cards/enchantment.h"
-#include "../cards/spell.h"  // TODO: investigate includes for this. should it have it?
-#include "../narrator.h"
 #include "../argexception.h"
+#include "../cards/enchantment.h"
+#include "../cards/spell.h"
+#include "../narrator.h"
 
 using namespace std;
 
@@ -38,8 +38,7 @@ bool Player::playCard(int index, bool testingEnabled) {
         auto spell = static_pointer_cast<Spell>(card);
         try {
             spell->expend();
-        }
-        catch (ArgException& e) {
+        } catch (ArgException& e) {
             cerr << e.what() << endl;
             return false;
         }
@@ -75,8 +74,7 @@ bool Player::playCard(int index, int player, int minion, bool testingEnabled) {
         auto spell = static_pointer_cast<Spell>(card);
         try {
             spell->expend(player, minion);
-        }
-        catch (ArgException& e) {
+        } catch (ArgException& e) {
             cerr << e.what() << endl;
             return false;
         }
@@ -112,8 +110,7 @@ bool Player::playCard(int index, int player, bool testingEnabled) {  // Explicit
     auto spell = static_pointer_cast<Spell>(card);
     try {
         spell->expend(player);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return false;
     }
@@ -137,8 +134,7 @@ void Player::drawCard() {
     shared_ptr<Card> card;
     try {
         card = deck->popTopCard();
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return;
     }
@@ -164,8 +160,7 @@ bool Player::activateCard(int index, bool testingEnabled) {
     }
     try {
         m->activate();
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         throw;
     }
     Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
@@ -197,8 +192,7 @@ bool Player::activateCard(int index, int player, int minion, bool testingEnabled
     }
     try {
         m->activate(player, minion);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         throw;
     }
     Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
@@ -222,7 +216,7 @@ void Player::minionAttack(int index, int target) {
     if (!minion) {
         throw ArgException("Index out of bounds of board.");
     }
-    minion->attack(target); 
+    minion->attack(target);
 }
 
 bool Player::isAlive() { return life <= 0; }

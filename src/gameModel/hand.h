@@ -15,7 +15,6 @@ class Hand {
     vector<shared_ptr<Card>> cards;
 
    public:
-    void debugPrintHand();  // TODO: remove debug method!
     vector<shared_ptr<Card>>& getCards();
     bool isFull();
     void addCard(shared_ptr<Card> card);

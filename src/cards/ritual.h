@@ -1,7 +1,6 @@
 #ifndef RITUAL_H
 #define RITUAL_H
 
-#include "abilities/trigger.h"  // TODO: needed? currently attaching observer here.
 #include "abilities/triggeredability.h"
 #include "card.h"
 using namespace std;

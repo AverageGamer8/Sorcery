@@ -18,7 +18,7 @@ class ActivatedAbility : public Ability {
     virtual bool activate() override = 0;
     virtual bool activate(int player, int minion) = 0;
 
-    ActivatedAbility(Game* game, const string desc, int cost) 
+    ActivatedAbility(Game* game, const string desc, int cost)
         : Ability(desc), game{game}, cost{cost} {}
     int getCost() const;
 

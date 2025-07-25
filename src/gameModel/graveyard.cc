@@ -2,10 +2,6 @@
 using namespace std;
 
 void Graveyard::addMinion(shared_ptr<Minion> m) {
-    // while (m->getType() == "Enchantment") {
-    //     auto tmp = static_pointer_cast<Enchantment>(m);
-    //     m = tmp->getMinion();
-    // }
     minions.emplace_back(m);
 }
 shared_ptr<Minion> Graveyard::getTopMinion() {

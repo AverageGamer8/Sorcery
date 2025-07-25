@@ -1,7 +1,8 @@
 #include "controller.h"
-#include "../argexception.h"
 
-#include <iostream>  // TODO remove debug
+#include <iostream> 
+
+#include "../argexception.h"
 
 Controller::Controller(Game* game,
                        std::shared_ptr<Viewer> viewer)
@@ -32,8 +33,7 @@ bool Controller::attack(int attackingMinion) {
     }
     try {
         player->minionAttack(attackingMinion);  // attack player.
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what();
         return false;
     }
@@ -49,8 +49,7 @@ bool Controller::attack(int attackingMinion, int receivingMinion) {
     }
     try {
         player1->minionAttack(attackingMinion, receivingMinion);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what();
         return false;
     }
@@ -67,15 +66,14 @@ bool Controller::play(int card, int onPlayer, int minion, bool testingEnabled) {
     auto player = game->getActivePlayer();
     auto receivingPlayer = game->getPlayer(onPlayer);
     if (card < 0 || card >= player->getHand()->getSize() 
-        || onPlayer < 0 || onPlayer >= 2
+        || onPlayer < 0 || onPlayer >= 2 
         || (minion != -1 && (minion < 0 || minion >= receivingPlayer->getMinions().size()))) {
         return false;
     }
-    if (minion == -1) { // ritual
+    if (minion == -1) {  // ritual
         try {
             player->playCard(card, onPlayer, testingEnabled);
-        }
-        catch (ArgException& e) {
+        } catch (ArgException& e) {
             cerr << e.what() << endl;
             return false;
         }
@@ -83,8 +81,7 @@ bool Controller::play(int card, int onPlayer, int minion, bool testingEnabled) {
     }
     try {
         player->playCard(card, onPlayer, minion, testingEnabled);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return false;
     }
@@ -96,8 +93,7 @@ bool Controller::use(int minion, bool testingEnabled) {
     if (minion < 0 || minion >= player->getMinions().size()) return false;
     try {
         player->activateCard(minion, testingEnabled);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return false;
     }
@@ -107,15 +103,14 @@ bool Controller::use(int minion, bool testingEnabled) {
 bool Controller::use(int activeMinion, int onPlayer, int receivingMinion, bool testingEnabled) {
     auto player = game->getActivePlayer();
     auto receivingPlayer = game->getPlayer(onPlayer);
-    if (activeMinion < 0 || activeMinion >= player->getMinions().size()
-        || onPlayer < 0 || onPlayer >= 2
+    if (activeMinion < 0 || activeMinion >= player->getMinions().size() 
+        || onPlayer < 0 || onPlayer >= 2 
         || receivingMinion < 0 || receivingMinion >= receivingPlayer->getMinions().size()) {
-            return false;
-        }
+        return false;
+    }
     try {
         player->activateCard(activeMinion, onPlayer, receivingMinion, testingEnabled);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return false;
     }
@@ -130,7 +125,9 @@ void Controller::help() {
 }
 
 bool Controller::describe(int minion) {
-    if (minion < 0 || minion >= game->getActivePlayer()->getMinions().size()) throw ArgException("Invalid minion index provided.");
+    if (minion < 0 || minion >= game->getActivePlayer()->getMinions().size()) {
+        throw ArgException("Invalid minion index provided.");
+    }
     viewer->display(Viewer::DESCRIBE, minion);
     return true;
 }

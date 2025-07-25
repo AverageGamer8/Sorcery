@@ -1,11 +1,10 @@
 #include "activatedability.h"
 
-#include <iostream>  // TODO: remove debugs
 #include <memory>
 
+#include "../../argexception.h"
 #include "../../gameModel/game.h"
 #include "../../narrator.h"
-#include "../../argexception.h"
 
 using namespace std;
 
@@ -49,7 +48,7 @@ bool SummonThreeAirElemental::activate() {
         throw ArgException("Cannot summon minions, " + p->getName() + "'s board is full.");
     }
     int index = game->getActiveIndex();
-            
+
     Narrator::announce(p->getName() + " summons up to three 1/1 Air Elementals in a gust of magic.");
     for (int i = 0; i < 3; i++) {
         if (!p->getBoard()->isFull()) {

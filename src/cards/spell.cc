@@ -1,13 +1,12 @@
 #include "spell.h"
 
-#include <iostream>  // TODO: DEBUG
 #include <string>
 
+#include "../argexception.h"
 #include "../gameModel/game.h"
+#include "../narrator.h"
 #include "card.h"
 #include "enchantment.h"
-#include "../narrator.h"
-#include "../argexception.h"
 using namespace std;
 
 Spell::Spell(string name, string description, int cost, int owner, Game* game, string type) : Card{name, description, type, cost, owner, game} {};
@@ -132,14 +131,18 @@ bool Blizzard::expend() {
     for (size_t i = 0; i < currSize;) {
         if (currMinions[i]->takeDamage(2)) {
             game->handleMinionDeath(game->getActiveIndex(), i);
-            currSize--; currMinions = curr->getBoard()->getMinions();
-        } else i++;
+            currSize--;
+            currMinions = curr->getBoard()->getMinions();
+        } else
+            i++;
     }
     for (size_t i = 0; i < oppSize;) {
         if (oppMinions[i]->takeDamage(2)) {
             game->handleMinionDeath(game->getInactiveIndex(), i);
-            oppSize--; oppMinions = opp->getBoard()->getMinions();
-        } else i++;
+            oppSize--;
+            oppMinions = opp->getBoard()->getMinions();
+        } else
+            i++;
     }
     return true;
 }

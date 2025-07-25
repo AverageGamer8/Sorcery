@@ -1,12 +1,12 @@
 #include "game.h"
 
-#include "../narrator.h"
 #include "../argexception.h"
+#include "../narrator.h"
 
 using namespace std;
 
 Game::Game(vector<shared_ptr<Player>> players)
-    : players{players} { }
+    : players{players} {}
 
 void Game::startTurn() {
     Narrator::printLine();
@@ -61,9 +61,8 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
         Narrator::announce(attackingMinion->getName() + " has been defeated while attacking!");
         int attackerIndex;
         try {
-             attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
-        }
-        catch (ArgException& e) {
+            attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
+        } catch (ArgException& e) {
             cerr << e.what() << endl;
             return;
         }
@@ -76,8 +75,7 @@ bool Game::playCard(int card, bool testingEnabled) {  // Wrapper to notify Minio
     auto cardPtr = player->getHand()->getCardAtIndex(card);
     try {
         player->playCard(card, testingEnabled);
-    }
-    catch (ArgException& e) {
+    } catch (ArgException& e) {
         cerr << e.what() << endl;
         return false;
     }

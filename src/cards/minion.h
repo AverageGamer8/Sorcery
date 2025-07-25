@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "card.h"
 #include "abilities/activatedability.h"
 #include "abilities/triggeredability.h"
+#include "card.h"
 
 using namespace std;
 
@@ -18,10 +18,10 @@ class Minion : public Card, public enable_shared_from_this<Minion> {
     shared_ptr<TriggeredAbility> triggeredAbility;
 
    public:
-    Minion(string name, string description, int cost, int owner, 
-        Game* game, int atk, int def, int actions, 
-        shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
-        string type = "Minion");
+    Minion(string name, string description, int cost, int owner,
+           Game* game, int atk, int def, int actions,
+           shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
+           string type = "Minion");
     void attack();
     void attack(int target);
     virtual bool activate();
@@ -36,7 +36,7 @@ class Minion : public Card, public enable_shared_from_this<Minion> {
     string getDesc() const override;
     string getType() const override;
     int getCost() const override;
-    
+
     virtual int getAttack() const;
     virtual int getDefence() const;
     virtual int getActions() const;

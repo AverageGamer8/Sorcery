@@ -1,15 +1,10 @@
 #include "hand.h"
 
-#include <iostream>  // TODO: Remove deubgs
+#include <iostream>
 
 using namespace std;
 
-void Hand::debugPrintHand() {  // debug function.
-    for (auto& c : cards) {
-        cerr << "DEBUG: (Hand) CARD - " << c->getName() << endl;
-    }
-}
-
+// =============== Gameplay ===================
 bool Hand::isFull() {
     return cards.size() >= MAX_HAND_SIZE;
 }
@@ -27,7 +22,7 @@ void Hand::discardCard(int index) {
     cards.erase(cards.begin() + index);
 }
 
-// ============== getters & setters ==========
+// ============== Getters & Setters ==========
 
 vector<shared_ptr<Card>>& Hand::getCards() { return cards; }
 int Hand::getSize() const { return cards.size(); }

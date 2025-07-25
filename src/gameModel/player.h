@@ -1,16 +1,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
-#include <map>
 
+#include "../cards/minion.h"
 #include "board.h"
 #include "deck.h"
-#include "hand.h"
-#include "../cards/minion.h"
 #include "graveyard.h"
+#include "hand.h"
 
 using namespace std;
 
@@ -41,8 +41,8 @@ class Player {
     bool activateCard(int index, bool testingEnabled);
     bool activateCard(int index, int player, int minion, bool testingEnabled);
 
-    void minionAttack(int index); // minion vs. player
-    void minionAttack(int index, int target); // minion vs. minion
+    void minionAttack(int index);              // minion vs. player
+    void minionAttack(int index, int target);  // minion vs. minion
     bool isAlive();
     bool isHandFull();
     bool hasRitual() const;

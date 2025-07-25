@@ -5,13 +5,13 @@
 #include <memory>
 #include <vector>
 
-#include "window.h"
-#include "display.h"
 #include "../cards/card.h"
-#include "../cards/minion.h"
 #include "../cards/enchantment.h"
+#include "../cards/minion.h"
 #include "../cards/ritual.h"
 #include "../cards/spell.h"
+#include "display.h"
+#include "window.h"
 
 using namespace std;
 

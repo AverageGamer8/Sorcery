@@ -4,15 +4,15 @@
 #include <memory>
 #include <vector>
 
-#include "display.h"
 #include "../gameModel/game.h"
+#include "display.h"
 
 class Viewer {
     std::vector<std::shared_ptr<sorcDisplay>> displays;
     Game* game;
 
    public:
-    enum Command {  // TODO: Add more enums with more controller commands
+    enum Command {
         HELP,
         DESCRIBE,
         HAND,

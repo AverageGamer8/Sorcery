@@ -1,6 +1,5 @@
 #include "triggeredability.h"
 
-#include <iostream>  // TODO: remove debugs
 #include <memory>
 
 #include "../../gameModel/game.h"
@@ -25,7 +24,7 @@ Trigger::TriggerType TriggeredAbility::getTriggerType() const {
 OnStartGainMagic::OnStartGainMagic(Game* game, int player) : TriggeredAbility{game, player, "At the start of your turn, gain 1 magic", Trigger::TriggerType::TurnStart} {}
 bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     auto p = game->getPlayer(player);
-    Narrator::announce(p->getName()+ "'s Dark Magic ritual activates with the new turn, granting them 1 magic.");
+    Narrator::announce(p->getName() + "'s Dark Magic ritual activates with the new turn, granting them 1 magic.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {

@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include "trigger.h" // TODO: investigate dependency. no arrow in uml
 #include "ability.h"
 #include "observer.h"
+#include "trigger.h"
 
 using namespace std;
 
@@ -28,23 +28,23 @@ class TriggeredAbility : public Observer, public Ability {
     virtual ~TriggeredAbility() = default;
 };
 
-class OnStartGainMagic: public TriggeredAbility {
-    public:
-        OnStartGainMagic(Game* game, int player);
-        bool activate() override;
-        bool shouldTrigger() const override;
+class OnStartGainMagic : public TriggeredAbility {
+   public:
+    OnStartGainMagic(Game* game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
-class OnEnterBuff: public TriggeredAbility {
-    public:
-        OnEnterBuff(Game* game, int player);
-        bool activate() override;
-        bool shouldTrigger() const override;
+class OnEnterBuff : public TriggeredAbility {
+   public:
+    OnEnterBuff(Game* game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
-class OnEnterDestroy: public TriggeredAbility {
-    public:
-        OnEnterDestroy(Game* game, int player);
-        bool activate() override;
-        bool shouldTrigger() const override;
+class OnEnterDestroy : public TriggeredAbility {
+   public:
+    OnEnterDestroy(Game* game, int player);
+    bool activate() override;
+    bool shouldTrigger() const override;
 };
 
 class OnExitGainBuff : public TriggeredAbility {

@@ -2,10 +2,10 @@
 
 #include <memory>
 #include <vector>
-#include "../cards/enchantment.h"
-#include "../argexception.h"
-using namespace std;
 
+#include "../argexception.h"
+#include "../cards/enchantment.h"
+using namespace std;
 
 bool Board::isFull() const {
     return minions.size() >= MAX_BOARD_SIZE;
@@ -14,7 +14,6 @@ bool Board::isFull() const {
 bool Board::hasRitual() const {
     return ritual != nullptr;
 }
-
 
 void Board::addRitual(shared_ptr<Ritual> r) {
     if (!r) return;

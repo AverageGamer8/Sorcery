@@ -7,7 +7,6 @@
 
 class sorcDisplay {
    public:
-    // TODO: use NVI
     virtual void printHelp() = 0;  // Give a list a commands
     virtual void printDescribe(Game* game, int minion) = 0;
     virtual void printHand(Game* game) = 0;

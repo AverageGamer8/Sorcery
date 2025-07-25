@@ -1,6 +1,5 @@
 #include "ritual.h"
 
-#include <iostream>  // TODO: remove debug
 #include <memory>
 #include <string>
 

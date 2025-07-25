@@ -30,7 +30,6 @@ class Game {
 
     // ============ Getters and Setters =====================
 
-    // Trigger &getTrigger(Trigger::TriggerType type);
     std::shared_ptr<Player> getPlayer(int index);
     std::shared_ptr<Player> getActivePlayer();
     shared_ptr<Player> getInactivePlayer();

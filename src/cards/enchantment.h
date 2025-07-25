@@ -6,16 +6,16 @@
 #include "minion.h"
 using namespace std;
 
-class Enchantment: public Minion {
+class Enchantment : public Minion {
    protected:
     shared_ptr<Minion> minion = nullptr;
     string atkDesc, defDesc;
 
    public:
-    Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def, 
-        int actions, shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility, 
-        string atkDesc = "", string defDesc = "", string type = "Enchantment");
-        
+    Enchantment(string name, string description, int cost, int owner, Game* game, int atk, int def,
+                int actions, shared_ptr<ActivatedAbility> activatedAbility, shared_ptr<TriggeredAbility> triggeredAbility,
+                string atkDesc = "", string defDesc = "", string type = "Enchantment");
+
     virtual bool attach(int player, int target);
     virtual bool activate() override;
     virtual bool activate(int player, int target) override;
@@ -43,34 +43,34 @@ class Enchantment: public Minion {
     virtual int getActivateCost() const override;
 };
 
-class GiantStrength: public Enchantment {
-    public:
-     GiantStrength(int owner, Game* game);
+class GiantStrength : public Enchantment {
+   public:
+    GiantStrength(int owner, Game* game);
 };
 
-class Enrage: public Enchantment {
-    public:
-     Enrage(int owner, Game* game);
-     bool attach(int player, int target) override;
+class Enrage : public Enchantment {
+   public:
+    Enrage(int owner, Game* game);
+    bool attach(int player, int target) override;
 };
 
-class Haste: public Enchantment {
-    public:
-     Haste(int owner, Game* game);
-     void restoreAction();
+class Haste : public Enchantment {
+   public:
+    Haste(int owner, Game* game);
+    void restoreAction();
 };
 
-class MagicFatigue: public Enchantment {
-    public:
-     MagicFatigue(int owner, Game* game);
-     int getActivateCost() const override;
+class MagicFatigue : public Enchantment {
+   public:
+    MagicFatigue(int owner, Game* game);
+    int getActivateCost() const override;
 };
 
-class Silence: public Enchantment {
-    public:
-     Silence(int owner, Game* game);
-     bool activate() override;
-     bool activate(int player, int target) override;
+class Silence : public Enchantment {
+   public:
+    Silence(int owner, Game* game);
+    bool activate() override;
+    bool activate(int player, int target) override;
 };
 
 #endif

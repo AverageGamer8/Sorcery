@@ -14,6 +14,7 @@ class Controller {
    public:
     Controller(Game* game, std::shared_ptr<Viewer> viewer);
 
+    // ====================== Gameplay Controls ===================
     void end();
     void draw();
     bool discard(int card);

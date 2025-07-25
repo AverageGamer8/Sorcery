@@ -7,7 +7,8 @@ using namespace std;
 
 class ArgException : public exception {
     string message = "Error: ";
-public:
+
+   public:
     explicit ArgException(const string& error);
     const char* what();
 };

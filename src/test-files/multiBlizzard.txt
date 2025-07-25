@@ -2,8 +2,11 @@ blizzDeck
 mastSummon
 end
 play 1
+end
+end
 use 1
 play 1
+board
 end
 play 1
 board

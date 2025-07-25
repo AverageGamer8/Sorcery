@@ -1,0 +1,12 @@
+The Rad
+The Cool
+board
+hand
+play 3
+play 1
+end
+play 4
+play 1
+play 3 2 1
+inspect 1
+attack 1

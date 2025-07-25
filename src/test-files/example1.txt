@@ -3,7 +3,15 @@ Linus
 play 1
 end
 play 2
+end
+end
+board
 attack 1 1
+discard 1
+discard 1
+board
 end
 play 4 2 1
 board
+end
+hand

@@ -1,0 +1,28 @@
+Uno
+Dos
+board
+hand
+play 3
+board
+play 3
+board
+end
+board
+hand
+play 2
+attack 1 2
+board
+end
+hand
+play 4
+attack 1 1
+end
+board
+hand
+play 1
+play 1
+end
+use 1
+hand
+end
+quit

@@ -12,24 +12,16 @@ void Game::startTurn() {
     Narrator::printLine();
     Narrator::announce("Player " + to_string(getActiveIndex() + 1) + ": '" + getActivePlayer()->getName() + "' starts their turn...");
     auto player = getActivePlayer();
-
-    player->setMagic(player->getMagic() + 1);
-    Narrator::announce("Magic restored and minions refreshed!");
-
-    auto hand = player->getHand();
     auto board = player->getBoard();
-    for (auto card : hand->getCards()) {
-        if (card->getType() == "Minion") {
-            auto minion = static_pointer_cast<Minion>(card);
-            minion->restoreAction();
-        }
-    }
+    player->setMagic(player->getMagic() + 1);
+    Narrator::announce("Magic restored!");
+    player->drawCard();
+    Narrator::announce("A new card is drawn from the deck.");
     for (auto minion : board->getMinions()) {
         minion->restoreAction();
     }
+    Narrator::announce("Minions on the board refreshed!");
 
-    player->drawCard();
-    Narrator::announce("A new card is drawn from the deck.");
     notifyTrigger(Trigger::TriggerType::TurnStart);
 }
 

@@ -52,7 +52,6 @@ bool SummonThreeAirElemental::activate() {
         return false;
     }
     int index = game->getActiveIndex();
-            game->notifyTrigger(Trigger::TriggerType::MinionEnter);
             
     Narrator::announce(p->getName() + " summons up to three 1/1 Air Elementals in a gust of magic.");
     for (int i = 0; i < 3; i++) {

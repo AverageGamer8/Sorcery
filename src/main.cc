@@ -17,7 +17,7 @@
 
 using namespace std;
 
-const string DEFAULT_DECK_PATH = "../sorcery-asciiart/default.deck";
+const string DEFAULT_DECK_PATH = "default.deck";
 const int DEFAULT_PLAYER_LIFE = 20;
 const int DEFAULT_PLAYER_MAGIC = 3;
 const int MAX_CARDS_IN_HAND = 5;

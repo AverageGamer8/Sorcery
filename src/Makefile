@@ -8,7 +8,8 @@
 ########## Variables ##########
 
 CXX = g++-14					# compiler
-CXXFLAGS = -std=c++20 -g -Wall -MMD -Iview			# compiler flags
+CXXFLAGS = -std=c++20 -g -Wall -fPIE -MMD -Iview			# compiler flags
+LDFLAGS = -lX11
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 # sources (*.cc)
@@ -28,8 +29,8 @@ EXEC = sorcery					# executable name
 
 .PHONY : clean					# not file names
 
-${EXEC} : ${OBJECTS} -lX11				# link step
-	${CXX} ${CXXFLAGS} $^ -o $@		# additional object files before $^
+${EXEC} : ${OBJECTS}				# link step
+	${CXX} ${CXXFLAGS} $^ ${LDFLAGS} -o $@		# additional object files before $^
 
 # compile for subdirectories
 cards/%.o: cards/%.cc

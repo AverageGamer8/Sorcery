@@ -12,7 +12,7 @@ TextDisplay::TextDisplay(ostream& out, bool enablePrintDelay)
     : out{out}, enablePrintDelay{enablePrintDelay} {}
 
 void TextDisplay::printCardTemplate(const card_template_t& cardInfo) {
-    for (int i = 0; i < cardInfo.size(); ++i) {
+    for (size_t i = 0; i < cardInfo.size(); ++i) {
         out << cardInfo[i];
         if (i < cardInfo.size() - 1) {
             out << endl;
@@ -146,7 +146,7 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
     int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card!
     // assumes all card have same or greater height.
     for (int line = 0; line < height; ++line) {
-        for (int card = 0; card < cardTemplates.size(); ++card) {
+        for (size_t card = 0; card < cardTemplates.size(); ++card) {
             out << cardTemplates[card][line];
         }
         if (line < height - 1) {

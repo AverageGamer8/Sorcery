@@ -33,7 +33,7 @@ void Minion::attack() {
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
     Narrator::announce(getName() + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     opp->setLife(opp->getLife() - getAttack());
-    if (opp->getLife() <= 0) {
+    if (!opp->isAlive()) {
         opp->setLife(0);
         game->setWinner(game->getActiveIndex());
     }

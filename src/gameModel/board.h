@@ -20,17 +20,17 @@ class Board {
 
     bool isFull() const;
     bool hasRitual() const;
-    void addMinion(std::shared_ptr<Minion> m);
-    void addRitual(std::shared_ptr<Ritual> r);
+    void addMinion(shared_ptr<Minion> m);
+    void addRitual(shared_ptr<Ritual> r);
     shared_ptr<Minion> removeMinion(int target);
     void removeRitual();
-    void setMinion(int i, std::shared_ptr<Minion> m);
 
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);
     int getMinionIndex(shared_ptr<Minion> m) const;
     shared_ptr<Ritual> getRitual();
     void setRitual(shared_ptr<Ritual> ritual);
+    void setMinion(int i, shared_ptr<Minion> m);
 };
 
 #endif

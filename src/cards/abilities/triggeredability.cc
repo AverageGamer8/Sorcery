@@ -55,7 +55,7 @@ bool OnEnterBuff::activate() {
     auto minion = minions.back();
     minion->setDefence(minion->getDefence() + 1);
     minion->setAttack(minion->getAttack() + 1);
-    Narrator::announce(p->getName() + "'s Aura of Power ritual, has buffed their " + minion->getName() + " by +1/+1.");
+    Narrator::announce(p->getName() + "'s Aura of Power ritual has buffed their " + minion->getName() + " by +1/+1.");
     ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     return true;
 }

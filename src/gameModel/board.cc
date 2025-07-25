@@ -41,10 +41,6 @@ shared_ptr<Minion> Board::removeMinion(int target) {
 
 void Board::removeRitual() { ritual = nullptr; }
 
-void Board::setMinion(int i, shared_ptr<Minion> m) {
-    if (i >= minions.size()) return;
-    minions[i] = m;
-}
 
 vector<shared_ptr<Minion>>& Board::getMinions() {
     return minions;
@@ -69,4 +65,9 @@ shared_ptr<Ritual> Board::getRitual() { return ritual; }
 
 void Board::setRitual(shared_ptr<Ritual> ritual) {
     this->ritual = ritual;
+}
+
+void Board::setMinion(int i, shared_ptr<Minion> m) {
+    if (i >= minions.size()) return;
+    minions[i] = m;
 }

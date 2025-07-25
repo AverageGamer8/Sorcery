@@ -1,5 +1,5 @@
-uno
-dos
+blizzDeck
+mastSummon
 end
 play 1
 use 1

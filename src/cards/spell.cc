@@ -49,7 +49,7 @@ bool Unsummon::expend() {
 }
 bool Unsummon::expend(int player, int minion) {
     auto p = game->getPlayer(player);
-    if (p->getHand()->isFull()) {
+    if (p->isHandFull()) {
         Narrator::announce(p->getName() + " tried to expend Unsummon, but their hand is full.");
         throw ArgException("Can't Unsummon, " + p->getName() + "'s hand is full.");
     }
@@ -63,10 +63,11 @@ bool Unsummon::expend(int player) {
 
 Recharge::Recharge(int owner, Game* game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
 bool Recharge::expend() {
-    auto ritual = game->getPlayer(owner)->getBoard()->getRitual();
-    if (!ritual) {
+    auto player = game->getPlayer(owner);
+    if (player->hasRitual()) {
         throw ArgException("Ritual is invalid.");
     }
+    auto ritual = player->getBoard()->getRitual();
     ritual->setCharges(ritual->getCharges() + 3);
     return true;
 }
@@ -103,7 +104,7 @@ bool RaiseDead::expend() {
     if (curr->getHand()->isFull()) {
         throw ArgException("Hand is full.");
     }
-    if (curr->getGraveyard()->isEmpty()) {
+    if (curr->isGraveyardEmpty()) {
         throw ArgException("Graveyard is empty.");
     }
 

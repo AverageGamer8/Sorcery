@@ -36,7 +36,6 @@ bool Banish::expend(int player, int target) {
     auto p = game->getPlayer(player);
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
     p->getBoard()->removeMinion(target);
-    game->notifyTrigger(Trigger::TriggerType::MinionExit);
     return true;
 }
 bool Banish::expend(int player) {
@@ -100,7 +99,7 @@ bool Disenchant::expend(int player) {
 
 RaiseDead::RaiseDead(int owner, Game* game) : Spell{"Raise Dead", "Resurrect the top minion in your graveyard and set its defence to 1", 1, owner, game} {}
 bool RaiseDead::expend() {
-    auto curr = game->getPlayer(game->getActiveIndex());
+    auto curr = game->getPlayer(owner);
     if (curr->getHand()->isFull()) {
         throw ArgException("Hand is full.");
     }

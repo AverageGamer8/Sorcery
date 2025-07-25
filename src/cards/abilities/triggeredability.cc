@@ -114,8 +114,7 @@ bool OnEnterDamage::activate() {
     if (board->getMinions().empty()) return true;
     auto minion = board->getMinion(board->getMinions().size() - 1);
     Narrator::announce(p->getName() + "'s " + minion->getName() + " takes 1 damage from Fire Elemental's burn.");
-    minion->takeDamage(1);
-    if (minion->getDefence() <= 0) {
+    if (minion->takeDamage(1)) {
         game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size() - 1);
     }
     return true;

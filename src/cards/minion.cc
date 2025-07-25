@@ -27,11 +27,11 @@ bool Minion::activate(int player, int minion) {
 
 void Minion::attack() {
     if (getActions() == 0) {
-        Narrator::announce(name + " has no actions left and too tired to attack.");
+        Narrator::announce(getName() + " has no actions left and too tired to attack.");
         return;
     }
     shared_ptr<Player> opp = game->getPlayer(game->getInactiveIndex());
-    Narrator::announce(name + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
+    Narrator::announce(getName() + " charges at Player: " + opp->getName() + " directly for " + to_string(getAttack()) + " damage.");
     opp->setLife(opp->getLife() - getAttack());
     if (opp->getLife() <= 0) {
         opp->setLife(0);
@@ -42,7 +42,7 @@ void Minion::attack() {
 
 void Minion::attack(int target) {
     if (getActions() == 0) {
-        Narrator::announce(name + " has no actions left and too tired to attack.");
+        Narrator::announce(getName() + " has no actions left and too tired to attack.");
         return;
     }
     game->battleMinion(shared_from_this(), target);
@@ -58,9 +58,9 @@ void Minion::consumeAction() {
 
 bool Minion::takeDamage(int dmg) {
     def -= dmg;
-    Narrator::announce(name + " takes " + to_string(dmg) + " damage. (" + to_string(def) + " DEF left)");
+    Narrator::announce(getName() + " takes " + to_string(dmg) + " damage. (" + to_string(def) + " DEF left)");
     if (def <= 0) {
-        Narrator::announce(name + " has died!");
+        Narrator::announce(getName() + " has died!");
         game->notifyTrigger(Trigger::TriggerType::MinionExit);
         return true;
     }

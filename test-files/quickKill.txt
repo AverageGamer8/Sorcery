@@ -1,0 +1,14 @@
+Uno
+Dos
+play 5
+play 1
+play 3 1 1
+play 1 1 1
+attack 1
+end
+end
+play 1 1 1
+board
+attack 1
+attack 1
+

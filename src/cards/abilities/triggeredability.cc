@@ -53,8 +53,8 @@ bool OnEnterBuff::activate() {
     auto& minions = p->getBoard()->getMinions();
     if (minions.empty()) return true;
     auto minion = minions.back();
-    minion->setDefence(minion->getDefence() + 1);
-    minion->setAttack(minion->getAttack() + 1);
+    minion->increaseAtk(1);
+    minion->increaseDef(1);
     Narrator::announce(p->getName() + "'s Aura of Power ritual has buffed their " + minion->getName() + " by +1/+1.");
     ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     return true;
@@ -82,7 +82,7 @@ bool OnEnterDestroy::activate() {
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
     activePlayer->getBoard()->removeMinion(minions.size() - 1);
     ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
-    Narrator::announce(activePlayer->getName() + "'s Standstill ritual activates, destroying the newly summoned " + newMinion->getName() + ".");
+    Narrator::announce(p->getName() + "'s Standstill ritual activates, destroying the newly summoned " + newMinion->getName() + ".");
     return true;
 }
 bool OnEnterDestroy::shouldTrigger() const {

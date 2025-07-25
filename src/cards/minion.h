@@ -29,9 +29,7 @@ class Minion : public Card, public enable_shared_from_this<Minion> {
     virtual void restoreAction();
     virtual void consumeAction();
     virtual bool takeDamage(int dmg);
-    virtual void increaseAtk(int amount);
-    virtual void increaseDef(int amount);
-
+    
     string getName() const override;
     string getDesc() const override;
     string getType() const override;
@@ -47,6 +45,8 @@ class Minion : public Card, public enable_shared_from_this<Minion> {
     void setDefence(int def);
     void setAttack(int atk);
     void setActions(int actions);
+    virtual void increaseAtk(int amount);
+    virtual void increaseDef(int amount);
 
     virtual ~Minion() = default;
 };

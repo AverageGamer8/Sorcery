@@ -1,12 +1,15 @@
 #ifndef ARG_EXCEPTION_H
 #define ARG_EXCEPTION_H
 
-#include <stdexcept>
+#include <exception>
 #include <string>
+using namespace std;
 
-class ArgException : public std::runtime_error {
+class ArgException : public exception {
+    string message = "Error: ";
 public:
-    explicit ArgException(const std::string& error);
+    explicit ArgException(const string& error);
+    const char* what();
 };
 
 #endif

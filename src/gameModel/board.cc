@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "../cards/enchantment.h"
+#include "../argexception.h"
 using namespace std;
 
 
@@ -17,19 +18,12 @@ bool Board::hasRitual() const {
 
 void Board::addRitual(shared_ptr<Ritual> r) {
     if (!r) return;
-    if (hasRitual()) {
-        ritual->detachAbilities();
-    }
     ritual = r;
-    ritual->attachAbilities();
 }
 
 void Board::addMinion(shared_ptr<Minion> m) {
     if (isFull() || !m) {
         return;
-    }
-    if (m->getTriggeredAbility()) {
-        m->attachAbilities();
     }
     minions.emplace_back(m);
 }
@@ -42,9 +36,6 @@ shared_ptr<Minion> Board::removeMinion(int target) {
     while (minion->getType() == "Enchantment") {
         auto ench = static_pointer_cast<Enchantment>(minion);
         minion = ench->getMinion();
-    }
-    if (minion->getTriggeredAbility()) {
-        minion->detachAbilities();
     }
     return minion;
 }
@@ -72,8 +63,7 @@ int Board::getMinionIndex(shared_ptr<Minion> m) const {
         }
     }
 
-    return -1;
-    // TODO: exception.
+    throw ArgException("Attacking minion's index not found.");
 }
 
 shared_ptr<Ritual> Board::getRitual() { return ritual; }

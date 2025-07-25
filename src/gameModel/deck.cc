@@ -7,6 +7,7 @@
 #include <random>
 #include <chrono>
 #include <utility>
+#include "../argexception.h"
 using namespace std;
 
 Deck::Deck(int owner) : owner{owner}, seed{chrono::system_clock::now().time_since_epoch().count()} {}
@@ -114,7 +115,7 @@ vector<shared_ptr<Card>>& Deck::getCards() {
 }
 
 shared_ptr<Card> Deck::popTopCard() {
-    if (cards.empty()) return nullptr; // TODO: exception.
+    if (cards.empty()) throw ArgException("Deck is out of cards.");
     auto card = cards.back();
     cards.pop_back();
     return card;

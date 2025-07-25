@@ -5,6 +5,7 @@
 
 #include "../../gameModel/game.h"
 #include "../../narrator.h"
+#include "../../argexception.h"
 
 using namespace std;
 
@@ -12,8 +13,7 @@ int ActivatedAbility::getCost() const { return cost; }
 
 DealDamage::DealDamage(Game* game) : ActivatedAbility(game, "Deal 1 damage to target minion", 1) {}
 bool DealDamage::activate() {
-    cerr << "DEBUG: (ActivatedAbility) Not proper usage: must have target." << endl;
-    return false;
+    throw ArgException("Must have target.");
 }
 bool DealDamage::activate(int player, int minion) {
     auto p = game->getPlayer(player);
@@ -30,9 +30,8 @@ SummonAirElemental::SummonAirElemental(Game* game) : ActivatedAbility(game, "Sum
 bool SummonAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {
-        cerr << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
         Narrator::announce(p->getName() + " tried to summon Air Elementals, but their board is full.");
-        return false;
+        throw ArgException("Cannot summon minions, " + p->getName() + "'s board is full.");
     }
     int index = game->getActiveIndex();
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
@@ -41,17 +40,15 @@ bool SummonAirElemental::activate() {
     return true;
 }
 bool SummonAirElemental::activate(int player, int minion) {
-    cerr << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
-    return false;
+    throw ArgException("Should not have target.");
 }
 
 SummonThreeAirElemental::SummonThreeAirElemental(Game* game) : ActivatedAbility(game, "Summon up to three 1/1 air elementals", 2) {}
 bool SummonThreeAirElemental::activate() {
     auto p = game->getActivePlayer();
     if (p->getBoard()->isFull()) {
-        cerr << "DEBUG: (ActivatedAbility) Cannot summon minions, board full." << endl;
         Narrator::announce(p->getName() + " tried to summon an Air Elemental, but their board is full.");
-        return false;
+        throw ArgException("Cannot summon minions, " + p->getName() + "'s board is full.");
     }
     int index = game->getActiveIndex();
             game->notifyTrigger(Trigger::TriggerType::MinionEnter);
@@ -67,6 +64,5 @@ bool SummonThreeAirElemental::activate() {
     return true;
 }
 bool SummonThreeAirElemental::activate(int player, int minion) {
-    cerr << "DEBUG: (ActivatedAbility) Not proper usage: should not have target." << endl;
-    return false;
+    throw ArgException("Should not have target.");
 }

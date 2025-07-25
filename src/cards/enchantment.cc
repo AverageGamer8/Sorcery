@@ -1,6 +1,7 @@
 #include "enchantment.h"
 
 #include "../gameModel/game.h"
+#include "../argexception.h"
 using namespace std;
 
 Enchantment::Enchantment(string name, string description, int cost, int owner, Game* game,
@@ -144,8 +145,10 @@ int MagicFatigue::getActivateCost() const {
 }
 Silence::Silence(int owner, Game* game) : Enchantment{"Silence", "Enchanted minion cannot use abilities", 1, owner, game, 0, 0, 0, nullptr, nullptr} {}
 bool Silence::activate() {
+    throw ArgException(getName() + "'s activated ability was silenced.");
     return false;
 }
 bool Silence::activate(int player, int target) {
+    throw ArgException(getName() + "'s activated ability was silenced.");    
     return false;
 }

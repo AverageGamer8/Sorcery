@@ -35,11 +35,14 @@ bool Banish::expend() {
 bool Banish::expend(int player, int target) {
     auto p = game->getPlayer(player);
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
-    p->getBoard()->removeMinion(target);
+    auto m = p->getBoard()->removeMinion(target);
+    Narrator::announce(p->getName() + "'s " + m->getName() + " has been banished.");
     return true;
 }
 bool Banish::expend(int player) {
-    game->getPlayer(player)->getBoard()->removeRitual();
+    auto p = game->getPlayer(player);
+    Narrator::announce(p->getName() + "'s " + p->getBoard()->getRitual()->getName() + " has been banished.");
+    p->getBoard()->removeRitual();
     return true;
 }
 
@@ -54,7 +57,9 @@ bool Unsummon::expend(int player, int minion) {
         throw ArgException("Can't Unsummon, " + p->getName() + "'s hand is full.");
     }
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
-    p->getHand()->addCard(p->getBoard()->removeMinion(minion));
+    auto m = p->getBoard()->removeMinion(minion);
+    Narrator::announce(p->getName() + "'s " + m->getName() + " has been returned to their hand.");
+    p->getHand()->addCard(m);
     return true;
 }
 bool Unsummon::expend(int player) {
@@ -64,10 +69,11 @@ bool Unsummon::expend(int player) {
 Recharge::Recharge(int owner, Game* game) : Spell{"Recharge", "Your ritual gains 3 charges", 1, owner, game} {}
 bool Recharge::expend() {
     auto player = game->getPlayer(owner);
-    if (player->hasRitual()) {
-        throw ArgException("Ritual is invalid.");
+    if (!player->hasRitual()) {
+        throw ArgException("No ritual to target.");
     }
     auto ritual = player->getBoard()->getRitual();
+    Narrator::announce(player->getName() + "'s " + ritual->getName() + " has been charged up by 3 charges.");
     ritual->setCharges(ritual->getCharges() + 3);
     return true;
 }
@@ -91,6 +97,8 @@ bool Disenchant::expend(int player, int minion) {
         throw ArgException("No enchantments on minion selected.");
     }
     auto ench = static_pointer_cast<Enchantment>(target);
+    auto m = ench->getMinion();
+    Narrator::announce(target->getName() + "'s " + ench->getEnchName() + " has been removed.");
     game->getPlayer(player)->getBoard()->setMinion(minion, ench->getMinion());
     return true;
 }
@@ -110,14 +118,15 @@ bool RaiseDead::expend() {
 
     auto m = curr->getGraveyard()->popTopMinion();
     m->setDefence(1);
+    Narrator::announce(curr->getName() + "'s " + m->getName() + " has been resurrected and returned to their hand.");
     curr->getHand()->addCard(static_pointer_cast<Card>(m));
     return true;
 }
 bool RaiseDead::expend(int player, int minion) {
-    throw ArgException("Riase Dead must be used without target.");
+    throw ArgException("Raise Dead must be used without target.");
 }
 bool RaiseDead::expend(int player) {
-    throw ArgException("Riase Dead must be used without target.");
+    throw ArgException("Raise Dead must be used without target.");
 }
 
 Blizzard::Blizzard(int owner, Game* game) : Spell{"Blizzard", "Deal 2 damage to all minions", 3, owner, game} {}

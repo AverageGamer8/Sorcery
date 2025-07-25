@@ -36,16 +36,16 @@ bool Player::playCard(int index, bool testingEnabled) {
         board->addMinion(minion);
     } else if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
+        Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
         try {
             spell->expend();
         } catch (ArgException& e) {
             cerr << e.what() << endl;
             return false;
         }
-        Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
     } else if (card->getType() == "Ritual") {
         auto ritual = static_pointer_cast<Ritual>(card);
-        Narrator::announce(name + " activates the ritual '" + ritual->getName() + "' (cost: " + to_string(ritual->getCost()) + ").");
+        Narrator::announce(name + " sets up the ritual '" + ritual->getName() + "' (cost: " + to_string(ritual->getCost()) + ").");
         board->addRitual(ritual);
     } else {
         throw ArgException("Unrecognised card type. Only Minion, Spell, Ritual allowed.");
@@ -72,13 +72,13 @@ bool Player::playCard(int index, int player, int minion, bool testingEnabled) {
 
     if (card->getType() == "Spell") {
         auto spell = static_pointer_cast<Spell>(card);
+        Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
         try {
             spell->expend(player, minion);
         } catch (ArgException& e) {
             cerr << e.what() << endl;
             return false;
         }
-        Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
     } else if (card->getType() == "Enchantment") {
         auto ench = static_pointer_cast<Enchantment>(card);
         Narrator::announce(name + " enchants '" + ench->getName() + "' (cost: " + to_string(ench->getCost()) + ").");
@@ -108,15 +108,11 @@ bool Player::playCard(int index, int player, bool testingEnabled) {  // Explicit
     }
 
     auto spell = static_pointer_cast<Spell>(card);
+    Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
     try {
         spell->expend(player);
     } catch (ArgException& e) {
         cerr << e.what() << endl;
-        return false;
-    }
-    Narrator::announce(name + " casts the spell '" + spell->getName() + "' (cost: " + to_string(spell->getCost()) + ").");
-    if (!spell->expend(player)) {
-        cerr << "Spell cast failed." << endl;
         return false;
     }
 
@@ -158,12 +154,12 @@ bool Player::activateCard(int index, bool testingEnabled) {
     if (m->getActions() < 1) {
         throw ArgException("Minion has no actions left.");
     }
+    Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
     try {
         m->activate();
     } catch (ArgException& e) {
         throw;
     }
-    Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
@@ -190,12 +186,12 @@ bool Player::activateCard(int index, int player, int minion, bool testingEnabled
     if (m->getActions() < 1) {
         throw ArgException("Minion has no actions left.");
     }
+    Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
     try {
         m->activate(player, minion);
     } catch (ArgException& e) {
         throw;
     }
-    Narrator::announce(name + "'s minion '" + m->getName() + "' unleashes its ability (cost: " + to_string(m->getActivateCost()) + ").");
     if (hasMagicCost(cost) || !testingEnabled) {
         setMagic(getMagic() - cost);
     }
@@ -219,7 +215,7 @@ void Player::minionAttack(int index, int target) {
     minion->attack(target);
 }
 
-bool Player::isAlive() { return life <= 0; }
+bool Player::isAlive() { return life > 0; }
 bool Player::isHandFull() { return hand->isFull(); }
 bool Player::hasRitual() const { return getBoard()->hasRitual(); }
 bool Player::isGraveyardEmpty() const { return graveyard->isEmpty(); }

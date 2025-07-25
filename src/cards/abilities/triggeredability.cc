@@ -24,13 +24,14 @@ Trigger::TriggerType TriggeredAbility::getTriggerType() const {
 OnStartGainMagic::OnStartGainMagic(Game* game, int player) : TriggeredAbility{game, player, "At the start of your turn, gain 1 magic", Trigger::TriggerType::TurnStart} {}
 bool OnStartGainMagic::activate() {  // gains 1 magic at start of turn.
     auto p = game->getPlayer(player);
-    Narrator::announce(p->getName() + "'s Dark Magic ritual activates with the new turn, granting them 1 magic.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
         Narrator::announce(p->getName() + "'s  Dark Magic ritual lies exhausted, its strength consumed.");
         return false;
     }
+    if (!ritual) return true;
+    Narrator::announce(p->getName() + "'s Dark Magic ritual activates with the new turn, granting them 1 magic.");
     p->setMagic(p->getMagic() + 1);
     ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
     return true;
@@ -42,16 +43,17 @@ bool OnStartGainMagic::shouldTrigger() const {
 OnEnterBuff::OnEnterBuff(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play under your control, it gains +1/+1", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterBuff::activate() {
     auto p = game->getPlayer(player);
-    Narrator::announce(p->getName() + "'s Aura of Power ritual has activated.");
 
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
         Narrator::announce(p->getName() + "'s  Aura of Power ritual lies exhausted, its strength consumed.");
         return false;
     }
+    if (!ritual) return true;
     // buff new minion
     auto& minions = p->getBoard()->getMinions();
     if (minions.empty()) return true;
+    Narrator::announce(p->getName() + "'s Aura of Power ritual has activated.");
     auto minion = minions.back();
     minion->increaseAtk(1);
     minion->increaseDef(1);
@@ -66,8 +68,7 @@ bool OnEnterBuff::shouldTrigger() const {
 OnEnterDestroy::OnEnterDestroy(Game* game, int player) : TriggeredAbility{game, player, "Whenever a minion enters play, destroy it", Trigger::TriggerType::MinionEnter} {}
 bool OnEnterDestroy::activate() {
     auto p = game->getPlayer(player);
-    Narrator::announce(p->getName() + "'s Standstill ritual has activated.");
-
+    
     auto ritual = p->getBoard()->getRitual();
     if (ritual && ritual->getCharges() < ritual->getActivationCost()) {
         Narrator::announce(p->getName() + "'s  Standstill ritual lies exhausted, its strength consumed.");
@@ -78,6 +79,7 @@ bool OnEnterDestroy::activate() {
     auto activePlayer = game->getActivePlayer();
     auto& minions = activePlayer->getBoard()->getMinions();
     if (minions.empty()) return true;
+    Narrator::announce(p->getName() + "'s Standstill ritual has activated.");
     auto newMinion = minions.back();
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
     activePlayer->getBoard()->removeMinion(minions.size() - 1);
@@ -96,8 +98,8 @@ bool OnExitGainBuff::activate() {
     auto p = game->getPlayer(player);
     for (auto& m : p->getBoard()->getMinions()) {
         if (m->getName() == "Bone Golem") {
-            m->increaseDef(1);
             m->increaseAtk(1);
+            m->increaseDef(1);
             Narrator::announce(p->getName() + "'s Bone Golem gains +1/+1 from the fallen.");
         }
     }

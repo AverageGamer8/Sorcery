@@ -67,7 +67,8 @@ void TextDisplay::printHand(Game* game) {
         card_template_t cardInfo = getCardInfo(card);
         cardTemplates.emplace_back(cardInfo);
     }
-    printTemplatesRow(cardTemplates);
+    if (cardTemplates.empty()) out << "No cards left in hand." << endl;
+    else printTemplatesRow(cardTemplates);
 }
 
 card_template_t TextDisplay::getMinionInfo(shared_ptr<Minion> minion) const {
@@ -140,7 +141,7 @@ card_template_t TextDisplay::getCardInfo(shared_ptr<Card> card) const {
 }
 void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const {
     if (cardTemplates.empty()) {
-        cerr << "DEBUG: TextDisplay: empty template given to print" << endl;  // todo exception
+        cerr << "DEBUG: TextDisplay: empty template given to print" << endl;
         return;
     }
     int height = cardTemplates[0].size();  // NOTE: take first element of templates vector as height of card!
@@ -156,7 +157,7 @@ void TextDisplay::printTemplatesRow(vector<card_template_t> cardTemplates) const
             }
         }
     }
-    cout << endl;
+    out << endl;
 }
 
 vector<card_template_t> TextDisplay::getBoardMinionsRow(shared_ptr<Player> player) {
@@ -204,7 +205,7 @@ vector<card_template_t> TextDisplay::getBoardPlayerRow(shared_ptr<Player> player
 
 void TextDisplay::printHorizontalBorder() const {
     for (int i = 0; i < HORIZONTAL_LINE_WIDTH; i++) {
-        cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+        out << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
     }
 }
 
@@ -217,10 +218,10 @@ card_template_t TextDisplay::buildVerticalCardBorder() const {
     return col;
 }
 void TextDisplay::printBoard(Game* game) {
-    cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+    out << EXTERNAL_BORDER_CHAR_TOP_LEFT;
     printHorizontalBorder();
-    cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT;
-    cout << endl;
+    out << EXTERNAL_BORDER_CHAR_TOP_RIGHT;
+    out << endl;
 
     card_template_t verticalBorder = buildVerticalCardBorder();
 
@@ -242,12 +243,12 @@ void TextDisplay::printBoard(Game* game) {
     printTemplatesRow(row1Templates);
     printTemplatesRow(row2Templates);
     printCardTemplate(CENTRE_GRAPHIC);
-    cout << endl;
+    out << endl;
     printTemplatesRow(row3Templates);
     printTemplatesRow(row4Templates);
 
-    cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+    out << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
     printHorizontalBorder();
-    cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT;
-    cout << endl;
+    out << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT;
+    out << endl;
 }

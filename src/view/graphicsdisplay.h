@@ -1,7 +1,6 @@
 #ifndef GRAPHICSDISPLAY_H
 #define GRAPHICSDISPLAY_H
 
-#include <iostream>
 #include <memory>
 #include <vector>
 

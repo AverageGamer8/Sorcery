@@ -1,7 +1,8 @@
 #include "graphicsdisplay.h"
+
+#include <algorithm>
 #include <sstream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -14,9 +15,7 @@ const int offset = 10, cOffset = 2 * offset;
 const int lineCap = 24;
 const int borderThickness = 3;
 
-
-GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height, EMPTY); }
+GraphicsDisplay::GraphicsDisplay(int width, int height) : xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height, EMPTY); }
 
 void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
     xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
@@ -26,7 +25,9 @@ void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
 }
 
 void GraphicsDisplay::drawDesc(int x, int y, string desc) {
-    istringstream iss{desc}; string out = "", tmp; int line = 0;
+    istringstream iss{desc};
+    string out = "", tmp;
+    int line = 0;
     for (; iss >> tmp; line++) {
         while (iss && out.length() + tmp.length() < lineCap) {
             out += tmp + " ";
@@ -48,7 +49,7 @@ void GraphicsDisplay::printPlayer(int pos, shared_ptr<Player> player) {
     xw.drawString(left + (cWidth * 0.8) + 2 * offset, top + (pos == 0 ? cHeight * 0.8 : 0) + 2 * offset, to_string(player->getMagic()));
 }
 
-void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {  
+void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {
     xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, "Minion");
     xw.fillRectangle(x, y + (cHeight * 0.8), cWidth * 0.2, cHeight * 0.2, ATK);
     xw.drawString(x + cOffset, y + (cHeight * 0.8) + cOffset, to_string(minion->getAttack()));
@@ -56,7 +57,8 @@ void GraphicsDisplay::printMinion(int x, int y, shared_ptr<Minion> minion) {
     xw.drawString(x + (cWidth * 0.8) + cOffset, y + (cHeight * 0.8) + cOffset, to_string(minion->getDefence()));
     auto triggeredAbility = minion->getTriggeredAbility();
     auto activatedAbility = minion->getActivatedAbility();
-    if (triggeredAbility) drawDesc(x, y, triggeredAbility->getDesc());
+    if (triggeredAbility)
+        drawDesc(x, y, triggeredAbility->getDesc());
     else if (activatedAbility) {
         xw.fillRectangle(x, y + (cHeight * 0.4), cWidth * 0.2, cHeight * 0.2, COST);
         xw.drawString(x + cOffset, y + (cHeight * 0.4) + cOffset, to_string(minion->getActivateCost()));
@@ -143,7 +145,6 @@ void GraphicsDisplay::printDescribe(Game* game, int minion) {
         xw.drawString(x + (cWidth * 0.6) + offset, y + (cHeight * 0.2) + offset, ench->getType());
         printEnchantment(x, y, ench);
     }
-
 }
 
 void GraphicsDisplay::printHand(Game* game) {
@@ -155,10 +156,14 @@ void GraphicsDisplay::printHand(Game* game) {
         int x = i * cWidth;
         auto card = hand->getCardAtIndex(i);
         printCard(x, y, card);
-        if (card->getType() == "Minion") printMinion(x, y, static_pointer_cast<Minion>(card));
-        else if (card->getType() == "Enchantment") printEnchantment(x, y, static_pointer_cast<Enchantment>(card));
-        else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));
-        else if (card->getType() == "Spell") printSpell(x, y, static_pointer_cast<Spell>(card));
+        if (card->getType() == "Minion")
+            printMinion(x, y, static_pointer_cast<Minion>(card));
+        else if (card->getType() == "Enchantment")
+            printEnchantment(x, y, static_pointer_cast<Enchantment>(card));
+        else if (card->getType() == "Ritual")
+            printRitual(x, y, static_pointer_cast<Ritual>(card));
+        else if (card->getType() == "Spell")
+            printSpell(x, y, static_pointer_cast<Spell>(card));
     }
     xw.fillRectangle(0, cHeight * 5 - borderThickness, width, borderThickness, BORDER);
 }

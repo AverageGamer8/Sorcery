@@ -25,6 +25,7 @@ void Board::addMinion(shared_ptr<Minion> m) {
         return;
     }
     minions.emplace_back(m);
+    mostRecent = minions.size() - 1;
 }
 
 shared_ptr<Minion> Board::removeMinion(int target) {
@@ -59,6 +60,10 @@ int Board::getMinionIndex(shared_ptr<Minion> m) const {
     }
 
     throw ArgException("Attacking minion's index not found.");
+}
+
+size_t Board::getMostRecent() const {
+    return mostRecent;
 }
 
 shared_ptr<Ritual> Board::getRitual() { return ritual; }

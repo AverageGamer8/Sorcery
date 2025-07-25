@@ -14,6 +14,7 @@ const int MAX_BOARD_SIZE = 5;
 class Board {
     vector<shared_ptr<Minion>> minions;
     shared_ptr<Ritual> ritual;
+    size_t mostRecent = 0;
 
    public:
     Board(shared_ptr<Ritual> ritual) : ritual{ritual} {}
@@ -28,6 +29,7 @@ class Board {
     vector<shared_ptr<Minion>>& getMinions();
     shared_ptr<Minion> getMinion(int index);
     int getMinionIndex(shared_ptr<Minion> m) const;
+    size_t getMostRecent() const;
     shared_ptr<Ritual> getRitual();
     void setRitual(shared_ptr<Ritual> ritual);
     void setMinion(int i, shared_ptr<Minion> m);

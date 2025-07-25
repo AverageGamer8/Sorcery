@@ -78,17 +78,17 @@ bool OnEnterDestroy::activate() {
     // destroy added minion.
     auto activePlayer = game->getActivePlayer();
     auto& minions = activePlayer->getBoard()->getMinions();
-    if (minions.empty()) return true;
     Narrator::announce(p->getName() + "'s Standstill ritual has activated.");
     auto newMinion = minions.back();
     game->notifyTrigger(Trigger::TriggerType::MinionExit);
-    activePlayer->getBoard()->removeMinion(minions.size() - 1);
+    activePlayer->getBoard()->removeMinion(activePlayer->getBoard()->getMostRecent());
     ritual->setCharges(ritual->getCharges() - ritual->getActivationCost());
-    Narrator::announce(p->getName() + "'s Standstill ritual activates, destroying the newly summoned " + newMinion->getName() + ".");
+    Narrator::announce(p->getName() + "'s Standstill ritual destroys the newly summoned " + newMinion->getName() + ".");
     return true;
 }
 bool OnEnterDestroy::shouldTrigger() const {
-    return true;
+    auto board = game->getActivePlayer()->getBoard();
+    return board->getMostRecent() < board->getMinions().size();
 }
 
 // ================== Minion Abilities =====================
@@ -113,16 +113,16 @@ OnEnterDamage::OnEnterDamage(Game* game, int player) : TriggeredAbility{game, pl
 bool OnEnterDamage::activate() {
     auto p = game->getActivePlayer();
     auto board = p->getBoard();
-    if (board->getMinions().empty()) return true;
-    auto minion = board->getMinion(board->getMinions().size() - 1);
-    Narrator::announce(p->getName() + "'s " + minion->getName() + " takes 1 damage from Fire Elemental's burn.");
+    auto minion = board->getMinion(board->getMostRecent());
+    Narrator::announce(p->getName() + "'s " + minion->getName() + " is burned by " + game->getPlayer(player)->getName() + "'s Fire Elemental.");
     if (minion->takeDamage(1)) {
         game->handleMinionDeath(game->getActiveIndex(), board->getMinions().size() - 1);
     }
     return true;
 }
 bool OnEnterDamage::shouldTrigger() const {
-    return game->getActiveIndex() != player;
+    auto board = game->getActivePlayer()->getBoard();
+    return game->getActiveIndex() != player && board->getMostRecent() < board->getMinions().size();
 }
 OnTurnEndBuff::OnTurnEndBuff(Game* game, int player) : TriggeredAbility{game, player, "At the end of your turn, all you minions gain +0/+1.", Trigger::TriggerType::TurnEnd} {}
 bool OnTurnEndBuff::activate() {

@@ -31,9 +31,9 @@ bool SummonAirElemental::activate() {
         throw ArgException("Cannot summon minions, " + p->getName() + "'s board is full.");
     }
     int index = game->getActiveIndex();
+    Narrator::announce(p->getName() + " summons a 1/1 Air Elemental.");
     p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
     game->notifyTrigger(Trigger::TriggerType::MinionEnter);
-    Narrator::announce(p->getName() + " summons a 1/1 Air Elemental.");
     return true;
 }
 bool SummonAirElemental::activate(int player, int minion) {
@@ -52,9 +52,9 @@ bool SummonThreeAirElemental::activate() {
     Narrator::announce(p->getName() + " summons up to three 1/1 Air Elementals in a gust of magic.");
     for (int i = 0; i < 3; i++) {
         if (!p->getBoard()->isFull()) {
+            Narrator::announce("An Air Elemental appears on " + p->getName() + "'s side.");
             p->getBoard()->addMinion(make_shared<AirElemental>(index, game));
             game->notifyTrigger(Trigger::TriggerType::MinionEnter);
-            Narrator::announce(p->getName() + " summons an Air Elemental in a massive gust of magic.");
         }
     }
     return true;

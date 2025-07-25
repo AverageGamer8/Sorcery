@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
                 return 1;
             }
             deck1FilePath = argv[i];
-            cout << "DEBUG: received - " << deck1FilePath << endl;
+            cout << "received - " << deck1FilePath << endl;
         } else if (curArg == "-deck2") {
             ++i;
             if (i >= argc) {
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
                 return 1;
             }
             deck2FilePath = argv[i];
-            cout << "DEBUG: received - " << deck2FilePath << endl;
+            cout << "received - " << deck2FilePath << endl;
         } else if (curArg == "-init") {
             ++i;
             if (i >= argc) {
@@ -61,20 +61,20 @@ int main(int argc, char **argv) {
                 return 1;
             }
             initFile = argv[i];
-            cout << "DEBUG: initFile received - " << initFile << endl;
+            cout << "initFile received - " << initFile << endl;
         } else if (curArg == "-testing") {
             testingEnabled = true;
-            cout << "DEBUG: Testing Enabled." << endl;
+            cout << "Testing Enabled." << endl;
         } else if (curArg == "-graphics") {
             graphicsEnabled = true;
-            cout << "DEBUG: Graphics Enabled." << endl;
+            cout << "Graphics Enabled." << endl;
         } else if (curArg == "-narrate") {
             narrateEnabled = true;
-            cout << "DEBUG: Narrator Enabled." << endl;
+            cout << "Narrator Enabled." << endl;
         } else if (curArg == "-delay") {
             delayEnabled = true;
             
-            cout << "DEBUG: Text Delay Enabled." << endl;
+            cout << "Text Delay Enabled." << endl;
         } else {
             cerr << "Invalid argument " << curArg << "." << endl;
             return 1;

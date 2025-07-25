@@ -1,0 +1,11 @@
+Bjarne
+Linus
+play 2
+end
+play 2
+end
+board
+attack 1 1
+board
+play 1
+board

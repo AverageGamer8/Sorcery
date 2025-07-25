@@ -1,0 +1,1 @@
+-testing -deck1 ../test-files/enchOrder.deck -deck2 ../test-files/enchOrder.deck -init ../test-files/example2.txt

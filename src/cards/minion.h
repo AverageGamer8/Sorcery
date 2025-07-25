@@ -30,7 +30,7 @@ class Minion : public Card, public enable_shared_from_this<Minion> {
     void detachAbilities();
     virtual void restoreAction();
     virtual void consumeAction();
-    virtual void takeDamage(int dmg);
+    virtual bool takeDamage(int dmg);
     virtual void increaseAtk(int amount);
     virtual void increaseDef(int amount);
 

@@ -66,13 +66,15 @@ void Minion::consumeAction() {
     actions--;
 }
 
-void Minion::takeDamage(int dmg) {
+bool Minion::takeDamage(int dmg) {
     def -= dmg;
     Narrator::announce(name + " takes " + to_string(dmg) + " damage. (" + to_string(def) + " DEF left)");
     if (def <= 0) {
         Narrator::announce(name + " has died!");
         game->notifyTrigger(Trigger::TriggerType::MinionExit);
+        return true;
     }
+    return false;
 }
 
 void Minion::increaseAtk(int amount) {

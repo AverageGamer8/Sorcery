@@ -32,12 +32,14 @@ void Enchantment::restoreAction() {
     minion->restoreAction();
 }
 
-void Enchantment::takeDamage(int dmg) {
+bool Enchantment::takeDamage(int dmg) {
     def -= dmg;
     if (def < 0) {
-        minion->takeDamage(-def);
+        int remaining = -def;
         def = 0;
+        return minion->takeDamage(remaining);
     }
+    return false;
 }
 
 void Enchantment::increaseAtk(int amount) {

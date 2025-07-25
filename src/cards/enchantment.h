@@ -20,7 +20,7 @@ class Enchantment: public Minion {
     virtual bool activate() override;
     virtual bool activate(int player, int target) override;
     virtual void restoreAction() override;
-    void takeDamage(int dmg) override;
+    bool takeDamage(int dmg) override;
     void increaseAtk(int amount) override;
     void increaseDef(int amount) override;
     shared_ptr<Minion> getMinion() const;

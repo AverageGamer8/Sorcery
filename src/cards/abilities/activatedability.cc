@@ -18,8 +18,7 @@ bool DealDamage::activate() {
 bool DealDamage::activate(int player, int minion) {
     auto p = game->getPlayer(player);
     auto m = p->getBoard()->getMinion(minion);
-    m->takeDamage(1);
-    if (m->getDefence() <= 0) {
+    if (m->takeDamage(1)) {
         game->handleMinionDeath(player, minion);
     }
     return true;

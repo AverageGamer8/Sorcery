@@ -21,7 +21,7 @@ void Controller::draw() {
 
 bool Controller::discard(int card) {
     auto player = game->getActivePlayer();
-    if (card < 0 || card >= player->getHand()->getSize()) return false;
+    if (card < 0 || card >= player->getHand()->getSize()) throw ArgException("Invalid command provided to controller.");
     player->discardCard(card);
     return true;
 }
@@ -29,13 +29,12 @@ bool Controller::discard(int card) {
 bool Controller::attack(int attackingMinion) {
     auto player = game->getActivePlayer();
     if (attackingMinion < 0 || attackingMinion >= player->getMinions().size()) {
-        return false;
+        throw ArgException("The attack fails - invalid command provided.");
     }
     try {
         player->minionAttack(attackingMinion);  // attack player.
     } catch (ArgException& e) {
-        cerr << e.what();
-        return false;
+        throw;
     }
     return true;
 }
@@ -45,20 +44,19 @@ bool Controller::attack(int attackingMinion, int receivingMinion) {
     auto player2 = game->getInactivePlayer();
     if (attackingMinion < 0 || attackingMinion >= player1->getMinions().size() 
         || receivingMinion < 0 || receivingMinion >= player2->getMinions().size()) {
-        return false;
+        throw ArgException("The attack fails - invalid command provided.");
     }
     try {
         player1->minionAttack(attackingMinion, receivingMinion);
     } catch (ArgException& e) {
-        cerr << e.what();
-        return false;
+        throw;
     }
     return true;
 }
 
 bool Controller::play(int card, bool testingEnabled) {
-    if (card < 0 || card >= game->getActivePlayer()->getHand()->getSize()) return false;
-    if (!game->playCard(card, testingEnabled)) return false;  // Minion enters.
+    if (card < 0 || card >= game->getActivePlayer()->getHand()->getSize()) throw ArgException("Invalid command provided to controller.");
+    if (!game->playCard(card, testingEnabled)) throw ArgException("Invalid command provided to controller.");  // Minion enters.
     return true;
 }
 
@@ -68,34 +66,31 @@ bool Controller::play(int card, int onPlayer, int minion, bool testingEnabled) {
     if (card < 0 || card >= player->getHand()->getSize() 
         || onPlayer < 0 || onPlayer >= 2 
         || (minion != -1 && (minion < 0 || minion >= receivingPlayer->getMinions().size()))) {
-        return false;
+        throw ArgException("Invalid command provided to controller.");
     }
     if (minion == -1) {  // ritual
         try {
             player->playCard(card, onPlayer, testingEnabled);
         } catch (ArgException& e) {
-            cerr << e.what() << endl;
-            return false;
+            throw;
         }
         return true;
     }
     try {
         player->playCard(card, onPlayer, minion, testingEnabled);
     } catch (ArgException& e) {
-        cerr << e.what() << endl;
-        return false;
+        throw;
     }
     return true;
 }
 
 bool Controller::use(int minion, bool testingEnabled) {
     auto player = game->getActivePlayer();
-    if (minion < 0 || minion >= player->getMinions().size()) return false;
+    if (minion < 0 || minion >= player->getMinions().size()) throw ArgException("Invalid command provided to controller.");
     try {
         player->activateCard(minion, testingEnabled);
     } catch (ArgException& e) {
-        cerr << e.what() << endl;
-        return false;
+        throw;
     }
     return true;
 }
@@ -106,13 +101,12 @@ bool Controller::use(int activeMinion, int onPlayer, int receivingMinion, bool t
     if (activeMinion < 0 || activeMinion >= player->getMinions().size() 
         || onPlayer < 0 || onPlayer >= 2 
         || receivingMinion < 0 || receivingMinion >= receivingPlayer->getMinions().size()) {
-        return false;
+        throw ArgException("Invalid command provided to controller.");
     }
     try {
         player->activateCard(activeMinion, onPlayer, receivingMinion, testingEnabled);
     } catch (ArgException& e) {
-        cerr << e.what() << endl;
-        return false;
+        throw;
     }
     return true;
 }

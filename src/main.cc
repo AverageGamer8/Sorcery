@@ -224,7 +224,13 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int card;
                 if (!parseInt(tokens[1], card)) continue;
-                if (!controller->discard(card - 1)) break;
+                try {
+                    controller->discard(card - 1);
+                }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
+                    continue;
+                }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
                 continue;
@@ -270,8 +276,11 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int card;
                 if (!parseInt(tokens[1], card)) continue;
-                if (!controller->play(card - 1, testingEnabled)) {
-                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                try {
+                    controller->play(card - 1, testingEnabled);
+                }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
                     continue;
                 }
             } else if (args == 3) {
@@ -285,8 +294,11 @@ int main(int argc, char **argv) {
                 } else {
                     if (!parseInt(tokens[3], minion)) continue;
                 }
-                if (!controller->play(card - 1, player - 1, minion - 1, testingEnabled)) {
-                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                try {
+                    controller->play(card - 1, player - 1, minion - 1, testingEnabled);
+                }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
                     continue;
                 }
             } else {
@@ -305,10 +317,13 @@ int main(int argc, char **argv) {
             if (args == 1) {
                 int minion;
                 if (!parseInt(tokens[1], minion)) continue;
-                if (!controller->use(minion - 1, testingEnabled)) {
-                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
-                    continue;
+                try {
+                    controller->use(minion - 1, testingEnabled);
                 }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
+                    continue;
+                }                
             } else if (args == 3) {
                 int activeMinion;
                 int player;
@@ -316,10 +331,13 @@ int main(int argc, char **argv) {
                 if (!parseInt(tokens[1], activeMinion)) continue;
                 if (!parseInt(tokens[2], player)) continue;
                 if (!parseInt(tokens[3], receivingMinion)) continue;
-                if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1, testingEnabled)) {
-                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
-                    continue;
+                try {
+                    controller->use(activeMinion - 1, player - 1, receivingMinion - 1, testingEnabled);
                 }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
+                    continue;
+                }   
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use either 1 or 3." << endl;
                 continue;
@@ -355,6 +373,12 @@ int main(int argc, char **argv) {
             continue;
         }
     }
+
+    if (game->getWinner() == -1) {
+        cerr << "Exiting early." << endl;
+        return 0;
+    }
+
     string loser = game->getPlayer((game->getWinner() + 1) % 2)->getName();
     string winner = game->getPlayer(game->getWinner())->getName();
 

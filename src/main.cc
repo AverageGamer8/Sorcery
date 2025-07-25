@@ -12,6 +12,8 @@
 #include "view/graphicsdisplay.h"
 #include "view/textdisplay.h"
 #include "view/viewer.h"
+#include "./argexception.h"
+#include "./utils.h"
 
 using namespace std;
 
@@ -220,7 +222,8 @@ int main(int argc, char **argv) {
             }
             int args = tokens.size() - 1;
             if (args == 1) {
-                int card = stoi(tokens[1]);
+                int card;
+                if (!parseInt(tokens[1], card)) continue;
                 if (!controller->discard(card - 1)) break;
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;
@@ -236,14 +239,17 @@ int main(int argc, char **argv) {
             }
             int args = tokens.size() - 1;
             if (args == 1) {
-                int attackingMinion = stoi(tokens[1]);
+                int attackingMinion;
+                if (!parseInt(tokens[1], attackingMinion)) continue;
                 if (!controller->attack(attackingMinion - 1)) {
                     cerr << "The attack fails - invalid command provided." << endl;
                     continue;
                 }
             } else if (args == 2) {
-                int attackingMinion = stoi(tokens[1]);
-                int receivingMinion = stoi(tokens[2]);
+                int attackingMinion;
+                if (!parseInt(tokens[1], attackingMinion)) continue;
+                int receivingMinion;
+                if (!parseInt(tokens[2], receivingMinion)) continue;
                 if (!controller->attack(attackingMinion - 1, receivingMinion - 1)) {
                     cerr << "The attack fails - invalid command provided." << endl;
                     continue;
@@ -262,22 +268,25 @@ int main(int argc, char **argv) {
             }
             int args = tokens.size() - 1;
             if (args == 1) {
-                int card = stoi(tokens[1]);
+                int card;
+                if (!parseInt(tokens[1], card)) continue;
                 if (!controller->play(card - 1, testingEnabled)) {
-                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
-                int card = stoi(tokens[1]);
-                int player = stoi(tokens[2]);
+                int card;
+                if (!parseInt(tokens[1], card)) continue;
+                int player;
+                if (!parseInt(tokens[2], player)) continue;
                 int minion;
                 if (tokens[3] == "r") {
                     minion = 0;
                 } else {
-                    minion = stoi(tokens[3]);
+                    if (!parseInt(tokens[3], minion)) continue;
                 }
                 if (!controller->play(card - 1, player - 1, minion - 1, testingEnabled)) {
-                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -294,17 +303,21 @@ int main(int argc, char **argv) {
             }
             int args = tokens.size() - 1;
             if (args == 1) {
-                int minion = stoi(tokens[1]);
+                int minion;
+                if (!parseInt(tokens[1], minion)) continue;
                 if (!controller->use(minion - 1, testingEnabled)) {
-                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else if (args == 3) {
-                int activeMinion = stoi(tokens[1]);
-                int player = stoi(tokens[2]);
-                int receivingMinion = stoi(tokens[3]);
+                int activeMinion;
+                int player;
+                int receivingMinion;
+                if (!parseInt(tokens[1], activeMinion)) continue;
+                if (!parseInt(tokens[2], player)) continue;
+                if (!parseInt(tokens[3], receivingMinion)) continue;
                 if (!controller->use(activeMinion - 1, player - 1, receivingMinion - 1, testingEnabled)) {
-                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
+                    // cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
                     continue;
                 }
             } else {
@@ -321,10 +334,13 @@ int main(int argc, char **argv) {
             }
             int args = tokens.size() - 1;
             if (args == 1) {
-                int card = stoi(tokens[1]);
-                if (!controller->describe(card - 1)) {
-                    cerr << "DEBUG: (Main) Invalid command provided to controller." << endl;
-                    continue;
+                int card;
+                if (!parseInt(tokens[1], card)) continue;
+                try {
+                    controller->describe(card - 1);
+                }
+                catch (ArgException& e) {
+                    cerr << e.what() << endl;
                 }
             } else {
                 cerr << "Invalid input: Received " << args << " arguments. Please use 1." << endl;

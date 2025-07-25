@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "../cards/enchantment.h"
+#include "../argexception.h"
 using namespace std;
 
 
@@ -62,8 +63,7 @@ int Board::getMinionIndex(shared_ptr<Minion> m) const {
         }
     }
 
-    return -1;
-    // TODO: exception.
+    throw ArgException("Attacking minion's index not found.");
 }
 
 shared_ptr<Ritual> Board::getRitual() { return ritual; }

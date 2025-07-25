@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include "../narrator.h"
+#include "../argexception.h"
 
 using namespace std;
 
@@ -60,7 +61,14 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
     attackingMinion->takeDamage(oppMinion->getAttack());
     if (attackingMinion->getDefence() <= 0) {
         Narrator::announce(attackingMinion->getName() + " has been defeated while attacking!");
-        int attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
+        int attackerIndex;
+        try {
+             attackerIndex = attacker->getBoard()->getMinionIndex(attackingMinion);
+        }
+        catch (ArgException& e) {
+            cerr << e.what() << endl;
+            return;
+        }
         handleMinionDeath(getActiveIndex(), attackerIndex);
     }
 }
@@ -68,7 +76,13 @@ void Game::battleMinion(shared_ptr<Minion> attackingMinion, int receivingMinion)
 bool Game::playCard(int card, bool testingEnabled) {  // Wrapper to notify MinionEnter observers
     auto player = getActivePlayer();
     auto cardPtr = player->getHand()->getCardAtIndex(card);
-    if (!player->playCard(card, testingEnabled)) return false;
+    try {
+        player->playCard(card, testingEnabled);
+    }
+    catch (ArgException& e) {
+        cerr << e.what() << endl;
+        return false;
+    }
     if (cardPtr->getType() == "Minion") {
         notifyTrigger(Trigger::TriggerType::MinionEnter);
     }

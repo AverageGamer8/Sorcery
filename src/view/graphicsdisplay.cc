@@ -9,12 +9,14 @@ const int ATK = Xwindow::Red;
 const int DEF = Xwindow::Blue, MP = Xwindow::Blue;
 const int LIFE = Xwindow::Green, COST = Xwindow::Green, CHARGE = Xwindow::Green;
 const int BLANK = Xwindow::White;
-const int EMPTY = Xwindow::Black;
+const int EMPTY = Xwindow::Gray, BORDER = Xwindow::Black;
 const int offset = 10, cOffset = 2 * offset;
 const int lineCap = 24;
+const int borderThickness = 3;
+
 
 GraphicsDisplay::GraphicsDisplay(int width, int height) : 
-    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height); }
+    xw{width, height}, width{width}, height{height}, cWidth{width / 5}, cHeight{height / 6} { xw.fillRectangle(0, 0, width, height, EMPTY); }
 
 void GraphicsDisplay::printCard(int x, int y, shared_ptr<Card> card) {
     xw.fillRectangle(x, y, cWidth, cHeight, BLANK);
@@ -121,7 +123,7 @@ void GraphicsDisplay::printDescribe(Game* game, int minion) {
     auto player = game->getActivePlayer();
     auto target = player->getMinions()[minion];
 
-    xw.fillRectangle(0, 0, width, height);
+    xw.fillRectangle(0, 0, width, height, EMPTY);
     printCard(0, 0, static_pointer_cast<Card>(target));
     printMinion(0, 0, target);
     vector<shared_ptr<Enchantment>> enchs;
@@ -158,10 +160,11 @@ void GraphicsDisplay::printHand(Game* game) {
         else if (card->getType() == "Ritual") printRitual(x, y, static_pointer_cast<Ritual>(card));
         else if (card->getType() == "Spell") printSpell(x, y, static_pointer_cast<Spell>(card));
     }
+    xw.fillRectangle(0, cHeight * 5 - borderThickness, width, borderThickness, BORDER);
 }
 
 void GraphicsDisplay::printBoard(Game* game) {
-    xw.fillRectangle(0, 0, width, height);
+    xw.fillRectangle(0, 0, width, height, EMPTY);
     // print player 0
     auto player = game->getPlayer(0);
     printPlayer(0, player);
